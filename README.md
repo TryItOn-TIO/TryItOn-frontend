@@ -27,4 +27,33 @@ git commit -m "fix: 상품 상세 페이지 오류 수정"
 
 ## 🚀 프로젝트 실행 방법
 
-추가 예정입니다.
+### 1. 레포지토리 클론
+
+```bash
+git clone https://github.com/TryItOn-TIO/TryItOn-frontend.git
+cd TryItOn-frontend
+```
+
+### 2. 패키지 설치
+
+```bash
+npm install
+```
+
+### 3. 개발 서버 실행
+
+```bash
+npm run dev
+```
+
+### 4. 브라우저에 접속
+
+http://localhost:3000<br/>
+개발 서버가 실행되면 위 주소에서 결과를 확인할 수 있습니다.
+
+### 5. 빌드 및 실행
+
+```bash
+npm run build     # 정적 파일 빌드
+npm start         # 빌드된 앱 실행
+```
