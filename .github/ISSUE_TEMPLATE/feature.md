@@ -1,5 +1,5 @@
 ---
-name: 🛠️ 작업 이슈
+name: ✨ Feature Request
 about: 작업 항목을 작성할 때 사용하는 템플릿
 title: "[Feature] 제목을 작성해주세요"
 labels: feature
