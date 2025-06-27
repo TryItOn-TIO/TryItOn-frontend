@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { GoogleSignupRequest } from "@/types/auth";
+import { Gender } from "@/constants/Gender";
+import { Style } from "@/constants/Style";
 
 const SignupForm = ({
   onSubmit,
@@ -13,9 +15,9 @@ const SignupForm = ({
   const [formData, setFormData] = useState<GoogleSignupRequest>({
     username: "",
     birthDate: "",
-    gender: "M",
+    gender: Gender.F,
     phoneNum: "",
-    preferredStyle: "CASUAL",
+    preferredStyle: Style.CASUAL,
     height: 0,
     weight: 0,
     shoeSize: 0,
@@ -81,8 +83,8 @@ const SignupForm = ({
           onChange={handleChange}
           className="w-full p-2 border rounded"
         >
-          <option value="M">남성</option>
-          <option value="F">여성</option>
+          <option value={Gender.M}>남성</option>
+          <option value={Gender.F}>여성</option>
         </select>
       </div>
 
@@ -93,7 +95,7 @@ const SignupForm = ({
           name="phoneNum"
           value={formData.phoneNum}
           onChange={handleChange}
-          placeholder="01012345678"
+          placeholder="010-1234-5678"
           className="w-full p-2 border rounded"
           required
         />
@@ -107,10 +109,12 @@ const SignupForm = ({
           onChange={handleChange}
           className="w-full p-2 border rounded"
         >
-          <option value="CASUAL">캐주얼</option>
-          <option value="FORMAL">포멀</option>
-          <option value="STREET">스트릿</option>
-          <option value="VINTAGE">빈티지</option>
+          <option value={Style.CASUAL}>캐주얼</option>
+          <option value={Style.STREET}>스트릿</option>
+          <option value={Style.HIPHOP}>힙합</option>
+          <option value={Style.CHIC}>시크</option>
+          <option value={Style.FORMAL}>포멀</option>
+          <option value={Style.VINTAGE}>빈티지</option>
         </select>
       </div>
 

@@ -1,3 +1,6 @@
+import { Gender } from "@/constants/Gender";
+import { Style } from "@/constants/Style";
+
 export type SignupRequest = {
   email: string;
   password: string;
@@ -27,9 +30,9 @@ export type SigninResponse = {
 export type GoogleSignupRequest = {
   username: string;
   birthDate: string;
-  gender: string;
+  gender: Gender;
   phoneNum: string;
-  preferredStyle: string; // enum 적용
+  preferredStyle: Style;
   height: number;
   weight: number;
   shoeSize: number;
