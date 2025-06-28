@@ -1,13 +1,12 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import CategoryHeader from "@/components/layout/CategoryHeader";
 
 const Header = () => {
   return (
     <>
       <div className="w-screen py-6 bg-black flex justify-center">
-        <div className="w-full max-w-[1440px] flex justify-between items-center">
+        <div className="w-full max-w-[1440px] flex justify-between items-center mx-10">
           {/* 로고 */}
           <Link href={"/"}>
             <Image src="/images/logo.png" width={40} height={40} alt="logo" />
@@ -48,7 +47,6 @@ const Header = () => {
           </div>
         </div>
       </div>
-      <CategoryHeader />
     </>
   );
 };
