@@ -6,7 +6,7 @@ import CategoryHeader from "@/components/layout/CategoryHeader";
 const Header = () => {
   return (
     <>
-      <div className="w-screen py-4 bg-black flex justify-center">
+      <div className="w-screen py-6 bg-black flex justify-center">
         <div className="w-full max-w-[1440px] flex justify-between items-center">
           {/* 로고 */}
           <Link href={"/"}>
@@ -31,7 +31,7 @@ const Header = () => {
           </div>
 
           {/* 옷장, 장바구니, 마이페이지 */}
-          <div className="flex items-center gap-3 text-white text-l font-light">
+          <div className="flex items-center gap-3 text-white text-[1rem] font-light">
             <div className="flex gap-2 items-center">
               <Link href={"/closet"}>옷장</Link>
               <div className="bg-white w-[1px] h-[16px]" />
