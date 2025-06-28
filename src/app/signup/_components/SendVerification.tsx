@@ -18,7 +18,9 @@ const SendVerification = ({
 }: SendVerificationProps) => {
   const [error, setError] = useState("");
 
-  const handleClick = async () => {
+  const handleClick = async (e: React.FormEvent) => {
+    e.preventDefault();
+
     if (!validateEmail(data.email)) {
       alert("이메일 형식이 올바르지 않습니다.");
       return;
@@ -43,7 +45,7 @@ const SendVerification = ({
       어서오세요!
       <br />
       가입하실 이메일을 입력해주세요.
-      <div className="my-10 flex flex-col gap-8">
+      <form onSubmit={handleClick} className="my-10 flex flex-col gap-8">
         <InputText
           placeholder="이메일"
           value={data.email}
@@ -54,8 +56,8 @@ const SendVerification = ({
           isValid={error == ""}
           errorMessage={error}
         />
-        <BlackButton text="인증번호 발송" handleClick={handleClick} />
-      </div>
+        <BlackButton text="인증번호 발송" />
+      </form>
     </div>
   );
 };

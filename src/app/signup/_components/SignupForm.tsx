@@ -2,6 +2,8 @@ import { useState } from "react";
 import { GoogleSignupRequest } from "@/types/auth";
 import { Gender } from "@/constants/Gender";
 import { Style } from "@/constants/Style";
+import InputText from "@/components/forms/InputText";
+import BlackButton from "@/components/common/BlackButton";
 
 const SignupForm = ({
   onSubmit,
@@ -17,6 +19,8 @@ const SignupForm = ({
     height: 0,
     weight: 0,
     shoeSize: 0,
+    avatarBaseImageUrl: "",
+    userBaseImageUrl: "string",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -49,25 +53,20 @@ const SignupForm = ({
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <label className="block text-sm font-medium mb-1">닉네임 *</label>
-        <input
+        <InputText
+          placeholder="닉네임"
           type="text"
-          name="username"
           value={formData.username}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-          required
+          handleChange={setFormData}
         />
       </div>
 
       <div>
         <label className="block text-sm font-medium mb-1">생년월일 *</label>
-        <input
+        <InputText
           type="date"
-          name="birthDate"
           value={formData.birthDate}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-          required
+          handleChange={setFormData}
         />
       </div>
 
@@ -77,7 +76,7 @@ const SignupForm = ({
           name="gender"
           value={formData.gender}
           onChange={handleChange}
-          className="w-full p-2 border rounded"
+          className="w-full bg-transparent text-slate-700 text-sm border border-slate-700 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
         >
           <option value={Gender.M}>남성</option>
           <option value={Gender.F}>여성</option>
@@ -86,14 +85,11 @@ const SignupForm = ({
 
       <div>
         <label className="block text-sm font-medium mb-1">전화번호 *</label>
-        <input
+        <InputText
+          placeholder="010-0000-0000"
           type="tel"
-          name="phoneNum"
           value={formData.phoneNum}
-          onChange={handleChange}
-          placeholder="010-1234-5678"
-          className="w-full p-2 border rounded"
-          required
+          handleChange={setFormData}
         />
       </div>
 
@@ -103,7 +99,7 @@ const SignupForm = ({
           name="preferredStyle"
           value={formData.preferredStyle}
           onChange={handleChange}
-          className="w-full p-2 border rounded"
+          className="w-full bg-transparent text-slate-700 text-sm border border-slate-700 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
         >
           <option value={Style.CASUAL}>캐주얼</option>
           <option value={Style.STREET}>스트릿</option>
@@ -149,18 +145,12 @@ const SignupForm = ({
             value={formData.shoeSize}
             onChange={handleChange}
             className="w-full p-2 border rounded"
-            min="200"
+            min="150"
             max="350"
           />
         </div>
       </div>
-
-      <button
-        type="submit"
-        className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:opacity-50"
-      >
-        회원가입
-      </button>
+      <BlackButton text="회원가입" />
     </form>
   );
 };
