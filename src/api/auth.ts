@@ -6,6 +6,7 @@ import type {
   SignupResponse,
   GoogleSignupRequest,
   GoogleResponse,
+  VerifyCodeRequest,
 } from "@/types/auth";
 import { setAccessToken } from "@/utils/auth";
 
@@ -32,13 +33,25 @@ export const signinWithGoogle = async (
   return response.data;
 };
 
+export const sendEmail = async (email: string) => {
+  const response = await axiosWithoutAuth().post("/api/auth/mail/send", {
+    email,
+  });
+  return response.data;
+};
+
+export const verifyCode = async (data: VerifyCodeRequest): Promise<boolean> => {
+  const response = await axiosWithoutAuth().post("/api/auth/mail/verify", data);
+  return response.data;
+};
+
 export const signup = async (data: SignupRequest): Promise<SignupResponse> => {
-  const response = await axiosWithoutAuth().post("/auth/signup", data);
+  const response = await axiosWithoutAuth().post("/api/auth/mail/signup", data);
   return response.data;
 };
 
 export const signin = async (data: SigninRequest): Promise<SigninResponse> => {
-  const response = await axiosWithoutAuth().post("/auth/signin", data);
+  const response = await axiosWithoutAuth().post("/api/auth/mail/signin", data);
   if (response.data?.accessToken) {
     setAccessToken(response.data.accessToken);
   }

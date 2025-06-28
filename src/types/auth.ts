@@ -1,14 +1,24 @@
 import { Gender } from "@/constants/Gender";
 import { Style } from "@/constants/Style";
 
+export type VerifyCodeRequest = {
+  email: string;
+  code: string;
+};
+
 export type SignupRequest = {
   email: string;
   password: string;
   username: string;
-  preferredStyle: string;
-  height: number; // cm
-  weight: number; // kg
-  age: number;
+  birthDate: string;
+  preferredStyle: Style;
+  height: number;
+  weight: number;
+  gender: Gender;
+  phoneNum: string;
+  shoeSize: number;
+  avatarBaseImageUrl: string;
+  userBaseImageUrl: string;
 };
 
 export type SignupResponse = {
@@ -22,8 +32,8 @@ export type SigninRequest = {
 };
 
 export type SigninResponse = {
-  username: string;
   email: string;
+  username: string;
   accessToken: string;
 };
 
@@ -36,6 +46,8 @@ export type GoogleSignupRequest = {
   height: number;
   weight: number;
   shoeSize: number;
+  avatarBaseImageUrl: string;
+  userBaseImageUrl: string;
 };
 
 export type GoogleResponse = {

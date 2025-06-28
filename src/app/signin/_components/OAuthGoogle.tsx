@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { useIdToken } from "@/hooks/useIdToken";
 
 const OAuthGoogle = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const { setIdToken } = useIdToken();
 
   const router = useRouter();
@@ -18,7 +17,6 @@ const OAuthGoogle = () => {
     }
 
     const idToken = credentialResponse.credential;
-    setIsLoading(true);
 
     try {
       // 먼저 로그인 시도
@@ -43,8 +41,6 @@ const OAuthGoogle = () => {
         console.error("로그인 오류:", error.response || error.message);
         alert("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
       }
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -66,11 +62,6 @@ const OAuthGoogle = () => {
         text="signup_with"
         shape="rectangular"
       />
-      {isLoading && (
-        <div className="text-center mt-4">
-          <p>처리 중...</p>
-        </div>
-      )}
     </div>
   );
 };
