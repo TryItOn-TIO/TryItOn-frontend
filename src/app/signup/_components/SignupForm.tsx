@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { GoogleSignupRequest } from "@/types/auth";
 import { Gender } from "@/constants/Gender";
@@ -7,10 +5,8 @@ import { Style } from "@/constants/Style";
 
 const SignupForm = ({
   onSubmit,
-  isLoading,
 }: {
   onSubmit: (data: GoogleSignupRequest) => void;
-  isLoading: boolean;
 }) => {
   const [formData, setFormData] = useState<GoogleSignupRequest>({
     username: "",
@@ -52,7 +48,7 @@ const SignupForm = ({
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block text-sm font-medium mb-1">이름 *</label>
+        <label className="block text-sm font-medium mb-1">닉네임 *</label>
         <input
           type="text"
           name="username"
@@ -161,10 +157,9 @@ const SignupForm = ({
 
       <button
         type="submit"
-        disabled={isLoading}
         className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:opacity-50"
       >
-        {isLoading ? "처리 중..." : "회원가입 완료"}
+        회원가입
       </button>
     </form>
   );

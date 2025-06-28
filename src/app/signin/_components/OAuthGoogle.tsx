@@ -1,14 +1,13 @@
-import { signinWithGoogle, signupWithGoogle } from "@/api/auth";
-import SignupForm from "@/app/signup/_components/SignupForm";
+import React, { useState } from "react";
+import { signinWithGoogle } from "@/api/auth";
 import { setAccessToken } from "@/utils/auth";
 import { GoogleLogin } from "@react-oauth/google";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { useIdToken } from "@/hooks/useIdToken";
 
 const OAuthGoogle = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [showSignupForm, setShowSignupForm] = useState(false);
-  const [pendingIdToken, setPendingIdToken] = useState<string | null>(null);
+  const { setIdToken } = useIdToken();
 
   const router = useRouter();
 
@@ -37,8 +36,9 @@ const OAuthGoogle = () => {
       // 404 에러 또는 회원가입이 필요한 경우
       if (error.response?.status === 404 || error.response?.needsSignup) {
         console.log("회원가입이 필요합니다");
-        setPendingIdToken(idToken);
-        setShowSignupForm(true);
+
+        setIdToken(idToken);
+        router.push("/signup/oauth");
       } else {
         console.error("로그인 오류:", error.response || error.message);
         alert("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
@@ -48,41 +48,10 @@ const OAuthGoogle = () => {
     }
   };
 
-  const handleSignup = async (data: any) => {
-    if (!pendingIdToken) return;
-
-    setIsLoading(true);
-    try {
-      const signupRes = await signupWithGoogle({
-        idToken: pendingIdToken,
-        ...data,
-      });
-
-      if (signupRes.accessToken) {
-        console.log("회원가입 및 로그인 완료:", signupRes);
-        router.push("/"); // 홈으로 리다이렉트
-      }
-    } catch (error: any) {
-      console.error("회원가입 오류:", error);
-      alert("회원가입 중 오류가 발생했습니다. 다시 시도해주세요.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const handleError = () => {
     console.log("Google 로그인 실패");
     alert("Google 로그인에 실패했습니다. 다시 시도해주세요.");
   };
-
-  if (showSignupForm) {
-    return (
-      <div className="max-w-md mx-auto p-6">
-        <h2 className="text-2xl font-bold mb-6">회원가입 정보 입력</h2>
-        <SignupForm onSubmit={handleSignup} isLoading={isLoading} />
-      </div>
-    );
-  }
 
   return (
     <div className="w-full flex justify-center my-8">

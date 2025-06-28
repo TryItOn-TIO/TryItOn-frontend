@@ -81,7 +81,7 @@ const Signup = () => {
     return (
       <div className="max-w-md mx-auto p-6">
         <h2 className="text-2xl font-bold mb-6">회원가입 정보 입력</h2>
-        <SignupForm onSubmit={handleSignup} isLoading={isLoading} />
+        <SignupForm onSubmit={handleSignup} />
       </div>
     );
   }
