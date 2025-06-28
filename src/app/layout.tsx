@@ -21,7 +21,11 @@ export default function RootLayout({
           clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
         >
           <Header />
-          {children}
+          <div className="flex justify-center">
+            <div className="flex justify-start w-full max-w-[1280px]">
+              {children}
+            </div>
+          </div>
         </GoogleOAuthProvider>
       </body>
     </html>
