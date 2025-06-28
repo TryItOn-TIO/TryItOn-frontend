@@ -36,12 +36,14 @@ const Header = () => {
             <div className="bg-white w-[1px] h-[16px]" />
             <Link href={"/cart"}>장바구니</Link>
           </div>
-          <Image
-            src="/images/common/mypage.svg"
-            width={25}
-            height={25}
-            alt="logo"
-          />
+          <Link href={"/mypage"}>
+            <Image
+              src="/images/common/mypage.svg"
+              width={25}
+              height={25}
+              alt="logo"
+            />
+          </Link>
         </div>
       </div>
       <CategoryHeader />
