@@ -18,7 +18,7 @@ const Header = () => {
             <input
               type="text"
               placeholder="검색어를 입력하세요"
-              className="w-full placeholder:text-slate-400 bg-[#D9D9D9] text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+              className="w-full placeholder:text-slate-400 bg-[#f2f2f2] text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
             />
             <button className="absolute right-3">
               <Image
