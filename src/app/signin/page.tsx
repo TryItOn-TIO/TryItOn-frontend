@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import InputText from "@/components/forms/InputText";
 import Button from "@/components/common/BlackButton";
 import Link from "next/link";
-import SigninWithGoogle from "./_components/OAuthGoogle";
+import SigninWithGoogle from "@/app/signin/_components/OAuthGoogle";
 import { signin } from "@/api/auth";
 import { useRouter } from "next/navigation";
 import { validateEmail, validatePassword } from "@/utils/validator";

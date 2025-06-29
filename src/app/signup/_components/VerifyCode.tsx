@@ -1,5 +1,6 @@
 import { verifyCode } from "@/api/auth";
 import BlackButton from "@/components/common/BlackButton";
+import { useRouter } from "next/navigation";
 import React, { Dispatch, SetStateAction, useRef, useState } from "react";
 
 type VerifyCodeProps = {
@@ -10,6 +11,7 @@ type VerifyCodeProps = {
 const VerifyCode = ({ setStep, email }: VerifyCodeProps) => {
   const [codeDigits, setCodeDigits] = useState<string[]>(Array(6).fill(""));
   const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
+  const router = useRouter();
 
   const handleChange = (index: number, value: string) => {
     if (!/^\d?$/.test(value)) return; // 숫자 한 글자만 허용
@@ -35,13 +37,18 @@ const VerifyCode = ({ setStep, email }: VerifyCodeProps) => {
       alert("6자리 인증번호를 입력해주세요.");
       return;
     }
+    try {
+      const response = await verifyCode({ code, email });
 
-    const response = await verifyCode({ code, email });
-
-    if (response) {
-      setStep((prev) => prev + 1);
-    } else {
-      alert("인증번호가 올바르지 않습니다.");
+      if (response) {
+        setStep((prev) => prev + 1);
+      } else {
+        alert("인증번호가 올바르지 않습니다.");
+      }
+    } catch (error) {
+      alert("다시 시도해 주세요.");
+      console.log("인증번호 확인 에러", error);
+      router.push("/signin");
     }
   };
 

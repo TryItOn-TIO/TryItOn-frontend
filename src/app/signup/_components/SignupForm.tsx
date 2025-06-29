@@ -7,19 +7,16 @@ import BlackButton from "@/components/common/BlackButton";
 type SignupFormProps<T extends SignupRequest> = {
   data: T;
   setData: React.Dispatch<React.SetStateAction<T>>;
-  setStep?: React.Dispatch<React.SetStateAction<number>>;
-  onSubmit?: (data: T) => void;
+  setStep: React.Dispatch<React.SetStateAction<number>>;
 };
 
 const SignupForm = <T extends SignupRequest>({
   data,
   setData,
   setStep,
-  onSubmit,
 }: SignupFormProps<T>) => {
   const handleSubmit = () => {
-    setStep && setStep((prev) => prev + 1);
-    onSubmit && onSubmit(data);
+    setStep((prev) => prev + 1);
   };
 
   const handleChange = (

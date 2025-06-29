@@ -3,6 +3,7 @@ import BlackButton from "@/components/common/BlackButton";
 import InputText from "@/components/forms/InputText";
 import { EmailSignupRequest } from "@/types/auth";
 import { validateEmail } from "@/utils/validator";
+import { useRouter } from "next/navigation";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 type SendVerificationProps = {
@@ -18,6 +19,8 @@ const SendVerification = ({
 }: SendVerificationProps) => {
   const [error, setError] = useState(false);
 
+  const router = useRouter();
+
   const handleClick = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -25,10 +28,17 @@ const SendVerification = ({
       alert("이메일 형식이 올바르지 않습니다.");
       return;
     }
-    await sendEmail(data.email);
 
-    if (confirm("인증번호가 발송되었습니다.")) {
-      setStep((prev) => prev + 1);
+    try {
+      await sendEmail(data.email);
+
+      if (confirm("인증번호가 발송되었습니다.")) {
+        setStep((prev) => prev + 1);
+      }
+    } catch (error) {
+      alert("이미 가입된 이메일입니다.");
+      console.log("인증번호 발송 에러", error);
+      router.push("/signin");
     }
   };
 
