@@ -1,20 +1,20 @@
 "use client";
 
 import React, { Dispatch, SetStateAction, useRef, useState } from "react";
-import { EmailSignupRequest } from "@/types/auth";
+import { EmailSignupRequest, SignupRequest } from "@/types/auth";
 import BlackButton from "@/components/common/BlackButton";
 
-type TryonImgUploaderProps = {
+type TryonImgUploaderProps<T extends SignupRequest> = {
   setStep: React.Dispatch<React.SetStateAction<number>>;
-  data: EmailSignupRequest;
-  setData: Dispatch<SetStateAction<EmailSignupRequest>>;
+  data: T;
+  setData: Dispatch<SetStateAction<T>>;
 };
 
-const TryonImgUploader = ({
+const TryonImgUploader = <T extends SignupRequest>({
   setStep,
   data,
   setData,
-}: TryonImgUploaderProps) => {
+}: TryonImgUploaderProps<T>) => {
   const [preview, setPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 

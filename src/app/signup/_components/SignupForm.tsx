@@ -57,7 +57,7 @@ const SignupForm = <T extends SignupRequest>({
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-1">성별</label>
+        <label className="block text-sm font-medium mb-1">성별 *</label>
         <select
           name="gender"
           value={data.gender}
@@ -82,7 +82,7 @@ const SignupForm = <T extends SignupRequest>({
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-1">선호 스타일</label>
+        <label className="block text-sm font-medium mb-1">선호 스타일 *</label>
         <select
           name="preferredStyle"
           value={data.preferredStyle}
@@ -100,7 +100,7 @@ const SignupForm = <T extends SignupRequest>({
 
       <div className="grid grid-cols-3 gap-4">
         <div>
-          <label className="block text-sm font-medium mb-1">키 (cm)</label>
+          <label className="block text-sm font-medium mb-1">키 (cm) *</label>
           <input
             type="number"
             name="height"
@@ -113,7 +113,9 @@ const SignupForm = <T extends SignupRequest>({
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">몸무게 (kg)</label>
+          <label className="block text-sm font-medium mb-1">
+            몸무게 (kg) *
+          </label>
           <input
             type="number"
             name="weight"
@@ -126,7 +128,9 @@ const SignupForm = <T extends SignupRequest>({
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">신발 사이즈</label>
+          <label className="block text-sm font-medium mb-1">
+            신발 사이즈 *
+          </label>
           <input
             type="number"
             name="shoeSize"

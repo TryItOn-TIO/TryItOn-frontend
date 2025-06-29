@@ -1,11 +1,11 @@
 import Image from "next/image";
 import React, { useState } from "react";
-import { EmailSignupRequest } from "@/types/auth";
+import { EmailSignupRequest, SignupRequest } from "@/types/auth";
 import BlackButton from "@/components/common/BlackButton";
 
-type AvatarImageSelectorProps = {
-  data: EmailSignupRequest;
-  setData: React.Dispatch<React.SetStateAction<EmailSignupRequest>>;
+type AvatarImageSelectorProps<T extends SignupRequest> = {
+  data: T;
+  setData: React.Dispatch<React.SetStateAction<T>>;
   onSubmit: () => void;
 };
 
@@ -18,11 +18,11 @@ const sampleAvatars = [
   "/images/signup/female_body_shape6.png",
 ];
 
-const AvatarImageSelector = ({
+const AvatarImageSelector = <T extends SignupRequest>({
   data,
   setData,
   onSubmit,
-}: AvatarImageSelectorProps) => {
+}: AvatarImageSelectorProps<T>) => {
   const [selected, setSelected] = useState<string>(
     data.avatarBaseImageUrl || ""
   );

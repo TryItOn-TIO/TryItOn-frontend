@@ -8,10 +8,14 @@ import { useIdToken } from "@/hooks/useIdToken";
 import { GoogleSignupRequest } from "@/types/auth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import TryonImgUploader from "../_components/TryonImgUploader";
+import AvatarImageSelector from "../_components/AvatarImageSelector";
 
 const Oauth = () => {
   const { idToken } = useIdToken();
   const router = useRouter();
+
+  const [step, setStep] = useState(1);
   const [data, setData] = useState<GoogleSignupRequest>({
     username: "",
     birthDate: "",
@@ -26,7 +30,7 @@ const Oauth = () => {
     idToken: "",
   });
 
-  const handleSignup = async (data: GoogleSignupRequest) => {
+  const handleSubmit = async () => {
     if (!idToken) return;
 
     try {
@@ -49,9 +53,21 @@ const Oauth = () => {
 
   return (
     <div className="w-screen min-h-screen">
-      <div className="max-w-md mx-auto p-6">
+      <div className="w-[40rem] mx-auto p-6">
         <h2 className="text-2xl font-bold mb-6">회원가입 정보 입력</h2>
-        <SignupForm data={data} setData={setData} onSubmit={handleSignup} />
+        {step == 1 && (
+          <SignupForm setStep={setStep} data={data} setData={setData} />
+        )}
+        {step == 2 && (
+          <TryonImgUploader setStep={setStep} data={data} setData={setData} />
+        )}
+        {step == 3 && (
+          <AvatarImageSelector
+            data={data}
+            setData={setData}
+            onSubmit={handleSubmit}
+          />
+        )}
       </div>
     </div>
   );

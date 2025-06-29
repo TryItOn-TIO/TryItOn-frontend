@@ -49,27 +49,27 @@ const Signup = () => {
     <div className="w-screen">
       <div className="w-[40rem] mx-auto p-6">
         <h2 className="text-2xl font-bold my-8">회원가입</h2>
-        {step === 1 && (
+        {step == 1 && (
           <SendVerification setStep={setStep} data={data} setData={setData} />
         )}
-        {step === 2 && <VerifyCode setStep={setStep} email={data.email} />}
-        {step === 3 && (
+        {step == 2 && <VerifyCode setStep={setStep} email={data.email} />}
+        {step == 3 && (
           <PasswordForm setStep={setStep} data={data} setData={setData} />
         )}
-        {step === 4 && (
+        {step == 4 && (
           <SignupForm setStep={setStep} data={data} setData={setData} />
         )}
-        {step === 5 && (
+        {step == 5 && (
           <TryonImgUploader setStep={setStep} data={data} setData={setData} />
         )}
-        {step === 6 && (
+        {step == 6 && (
           <AvatarImageSelector
             data={data}
             setData={setData}
             onSubmit={handleSubmit}
           />
         )}
-        {step === 7 && <Success />}
+        {step == 7 && <Success />}
       </div>
     </div>
   );
