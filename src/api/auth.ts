@@ -56,7 +56,7 @@ export const signup = async (
 export const signin = async (
   data: EmailSigninRequest
 ): Promise<SigninResponse> => {
-  const response = await axiosWithoutAuth().post("/api/auth/mail/signin", data);
+  const response = await axiosWithoutAuth().post("/api/auth/mail/login", data);
   if (response.data?.accessToken) {
     setAccessToken(response.data.accessToken);
   }
