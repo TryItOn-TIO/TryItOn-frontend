@@ -9,9 +9,14 @@ const CategoryHeader = () => {
   const pathname = usePathname();
   const currentId = Number(pathname.split("/").pop());
 
+  // 카테고리 조건부 렌더링
+  if (pathname == "/signin" || pathname == "/signup") {
+    return;
+  }
+
   return (
     <div className="w-screen py-4 bg-black flex justify-center">
-      <div className="w-full max-w-[1440px] bg-black text-white font-light text-[0.9rem] flex items-center gap-5">
+      <div className="w-full max-w-[1440px] bg-black text-white font-light text-[0.9rem] flex items-center gap-5 mx-10">
         {Object.values(CATEGORY)
           .filter((v) => typeof v === "number")
           .map((categoryId) => (

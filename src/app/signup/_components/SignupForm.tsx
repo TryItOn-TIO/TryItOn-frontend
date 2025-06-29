@@ -1,48 +1,32 @@
-"use client";
+import { SignupRequest } from "@/types/auth";
+import { Gender } from "@/constants/Gender";
+import { Style } from "@/constants/Style";
+import InputText from "@/components/forms/InputText";
+import BlackButton from "@/components/common/BlackButton";
 
-import { useState } from "react";
-import { GoogleSignupRequest } from "@/types/auth";
+type SignupFormProps<T extends SignupRequest> = {
+  data: T;
+  setData: React.Dispatch<React.SetStateAction<T>>;
+  setStep?: React.Dispatch<React.SetStateAction<number>>;
+  onSubmit?: (data: T) => void;
+};
 
-const SignupForm = ({
+const SignupForm = <T extends SignupRequest>({
+  data,
+  setData,
+  setStep,
   onSubmit,
-  isLoading,
-}: {
-  onSubmit: (data: GoogleSignupRequest) => void;
-  isLoading: boolean;
-}) => {
-  const [formData, setFormData] = useState<GoogleSignupRequest>({
-    username: "",
-    birthDate: "",
-    gender: "M",
-    phoneNum: "",
-    preferredStyle: "CASUAL",
-    height: 0,
-    weight: 0,
-    shoeSize: 0,
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // 필수 필드 검증
-    if (!formData.username || !formData.birthDate || !formData.phoneNum) {
-      alert("필수 정보를 모두 입력해주세요.");
-      return;
-    }
-
-    onSubmit({
-      ...formData,
-      height: formData.height ? formData.height : 0,
-      weight: formData.weight ? formData.weight : 0,
-      shoeSize: formData.shoeSize ? formData.shoeSize : 0,
-    });
+}: SignupFormProps<T>) => {
+  const handleSubmit = () => {
+    setStep && setStep((prev) => prev + 1);
+    onSubmit && onSubmit(data);
   };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    setFormData({
-      ...formData,
+    setData({
+      ...data,
       [e.target.name]: e.target.value,
     });
   };
@@ -50,77 +34,77 @@ const SignupForm = ({
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block text-sm font-medium mb-1">이름 *</label>
-        <input
+        <label className="block text-sm font-medium mb-1">닉네임 *</label>
+        <InputText
+          placeholder="닉네임"
           type="text"
-          name="username"
-          value={formData.username}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-          required
+          value={data.username}
+          handleChange={(value) =>
+            setData((prev) => ({ ...prev, username: value }))
+          }
         />
       </div>
 
       <div>
         <label className="block text-sm font-medium mb-1">생년월일 *</label>
-        <input
+        <InputText
           type="date"
-          name="birthDate"
-          value={formData.birthDate}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-          required
+          value={data.birthDate}
+          handleChange={(value) =>
+            setData((prev) => ({ ...prev, birthDate: value }))
+          }
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-1">성별</label>
+        <label className="block text-sm font-medium mb-1">성별 *</label>
         <select
           name="gender"
-          value={formData.gender}
+          value={data.gender}
           onChange={handleChange}
-          className="w-full p-2 border rounded"
+          className="w-full bg-transparent text-slate-700 text-sm border border-slate-700 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
         >
-          <option value="M">남성</option>
-          <option value="F">여성</option>
+          <option value={Gender.M}>남성</option>
+          <option value={Gender.F}>여성</option>
         </select>
       </div>
 
       <div>
         <label className="block text-sm font-medium mb-1">전화번호 *</label>
-        <input
+        <InputText
+          placeholder="010-0000-0000"
           type="tel"
-          name="phoneNum"
-          value={formData.phoneNum}
-          onChange={handleChange}
-          placeholder="01012345678"
-          className="w-full p-2 border rounded"
-          required
+          value={data.phoneNum}
+          handleChange={(value) =>
+            setData((prev) => ({ ...prev, phoneNum: value }))
+          }
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-1">선호 스타일</label>
+        <label className="block text-sm font-medium mb-1">선호 스타일 *</label>
         <select
           name="preferredStyle"
-          value={formData.preferredStyle}
+          value={data.preferredStyle}
           onChange={handleChange}
-          className="w-full p-2 border rounded"
+          className="w-full bg-transparent text-slate-700 text-sm border border-slate-700 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
         >
-          <option value="CASUAL">캐주얼</option>
-          <option value="FORMAL">포멀</option>
-          <option value="STREET">스트릿</option>
-          <option value="VINTAGE">빈티지</option>
+          <option value={Style.CASUAL}>캐주얼</option>
+          <option value={Style.STREET}>스트릿</option>
+          <option value={Style.HIPHOP}>힙합</option>
+          <option value={Style.CHIC}>시크</option>
+          <option value={Style.FORMAL}>포멀</option>
+          <option value={Style.VINTAGE}>빈티지</option>
         </select>
       </div>
 
       <div className="grid grid-cols-3 gap-4">
         <div>
-          <label className="block text-sm font-medium mb-1">키 (cm)</label>
+          <label className="block text-sm font-medium mb-1">키 (cm) *</label>
           <input
             type="number"
             name="height"
-            value={formData.height}
+            value={data.height}
             onChange={handleChange}
             className="w-full p-2 border rounded"
             min="100"
@@ -129,11 +113,13 @@ const SignupForm = ({
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">몸무게 (kg)</label>
+          <label className="block text-sm font-medium mb-1">
+            몸무게 (kg) *
+          </label>
           <input
             type="number"
             name="weight"
-            value={formData.weight}
+            value={data.weight}
             onChange={handleChange}
             className="w-full p-2 border rounded"
             min="30"
@@ -142,26 +128,23 @@ const SignupForm = ({
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">신발 사이즈</label>
+          <label className="block text-sm font-medium mb-1">
+            신발 사이즈 *
+          </label>
           <input
             type="number"
             name="shoeSize"
-            value={formData.shoeSize}
+            value={data.shoeSize}
             onChange={handleChange}
             className="w-full p-2 border rounded"
-            min="200"
+            min="150"
             max="350"
           />
         </div>
       </div>
-
-      <button
-        type="submit"
-        disabled={isLoading}
-        className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:opacity-50"
-      >
-        {isLoading ? "처리 중..." : "회원가입 완료"}
-      </button>
+      <div className="w-full mt-10">
+        <BlackButton text="다음" />
+      </div>
     </form>
   );
 };
