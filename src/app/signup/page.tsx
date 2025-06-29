@@ -7,11 +7,11 @@ import Success from "@/app/signup/_components/Success";
 import { EmailSignupRequest } from "@/types/auth";
 import { Gender } from "@/constants/Gender";
 import { Style } from "@/constants/Style";
-import TryonImgUploader from "./_components/TryonImgUploader";
+import TryonImgUploader from "@/app/signup/_components/TryonImgUploader";
 import { signup } from "@/api/auth";
-import PasswordForm from "./_components/PasswordForm";
-import SignupForm from "./_components/SignupForm";
-import AvatarImageSelector from "./_components/AvatarImageSelector";
+import PasswordForm from "@/app/signup/_components/PasswordForm";
+import SignupForm from "@/app/signup/_components/SignupForm";
+import AvatarImageSelector from "@/app/signup/_components/AvatarImageSelector";
 import { useRouter } from "next/navigation";
 
 const Signup = () => {
