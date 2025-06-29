@@ -8,8 +8,8 @@ import { useIdToken } from "@/hooks/useIdToken";
 import { GoogleSignupRequest } from "@/types/auth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import TryonImgUploader from "../_components/TryonImgUploader";
-import AvatarImageSelector from "../_components/AvatarImageSelector";
+import TryonImgUploader from "@/app/signup/_components/TryonImgUploader";
+import AvatarImageSelector from "@/app/signup/_components/AvatarImageSelector";
 
 const Oauth = () => {
   const { idToken } = useIdToken();
@@ -45,7 +45,7 @@ const Oauth = () => {
         console.log("회원가입 및 로그인 완료:", response);
         router.push("/"); // 홈으로 리다이렉트
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error("회원가입 오류:", error);
       alert("회원가입 중 오류가 발생했습니다. 다시 시도해주세요.");
     }

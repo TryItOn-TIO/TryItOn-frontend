@@ -1,7 +1,7 @@
 "use client";
 
 import React, { Dispatch, SetStateAction, useRef, useState } from "react";
-import { EmailSignupRequest, SignupRequest } from "@/types/auth";
+import { SignupRequest } from "@/types/auth";
 import BlackButton from "@/components/common/BlackButton";
 
 type TryonImgUploaderProps<T extends SignupRequest> = {

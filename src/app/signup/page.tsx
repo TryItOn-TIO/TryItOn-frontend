@@ -12,6 +12,7 @@ import { signup } from "@/api/auth";
 import PasswordForm from "./_components/PasswordForm";
 import SignupForm from "./_components/SignupForm";
 import AvatarImageSelector from "./_components/AvatarImageSelector";
+import { useRouter } from "next/navigation";
 
 const Signup = () => {
   const [step, setStep] = useState(1);
@@ -30,6 +31,8 @@ const Signup = () => {
     userBaseImageUrl: "",
   });
 
+  const router = useRouter();
+
   const handleSubmit = async () => {
     // 필수 필드 검증
     console.log(data);
@@ -38,10 +41,16 @@ const Signup = () => {
       alert("필수 정보를 모두 입력해주세요.");
       return;
     }
-    const response = await signup(data);
+    try {
+      const response = await signup(data);
 
-    if (response) {
-      setStep((prev) => prev + 1);
+      if (response) {
+        setStep((prev) => prev + 1);
+      }
+    } catch (error) {
+      alert("에러가 발생했습니다. 다시 시도해 주세요.");
+      console.log("회원가입 에러", error);
+      router.push("/signin");
     }
   };
 
