@@ -39,7 +39,7 @@ const VerifyCode = ({ setStep, email }: VerifyCodeProps) => {
     const response = await verifyCode({ code, email });
 
     if (response) {
-      setStep(3);
+      setStep((prev) => prev + 1);
     } else {
       alert("인증번호가 올바르지 않습니다.");
     }

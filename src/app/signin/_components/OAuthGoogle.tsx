@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { signinWithGoogle } from "@/api/auth";
 import { setAccessToken } from "@/utils/auth";
 import { GoogleLogin } from "@react-oauth/google";
@@ -20,7 +19,7 @@ const OAuthGoogle = () => {
 
     try {
       // 먼저 로그인 시도
-      const loginRes = await signinWithGoogle(idToken);
+      const loginRes = await signinWithGoogle({ idToken });
 
       // 로그인 성공
       if (loginRes.accessToken) {

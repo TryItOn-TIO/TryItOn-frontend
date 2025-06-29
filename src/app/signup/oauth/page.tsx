@@ -2,24 +2,43 @@
 
 import { signupWithGoogle } from "@/api/auth";
 import SignupForm from "@/app/signup/_components/SignupForm";
+import { Gender } from "@/constants/Gender";
+import { Style } from "@/constants/Style";
 import { useIdToken } from "@/hooks/useIdToken";
+import { GoogleSignupRequest } from "@/types/auth";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const Oauth = () => {
   const { idToken } = useIdToken();
   const router = useRouter();
+  const [data, setData] = useState<GoogleSignupRequest>({
+    username: "",
+    birthDate: "",
+    preferredStyle: Style.CASUAL,
+    height: 0,
+    weight: 0,
+    gender: Gender.F,
+    phoneNum: "",
+    shoeSize: 0,
+    avatarBaseImageUrl: "",
+    userBaseImageUrl: "",
+    idToken: "",
+  });
 
-  const handleSignup = async (data: any) => {
+  const handleSignup = async (data: GoogleSignupRequest) => {
     if (!idToken) return;
 
     try {
-      const signupRes = await signupWithGoogle({
-        idToken: idToken,
+      const submitData = {
         ...data,
-      });
+        idToken,
+      };
 
-      if (signupRes.accessToken) {
-        console.log("회원가입 및 로그인 완료:", signupRes);
+      const response = await signupWithGoogle(submitData);
+
+      if (response.accessToken) {
+        console.log("회원가입 및 로그인 완료:", response);
         router.push("/"); // 홈으로 리다이렉트
       }
     } catch (error: any) {
@@ -32,7 +51,7 @@ const Oauth = () => {
     <div className="w-screen min-h-screen">
       <div className="max-w-md mx-auto p-6">
         <h2 className="text-2xl font-bold mb-6">회원가입 정보 입력</h2>
-        <SignupForm onSubmit={handleSignup} />
+        <SignupForm data={data} setData={setData} onSubmit={handleSignup} />
       </div>
     </div>
   );

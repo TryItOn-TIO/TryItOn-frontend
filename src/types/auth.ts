@@ -6,9 +6,8 @@ export type VerifyCodeRequest = {
   code: string;
 };
 
+// 회원가입 요청 공통 필드
 export type SignupRequest = {
-  email: string;
-  password: string;
   username: string;
   birthDate: string;
   preferredStyle: Style;
@@ -21,37 +20,37 @@ export type SignupRequest = {
   userBaseImageUrl: string;
 };
 
-export type SignupResponse = {
-  email: string;
-  username: string;
-};
-
-export type SigninRequest = {
-  email: string;
-  password: string;
-};
-
+// 로그인 응답 공통 필드
 export type SigninResponse = {
   email: string;
   username: string;
   accessToken: string;
 };
 
-export type GoogleSignupRequest = {
-  username: string;
-  birthDate: string;
-  gender: Gender;
-  phoneNum: string;
-  preferredStyle: Style;
-  height: number;
-  weight: number;
-  shoeSize: number;
-  avatarBaseImageUrl: string;
-  userBaseImageUrl: string;
+// 이메일 인증 회원가입 요청
+export type EmailSignupRequest = SignupRequest & {
+  email: string;
+  password: string;
 };
 
-export type GoogleResponse = {
-  username: string;
+// 이메일 인증 회원가입 응답
+export type EmailSignupResponse = {
   email: string;
-  accessToken: string;
+  username: string;
+};
+
+// 이메일 인증 로그인 요청
+export type EmailSigninRequest = {
+  email: string;
+  password: string;
+};
+
+// OAuth Google 로그인 요청
+export type GoogleSigninRequest = {
+  idToken: string;
+};
+
+// OAuth Google 회원가입 요청
+export type GoogleSignupRequest = SignupRequest & {
+  idToken: string;
 };

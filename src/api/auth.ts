@@ -1,18 +1,18 @@
 import { axiosWithoutAuth } from "@/api/index";
 import type {
-  SigninRequest,
   SigninResponse,
-  SignupRequest,
-  SignupResponse,
   GoogleSignupRequest,
-  GoogleResponse,
+  GoogleSigninRequest,
+  EmailSigninRequest,
   VerifyCodeRequest,
+  EmailSignupResponse,
+  EmailSignupRequest,
 } from "@/types/auth";
 import { setAccessToken } from "@/utils/auth";
 
 export const signupWithGoogle = async (
   data: GoogleSignupRequest
-): Promise<GoogleResponse> => {
+): Promise<SigninResponse> => {
   const response = await axiosWithoutAuth().post(
     "/api/auth/google/signup",
     data
@@ -23,11 +23,12 @@ export const signupWithGoogle = async (
 };
 
 export const signinWithGoogle = async (
-  idToken: string
-): Promise<GoogleResponse> => {
-  const response = await axiosWithoutAuth().post("/api/auth/google/login", {
-    idToken,
-  });
+  data: GoogleSigninRequest
+): Promise<SigninResponse> => {
+  const response = await axiosWithoutAuth().post(
+    "/api/auth/google/login",
+    data
+  );
   console.log(response);
 
   return response.data;
@@ -45,12 +46,16 @@ export const verifyCode = async (data: VerifyCodeRequest): Promise<boolean> => {
   return response.data;
 };
 
-export const signup = async (data: SignupRequest): Promise<SignupResponse> => {
+export const signup = async (
+  data: EmailSignupRequest
+): Promise<EmailSignupResponse> => {
   const response = await axiosWithoutAuth().post("/api/auth/mail/signup", data);
   return response.data;
 };
 
-export const signin = async (data: SigninRequest): Promise<SigninResponse> => {
+export const signin = async (
+  data: EmailSigninRequest
+): Promise<SigninResponse> => {
   const response = await axiosWithoutAuth().post("/api/auth/mail/signin", data);
   if (response.data?.accessToken) {
     setAccessToken(response.data.accessToken);

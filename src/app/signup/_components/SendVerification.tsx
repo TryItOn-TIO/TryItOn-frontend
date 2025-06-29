@@ -1,14 +1,14 @@
 import { sendEmail } from "@/api/auth";
 import BlackButton from "@/components/common/BlackButton";
 import InputText from "@/components/forms/InputText";
-import { SignupRequest } from "@/types/auth";
+import { EmailSignupRequest } from "@/types/auth";
 import { validateEmail } from "@/utils/validator";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 type SendVerificationProps = {
   setStep: Dispatch<SetStateAction<number>>;
-  data: SignupRequest;
-  setData: Dispatch<SetStateAction<SignupRequest>>;
+  data: EmailSignupRequest;
+  setData: Dispatch<SetStateAction<EmailSignupRequest>>;
 };
 
 const SendVerification = ({
@@ -16,27 +16,27 @@ const SendVerification = ({
   data,
   setData,
 }: SendVerificationProps) => {
-  const [error, setError] = useState("");
+  const [error, setError] = useState(false);
 
   const handleClick = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateEmail(data.email)) {
+    if (error) {
       alert("이메일 형식이 올바르지 않습니다.");
       return;
     }
     await sendEmail(data.email);
 
     if (confirm("인증번호가 발송되었습니다.")) {
-      setStep(2);
+      setStep((prev) => prev + 1);
     }
   };
 
   useEffect(() => {
     if (!validateEmail(data.email)) {
-      setError("이메일 형식이 올바르지 않습니다.");
+      setError(true);
     } else {
-      setError("");
+      setError(false);
     }
   }, [data.email]);
 
@@ -53,8 +53,8 @@ const SendVerification = ({
             setData((prev) => ({ ...prev, email: value }))
           }
           type="email"
-          isValid={error == ""}
-          errorMessage={error}
+          isInvalid={error}
+          errorMessage="이메일 형식이 올바르지 않습니다."
         />
         <BlackButton text="인증번호 발송" />
       </form>

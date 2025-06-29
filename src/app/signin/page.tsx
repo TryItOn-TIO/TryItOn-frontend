@@ -30,7 +30,9 @@ const Signin = () => {
           placeholder="비밀번호"
           type="password"
         />
-        <Button text="로그인" handleClick={handleSubmit} />
+        <div className="w-full mt-6">
+          <Button text="로그인" handleClick={handleSubmit} />
+        </div>
       </div>
       <div className="w-full flex gap-4 justify-end my-3">
         <Link href={"/signup"} className="text-sm text-gray-400 cursor-pointer">
