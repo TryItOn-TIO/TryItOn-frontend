@@ -1,5 +1,6 @@
 "use client";
 
+import { addWishlist, removeWishlist } from "@/api/wishlist";
 import BlackButton from "@/components/common/BlackButton";
 import Tag from "@/components/common/Tag";
 import WhiteButton from "@/components/common/WhiteButton";
@@ -48,16 +49,26 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
     return data.sale * orderData.quantity;
   };
 
-  const handleAddwishlist = () => {
-    confirm("찜 목록에 추가되었습니다.");
-    // 리프레시
-    window.location.reload();
+  const handleAddwishlist = async () => {
+    try {
+      await addWishlist({ productId: Number(data.id) });
+      confirm("찜 목록에 추가되었습니다.");
+      // 리프레시
+      window.location.reload();
+    } catch (error) {
+      console.error("찜 추가 중 에러 발생", error);
+    }
   };
 
-  const handleDeletewishlist = () => {
-    confirm("찜 목록에서 삭제되었습니다.");
-    // 리프레시
-    window.location.reload();
+  const handleDeletewishlist = async () => {
+    try {
+      await removeWishlist({ productId: Number(data.id) });
+      confirm("찜 목록에서 삭제되었습니다.");
+      // 리프레시
+      window.location.reload();
+    } catch (error) {
+      console.error("찜 삭제 중 에러 발생", error);
+    }
   };
 
   const handleOrder = () => {
