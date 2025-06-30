@@ -3,7 +3,7 @@ import React, { Dispatch, SetStateAction } from "react";
 type InputTextProps = {
   placeholder?: string;
   value: string;
-  handleChange: (value: string) => void;
+  handleChange: Dispatch<SetStateAction<any>>;
   type: string;
   isInvalid?: boolean;
   errorMessage?: string;
