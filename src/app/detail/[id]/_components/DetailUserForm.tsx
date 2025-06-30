@@ -75,9 +75,11 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
   return (
     <div className="text-black p-6 pb-[8rem] space-y-4">
       {/* 브랜드 및 제품명 */}
-      <div className="space-y-1">
-        <div className="text-sm text-gray-500">{data.brand}</div>
-        <div className="text-xl font-semibold">{data.productName}</div>
+      <div className="flex justify-between items-center">
+        <div className="space-y-1">
+          <div className="text-sm text-gray-500">{data.brand}</div>
+          <div className="text-xl font-semibold">{data.productName}</div>
+        </div>
       </div>
 
       {/* 가격 정보 */}
@@ -177,6 +179,13 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
           <Tag text="더블니" />
           <Tag text="남성바지" />
         </div>
+      </div>
+
+      {/* 사이즈 추천 */}
+      <div className="mt-10">
+        <label className="block text-sm font-medium mb-1 text-neutral-00">
+          {data.content}
+        </label>
       </div>
 
       {/* 버튼 영역 */}

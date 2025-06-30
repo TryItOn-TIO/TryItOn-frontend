@@ -62,7 +62,7 @@ const DetailRecommand = ({ data }: DetailRecommandProps) => {
   return (
     <div className="bg-gray-50 py-6 px-4 rounded-xl mt-8">
       <div className="text-base text-neutral-600 mb-4 p-2">
-        같이 볼 만한 상품
+        같이 볼만한 상품
       </div>
 
       <Swiper
