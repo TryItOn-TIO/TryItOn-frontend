@@ -31,7 +31,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <Image
             src={
               liked
-                ? "/images/common/heart_filled.svg"
+                ? "/images/common/red_heart.svg"
                 : "/images/common/heart.svg"
             }
             width={26}
