@@ -4,6 +4,7 @@ import React, { Dispatch, SetStateAction, useRef, useState } from "react";
 import { SignupRequest } from "@/types/auth";
 import BlackButton from "@/components/common/BlackButton";
 import Image from "next/image";
+import { generatePresignedUrl, uploadFileToS3 } from "@/api/files";
 
 type TryonImgUploaderProps<T extends SignupRequest> = {
   setStep: React.Dispatch<React.SetStateAction<number>>;
@@ -16,22 +17,36 @@ const TryonImgUploader = <T extends SignupRequest>({
   data,
   setData,
 }: TryonImgUploaderProps<T>) => {
-  const [preview, setPreview] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>("/images/ex10.png");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onloadend = () => {
-      setPreview("/images/ex10.png");
-      // TODO: S3 업로드 후, 링크로 전송해야 함
-      setData((prev) => ({
-        ...prev,
-        userBaseImageUrl:
-          "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8JUVBJUIwJTk1JUVDJTk1JTg0JUVDJUE3JTgwJUVCJTkzJUE0fGVufDB8fDB8fHww",
-      }));
+    reader.onloadend = async () => {
+      setPreview(reader.result as string);
+      
+      try {
+        // S3 업로드 실행
+        console.log('사진을 업로드합니다');
+        const presignedUrl = await generatePresignedUrl(file.name);
+        await uploadFileToS3(presignedUrl, file);
+        const fileUrl = presignedUrl.split('?')[0];
+        
+        setData((prev) => ({
+          ...prev,
+          userBaseImageUrl: fileUrl,
+        }));
+        
+        console.log('업로드 성공:', fileUrl);
+      } catch (error) {
+        console.error('업로드 실패:', error);
+        alert('업로드에 실패했습니다. 다시 시도해주세요.');
+        // 실패 시 미리보기를 디폴트 이미지로 되돌림
+        setPreview("/images/ex10.png");
+      }
     };
     reader.readAsDataURL(file);
   };
