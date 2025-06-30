@@ -4,6 +4,11 @@ on:
   push:
     branches: [ "main", "develop", "feat/cicd" ]
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        required: false
+        default: 'production'
 
 permissions:
   contents: read
