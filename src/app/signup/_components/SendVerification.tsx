@@ -21,6 +21,10 @@ const SendVerification = ({
 
   const router = useRouter();
 
+  const handelChange = (value: string) => {
+    setData((prev) => ({ ...prev, email: value }));
+  };
+
   const handleClick = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -59,9 +63,7 @@ const SendVerification = ({
         <InputText
           placeholder="이메일"
           value={data.email}
-          handleChange={(value: string) =>
-            setData((prev) => ({ ...prev, email: value }))
-          }
+          handleChange={handelChange}
           type="email"
           isInvalid={error}
           errorMessage="이메일 형식이 올바르지 않습니다."
