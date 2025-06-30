@@ -1,9 +1,7 @@
-import React, { Dispatch, SetStateAction } from "react";
-
 type InputTextProps = {
   placeholder?: string;
   value: string;
-  handleChange: Dispatch<SetStateAction<any>>;
+  handleChange: (value: string) => void;
   type: string;
   isInvalid?: boolean;
   errorMessage?: string;

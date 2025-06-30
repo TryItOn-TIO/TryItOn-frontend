@@ -3,6 +3,7 @@
 import React, { Dispatch, SetStateAction, useRef, useState } from "react";
 import { SignupRequest } from "@/types/auth";
 import BlackButton from "@/components/common/BlackButton";
+import Image from "next/image";
 
 type TryonImgUploaderProps<T extends SignupRequest> = {
   setStep: React.Dispatch<React.SetStateAction<number>>;
@@ -24,8 +25,7 @@ const TryonImgUploader = <T extends SignupRequest>({
 
     const reader = new FileReader();
     reader.onloadend = () => {
-      const base64 = reader.result as string;
-      setPreview(base64);
+      setPreview("/images/ex10.png");
       // TODO: S3 업로드 후, 링크로 전송해야 함
       setData((prev) => ({
         ...prev,
@@ -53,8 +53,10 @@ const TryonImgUploader = <T extends SignupRequest>({
       {/* 미리보기 사진 및 사진 선택 버튼 */}
       <div className="w-full flex flex-col items-center gap-4">
         {preview ? (
-          <img
+          <Image
             src={preview}
+            width={300}
+            height={400}
             alt="전신 사진 미리보기"
             className="w-48 h-auto rounded-md shadow-md"
           />
