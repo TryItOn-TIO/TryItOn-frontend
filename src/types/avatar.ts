@@ -1,3 +1,8 @@
+export type AvatarProductInfo = {
+  avatarImg: string;
+  productNames: string[];
+};
+
 export type AvatarRequest = {
   productId: number;
 };
