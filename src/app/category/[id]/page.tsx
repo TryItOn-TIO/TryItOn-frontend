@@ -15,7 +15,7 @@ type Params = {
   params: Promise<{ id: string }>;
 };
 
-const CategoCategoryry = async({ params }: Params) => {
+const Category = async({ params }: Params) => {
     const {id} = await params;
   return (
     <div>
