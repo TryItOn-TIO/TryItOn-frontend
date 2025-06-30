@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ProductResponse } from "@/types/product";
+import { addWishlist, removeWishlist } from "@/api/wishlist";
 
 type ProductCardProps = {
   product: ProductResponse;
@@ -12,6 +13,28 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
   const formattedPrice = new Intl.NumberFormat("ko-KR").format(price);
   const formattedSale = new Intl.NumberFormat("ko-KR").format(sale);
+
+  const handleAddwishlist = async () => {
+    try {
+      await addWishlist({ productId: Number(product.id) });
+      confirm("찜 목록에 추가되었습니다.");
+      // 리프레시
+      window.location.reload();
+    } catch (error) {
+      console.error("찜 추가 중 에러 발생", error);
+    }
+  };
+
+  const handleDeletewishlist = async () => {
+    try {
+      await removeWishlist({ productId: Number(product.id) });
+      confirm("찜 목록에서 삭제되었습니다.");
+      // 리프레시
+      window.location.reload();
+    } catch (error) {
+      console.error("찜 삭제 중 에러 발생", error);
+    }
+  };
 
   return (
     <div className="w-[240px] bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden relative">
@@ -37,6 +60,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             width={26}
             height={26}
             alt="찜하기"
+            onClick={liked ? handleDeletewishlist : handleAddwishlist}
           />
         </div>
 
