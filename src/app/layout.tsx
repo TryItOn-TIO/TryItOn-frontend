@@ -24,9 +24,13 @@ export default function RootLayout({
         <GoogleOAuthProvider
           clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
         >
-          <Header />
-          <CategoryHeader />
-          <div className="flex justify-center">
+          {/* header 상단에 고정 */}
+          <div className="fixed top-0 left-0 z-10">
+            <Header />
+            <CategoryHeader />
+          </div>
+          {/* layout을 제외한 컨텐츠 - header size: 15vh */}
+          <div className="flex justify-center mt-[15vh]">
             <div className="flex justify-start w-full max-w-[1280px]">
               {children}
             </div>

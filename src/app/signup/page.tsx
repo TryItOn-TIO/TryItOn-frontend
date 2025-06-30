@@ -55,7 +55,7 @@ const Signup = () => {
   };
 
   return (
-    <div className="w-screen">
+    <div className="w-screen mb-10">
       <div className="w-[40rem] mx-auto p-6">
         <h2 className="text-2xl font-bold my-8">회원가입</h2>
         {step == 1 && (

@@ -5,7 +5,7 @@ import Link from "next/link";
 const Header = () => {
   return (
     <>
-      <div className="w-screen py-6 bg-black flex justify-center">
+      <div className="w-screen h-[10vh] py-6 bg-black flex justify-center">
         <div className="w-full max-w-[1440px] flex justify-between items-center mx-10">
           {/* 로고 */}
           <Link href={"/"}>
