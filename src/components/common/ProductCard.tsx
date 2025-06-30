@@ -14,9 +14,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const formattedSale = new Intl.NumberFormat("ko-KR").format(sale);
 
   return (
-    <Link href={`/detail/${id}`}>
-      <div className="w-[240px] bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden relative">
-        {/* 이미지 */}
+    <div className="w-[240px] bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden relative">
+      {/* 이미지 */}
+      <Link href={`/detail/${id}`}>
         <div className="w-full h-[240px] bg-gray-100 relative">
           <Image
             src={img1}
@@ -24,33 +24,35 @@ const ProductCard = ({ product }: ProductCardProps) => {
             fill
             className="object-contain p-2"
           />
-
-          {/* 좋아요 아이콘 - 우측 상단 */}
-          <div className="absolute top-3 right-3">
-            <Image
-              src={
-                liked
-                  ? "/images/common/heart_filled.svg"
-                  : "/images/common/heart.svg"
-              }
-              width={26}
-              height={26}
-              alt="찜하기"
-            />
-          </div>
-
-          {/* 아바타 아이콘 - 우측 하단 */}
-          <div className="absolute bottom-3 right-3">
-            <Image
-              src="/images/common/avatar.svg"
-              width={32}
-              height={32}
-              alt="아바타 아이콘"
-            />
-          </div>
         </div>
+      </Link>
 
-        {/* 텍스트 영역 */}
+      {/* 좋아요 아이콘 - 우측 상단 */}
+      <div className="absolute top-3 right-3">
+        <Image
+          src={
+            liked
+              ? "/images/common/heart_filled.svg"
+              : "/images/common/heart.svg"
+          }
+          width={26}
+          height={26}
+          alt="찜하기"
+        />
+      </div>
+
+      {/* 아바타 아이콘 - 우측 하단 */}
+      <div className="absolute bottom-3 right-3">
+        <Image
+          src="/images/common/avatar.svg"
+          width={32}
+          height={32}
+          alt="아바타 아이콘"
+        />
+      </div>
+
+      {/* 제품 정보 */}
+      <Link href={`/detail/${id}`}>
         <div className="p-4">
           <div className="text-sm font-semibold text-gray-900 mb-1">
             {brand}
@@ -77,8 +79,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
             )}
           </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 };
 
