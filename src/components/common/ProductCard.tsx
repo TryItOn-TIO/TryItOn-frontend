@@ -16,39 +16,39 @@ const ProductCard = ({ product }: ProductCardProps) => {
   return (
     <div className="w-[240px] bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden relative">
       {/* 이미지 */}
-      <Link href={`/detail/${id}`}>
-        <div className="w-full h-[240px] bg-gray-100 relative">
+      <div className="w-full h-[240px] bg-gray-100 relative">
+        <Link href={`/detail/${id}`}>
           <Image
             src={img1}
             alt={productName}
             fill
             className="object-contain p-2"
           />
+        </Link>
+
+        {/* 좋아요 아이콘 - 우측 상단 */}
+        <div className="absolute top-3 right-3">
+          <Image
+            src={
+              liked
+                ? "/images/common/heart_filled.svg"
+                : "/images/common/heart.svg"
+            }
+            width={26}
+            height={26}
+            alt="찜하기"
+          />
         </div>
-      </Link>
 
-      {/* 좋아요 아이콘 - 우측 상단 */}
-      <div className="absolute top-3 right-3">
-        <Image
-          src={
-            liked
-              ? "/images/common/heart_filled.svg"
-              : "/images/common/heart.svg"
-          }
-          width={26}
-          height={26}
-          alt="찜하기"
-        />
-      </div>
-
-      {/* 아바타 아이콘 - 우측 하단 */}
-      <div className="absolute bottom-3 right-3">
-        <Image
-          src="/images/common/avatar.svg"
-          width={32}
-          height={32}
-          alt="아바타 아이콘"
-        />
+        {/* 아바타 아이콘 - 우측 하단 */}
+        <div className="absolute bottom-3 right-3">
+          <Image
+            src="/images/common/avatar.svg"
+            width={32}
+            height={32}
+            alt="아바타 아이콘"
+          />
+        </div>
       </div>
 
       {/* 제품 정보 */}
