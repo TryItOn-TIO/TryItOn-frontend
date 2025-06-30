@@ -25,7 +25,7 @@ export default function RootLayout({
           clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
         >
           {/* header 상단에 고정 */}
-          <div className="fixed top-0 left-0 z-50">
+          <div className="fixed top-0 left-0 z-10">
             <Header />
             <CategoryHeader />
           </div>
