@@ -1,11 +1,11 @@
 import React from "react";
 
 interface DetailPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
-const Detail = ({ params }: DetailPageProps) => {
-  const { id } = params;
+const Detail = async ({ params }: DetailPageProps) => {
+  const { id } = await params;
 
   return (
     <div>
