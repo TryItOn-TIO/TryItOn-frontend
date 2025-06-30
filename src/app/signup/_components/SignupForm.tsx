@@ -67,7 +67,7 @@ const SignupForm = <T extends SignupRequest>({
           name="gender"
           value={data.gender}
           onChange={handleChange}
-          className="w-full bg-transparent text-slate-700 text-sm border border-slate-700 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+          className="w-full bg-transparent text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
         >
           <option value={Gender.M}>남성</option>
           <option value={Gender.F}>여성</option>
@@ -90,7 +90,7 @@ const SignupForm = <T extends SignupRequest>({
           name="preferredStyle"
           value={data.preferredStyle}
           onChange={handleChange}
-          className="w-full bg-transparent text-slate-700 text-sm border border-slate-700 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+          className="w-full bg-transparent text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
         >
           <option value={Style.CASUAL}>캐주얼</option>
           <option value={Style.STREET}>스트릿</option>
@@ -109,7 +109,7 @@ const SignupForm = <T extends SignupRequest>({
             name="height"
             value={data.height}
             onChange={handleChange}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded border-slate-200"
             min="100"
             max="250"
           />
@@ -124,7 +124,7 @@ const SignupForm = <T extends SignupRequest>({
             name="weight"
             value={data.weight}
             onChange={handleChange}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded border-slate-200"
             min="30"
             max="200"
           />
@@ -139,7 +139,7 @@ const SignupForm = <T extends SignupRequest>({
             name="shoeSize"
             value={data.shoeSize}
             onChange={handleChange}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded border-slate-200"
             min="150"
             max="350"
           />

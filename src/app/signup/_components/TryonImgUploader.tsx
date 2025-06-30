@@ -25,7 +25,7 @@ const TryonImgUploader = <T extends SignupRequest>({
 
     const reader = new FileReader();
     reader.onloadend = () => {
-      setPreview("/images/ex10.png");
+      setPreview("/images/dummy/ex10.png");
       // TODO: S3 업로드 후, 링크로 전송해야 함
       setData((prev) => ({
         ...prev,
