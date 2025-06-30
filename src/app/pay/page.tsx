@@ -16,7 +16,7 @@ function generateRandomString() {
 // TODO: clientKey는 개발자센터의 결제위젯 연동 키 > 클라이언트 키로 바꾸세요.
 // TODO: 구매자의 고유 아이디를 불러와서 customerKey로 설정하세요. 이메일・전화번호와 같이 유추가 가능한 값은 안전하지 않습니다.
 // @docs https://docs.tosspayments.com/sdk/v2/js#토스페이먼츠-초기화
-const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
+const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY || "";
 const customerKey = generateRandomString();
 
 interface Amount {
@@ -145,7 +145,7 @@ export default function CheckoutPage() {
               // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
               // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
               await widgets!.requestPayment({
-                orderId: "6595603b-591d-4f12-8a45-0c3832a60824",
+                orderId: "04d25592-c8c9-427f-9fb1-1a6a8a692438",
                 orderName: "토스 티셔츠 외 2건",
                 successUrl: window.location.origin + "/success",
                 failUrl: window.location.origin + "/fail",
