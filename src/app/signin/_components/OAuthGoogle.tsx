@@ -28,12 +28,12 @@ const OAuthGoogle = () => {
         console.log("로그인 성공:", loginRes);
         router.push("/"); // 홈으로 리다이렉트
       }
-    } catch (error) {
+    } catch {
       alert("회원가입이 필요합니다");
       setIdToken(idToken);
       router.push("/signup/oauth");
-      console.error("로그인 에러:", error);
       // TODO: error 타입이 통일된 이후 타입 적용
+
       /*
       console.error("로그인 에러:", error);
       // 404 에러 또는 회원가입이 필요한 경우
