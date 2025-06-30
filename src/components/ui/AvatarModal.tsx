@@ -38,7 +38,7 @@ const AvatarModal = ({ onClose }: AvatarModalProps) => {
 
   return (
     <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-[rgba(0,0,0,0.25)] z-40">
-      <div className="relative w-[80vw] h-[80vh] bg-[rgba(233,233,233,0.95)] rounded-lg shadow-lg p-6 flex flex-col items-center justify-center">
+      <div className="relative w-[40rem] h-[80vh] bg-[rgba(233,233,233,0.95)] rounded-lg shadow-lg p-6 flex flex-col items-center justify-center">
         {loading ? (
           <div className="text-center text-lg">
             <p>아바타 생성 중입니다... 🛠️</p>

@@ -31,21 +31,22 @@ const DetailMainImg = ({ images }: DetailMainImgProps) => {
           slidesPerView={1}
           className="rounded-lg overflow-hidden"
         >
+          {/* 입어보기 버튼 */}
+          <div className="absolute top-4 right-4 z-10 cursor-pointer">
+            <Image
+              src="/images/common/try_icon.svg"
+              width={50}
+              height={50}
+              alt="입어보기"
+              onClick={() => setTryon(true)}
+            />
+          </div>
+
+          {/* 제품 사진 */}
           {images.map((img, idx) => (
             <SwiperSlide key={idx}>
               {/* 헤더 15vh 제외, 전체 화면 (height) */}
               <div className="relative w-full h-[85vh]">
-                <div className="absolute top-4 right-4 z-10 cursor-pointer">
-                  {/* 입어보기 버튼 */}
-                  <Image
-                    src="/images/common/try_icon.svg"
-                    width={50}
-                    height={50}
-                    alt="입어보기"
-                    onClick={() => setTryon(true)}
-                  />
-                </div>
-                {/* 제품 사진 */}
                 <Image
                   src={img}
                   alt={`제품 이미지 ${idx}`}
