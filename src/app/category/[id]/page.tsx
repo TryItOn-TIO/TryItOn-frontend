@@ -16,7 +16,7 @@ type Params = {
 };
 
 const Category = async({ params }: Params) => {
-    const id = await params;
+    const {id} = await params;
   return (
     <div>
       <div>Category 페이지 입니다</div>
