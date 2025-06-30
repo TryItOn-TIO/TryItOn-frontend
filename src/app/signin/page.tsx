@@ -31,6 +31,14 @@ const Signin = () => {
     }
   };
 
+  const handleEmailChange = (value: string) => {
+    setEmail(value);
+  };
+
+  const handlePasswordChange = (value: string) => {
+    setPassword(value);
+  };
+
   useEffect(() => {
     // 이메일 필드 유효성 검사
     if (!validateEmail(email)) {
@@ -53,7 +61,7 @@ const Signin = () => {
       <div className="flex flex-col items-center gap-4">
         <InputText
           value={email}
-          handleChange={setEmail}
+          handleChange={handleEmailChange}
           placeholder="이메일"
           type="text"
           isInvalid={emailError}
@@ -61,7 +69,7 @@ const Signin = () => {
         />
         <InputText
           value={password}
-          handleChange={setPassword}
+          handleChange={handlePasswordChange}
           placeholder="비밀번호"
           type="password"
           isInvalid={passwordError}

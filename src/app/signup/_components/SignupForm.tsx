@@ -28,6 +28,18 @@ const SignupForm = <T extends SignupRequest>({
     });
   };
 
+  const handleNameChange = (value: string) => {
+    setData((prev) => ({ ...prev, username: value }));
+  };
+
+  const handleDateChange = (value: string) => {
+    setData((prev) => ({ ...prev, birthDate: value }));
+  };
+
+  const handlePhoneNumChange = (value: string) => {
+    setData((prev) => ({ ...prev, phoneNum: value }));
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
@@ -36,9 +48,7 @@ const SignupForm = <T extends SignupRequest>({
           placeholder="닉네임"
           type="text"
           value={data.username}
-          handleChange={(value) =>
-            setData((prev) => ({ ...prev, username: value }))
-          }
+          handleChange={handleNameChange}
         />
       </div>
 
@@ -47,9 +57,7 @@ const SignupForm = <T extends SignupRequest>({
         <InputText
           type="date"
           value={data.birthDate}
-          handleChange={(value) =>
-            setData((prev) => ({ ...prev, birthDate: value }))
-          }
+          handleChange={handleDateChange}
         />
       </div>
 
@@ -72,9 +80,7 @@ const SignupForm = <T extends SignupRequest>({
           placeholder="010-0000-0000"
           type="tel"
           value={data.phoneNum}
-          handleChange={(value) =>
-            setData((prev) => ({ ...prev, phoneNum: value }))
-          }
+          handleChange={handlePhoneNumChange}
         />
       </div>
 

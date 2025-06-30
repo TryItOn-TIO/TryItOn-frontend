@@ -21,6 +21,10 @@ const PasswordForm = ({ setStep, data, setData }: PasswordFormProps) => {
     setStep((prev) => prev + 1);
   };
 
+  const handelChange = (value: string) => {
+    setData((prev) => ({ ...prev, password: value }));
+  };
+
   useEffect(() => {
     if (!validatePassword(data.password)) {
       setError(true);
@@ -34,9 +38,7 @@ const PasswordForm = ({ setStep, data, setData }: PasswordFormProps) => {
       <div className="mb-14">비밀번호를 입력해주세요.</div>
       <InputText
         value={data.password}
-        handleChange={(value) =>
-          setData((prev) => ({ ...prev, password: value }))
-        }
+        handleChange={handelChange}
         placeholder="비밀번호"
         type="password"
         isInvalid={error}
