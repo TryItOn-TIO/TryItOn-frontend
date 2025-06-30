@@ -34,7 +34,7 @@ const DetailMainImg = ({ images }: DetailMainImgProps) => {
           {/* 입어보기 버튼 */}
           <div className="absolute top-4 right-4 z-10 cursor-pointer">
             <Image
-              src="/images/common/try_icon.svg"
+              src="/images/common/avatar.svg"
               width={50}
               height={50}
               alt="입어보기"
