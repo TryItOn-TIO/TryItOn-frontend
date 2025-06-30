@@ -4,7 +4,8 @@ import { ProductDetailResponse } from "@/types/productDetail";
 import { useEffect, useState } from "react";
 import DetailMainImg from "@/app/detail/[id]/_components/DetailMainImg";
 import { getProductDetail } from "@/api/productDetail";
-import ProductDetailInfo from "./ProductDetailInfo";
+import ProductDetailInfo from "@/app/detail/[id]/_components/ProductDetailInfo";
+import DetailRecommand from "@/app/detail/[id]/_components/DetailRecommand";
 
 type DetailClientProps = {
   productId: number;
@@ -85,9 +86,13 @@ const DetailClient = ({ productId }: DetailClientProps) => {
     <>
       {!loading && (
         <div className="w-full flex justify-between">
+          {/* 좌측 상품 이미지 등 상세정보 */}
           <div className="w-[65%]">
             <DetailMainImg images={data.images} />
+            <DetailRecommand data={data} />
           </div>
+
+          {/* 우측 상품 장바구니/구매하기 창 */}
           <div className="bg-white w-[35%] min-h-screen h-screen fixed right-0 top-[15vh] overflow-scroll shadow-md">
             <ProductDetailInfo data={data} />
           </div>

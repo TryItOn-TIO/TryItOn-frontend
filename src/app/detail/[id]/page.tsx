@@ -8,7 +8,7 @@ const Detail = async ({ params }: Params) => {
   const { id } = await params;
 
   return (
-    <div className="w-full bg-gray-50">
+    <div className="w-full">
       <DetailClient productId={Number(id)} />
     </div>
   );
