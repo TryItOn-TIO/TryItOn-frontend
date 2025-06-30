@@ -1,4 +1,4 @@
-import { axiosWithAuth } from './index';
+import { axiosWithoutAuth } from './index';
 
 export interface FileUploadResponse {
   presignedUrl: string;
@@ -10,7 +10,7 @@ export interface FileUploadResponse {
  * @returns Pre-signed URL
  */
 export const generatePresignedUrl = async (fileName: string): Promise<string> => {
-  const response = await axiosWithAuth().get<string>('/api/files', {
+  const response = await axiosWithoutAuth().get<string>('/api/files', {
     params: {
       fileName,
     },
