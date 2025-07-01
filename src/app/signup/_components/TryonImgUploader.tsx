@@ -4,6 +4,7 @@ import React, { Dispatch, SetStateAction, useRef, useState } from "react";
 import { SignupRequest } from "@/types/auth";
 import BlackButton from "@/components/common/BlackButton";
 import Image from "next/image";
+import { generatePresignedUrl, uploadFileToS3 } from "@/api/files";
 
 type TryonImgUploaderProps<T extends SignupRequest> = {
   setStep: React.Dispatch<React.SetStateAction<number>>;
@@ -16,32 +17,54 @@ const TryonImgUploader = <T extends SignupRequest>({
   data,
   setData,
 }: TryonImgUploaderProps<T>) => {
-  const [preview, setPreview] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>("/images/ex10.png");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    setSelectedFile(file);
+
+    // 미리보기만 생성 (업로드는 하지 않음)
     const reader = new FileReader();
     reader.onloadend = () => {
-      setPreview("/images/dummy/ex10.png");
-      // TODO: S3 업로드 후, 링크로 전송해야 함
-      setData((prev) => ({
-        ...prev,
-        userBaseImageUrl:
-          "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8JUVBJUIwJTk1JUVDJTk1JTg0JUVDJUE3JTgwJUVCJTkzJUE0fGVufDB8fDB8fHww",
-      }));
+      setPreview(reader.result as string);
     };
     reader.readAsDataURL(file);
   };
 
-  const handleClickNext = () => {
-    if (!data.userBaseImageUrl) {
-      alert("전신 사진을 업로드해주세요.");
+  const handleClickNext = async () => {
+    if (!selectedFile) {
+      alert("전신 사진을 선택해주세요.");
       return;
     }
-    setStep((prev) => prev + 1);
+
+    setIsUploading(true);
+
+    try {
+      // S3 업로드 실행
+      console.log('S3 업로드 시작...');
+      const presignedUrl = await generatePresignedUrl(selectedFile.name);
+      await uploadFileToS3(presignedUrl, selectedFile);
+      const fileUrl = presignedUrl.split('?')[0];
+      
+      setData((prev) => ({
+        ...prev,
+        userBaseImageUrl: fileUrl,
+      }));
+      
+      console.log('업로드 성공:', fileUrl);
+      setStep((prev) => prev + 1);
+
+    } catch (error) {
+      console.error('업로드 실패:', error);
+      alert('업로드에 실패했습니다. 다시 시도해주세요.');
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   return (
@@ -71,17 +94,28 @@ const TryonImgUploader = <T extends SignupRequest>({
           onChange={handleFileChange}
           className="hidden"
           ref={fileInputRef}
+          disabled={isUploading}
         />
         <button
           onClick={() => fileInputRef.current?.click()}
-          className="text-sm bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+          disabled={isUploading}
+          className="text-sm bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow disabled:opacity-50"
         >
           사진 선택
         </button>
+
+        {selectedFile && (
+          <div className="text-sm text-gray-600">
+            선택된 파일: {selectedFile.name}
+          </div>
+        )}
       </div>
 
       {/* submit 버튼 */}
-      <BlackButton text="다음" handleClick={handleClickNext} />
+      <BlackButton 
+        text={isUploading ? "업로드 중..." : "다음"} 
+        handleClick={handleClickNext}
+      />
     </div>
   );
 };
