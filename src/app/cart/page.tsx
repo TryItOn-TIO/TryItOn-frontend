@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Minus, Plus, X } from "@/components/common/icons"
 import { Button } from "@/components/common/button"
 import { Checkbox } from "@/components/common/checkbox"
@@ -18,6 +19,7 @@ type CartItem = {
 }
 
 const Cart = () => {
+  const router = useRouter()
   const [cartItems, setCartItems] = useState<CartItem[]>([
     {
       id: "1",
@@ -89,6 +91,17 @@ const Cart = () => {
     setCartItems(cartItems.filter((item) => !selectedItems.includes(item.id)))
     setSelectedItems([])
     setAllSelected(false)
+  }
+
+  const handlePurchase = () => {
+    if (selectedItems.length === 0) {
+      alert("구매할 상품을 선택해주세요.")
+      return
+    }
+    // 선택된 상품 정보를 주문 페이지로 전달하기 위해 localStorage에 저장
+    const selectedCartItems = cartItems.filter((item) => selectedItems.includes(item.id))
+    localStorage.setItem("orderItems", JSON.stringify(selectedCartItems))
+    router.push("/order")
   }
 
   const selectedCartItems = cartItems.filter((item) => selectedItems.includes(item.id))
@@ -247,7 +260,11 @@ const Cart = () => {
               </div>
             </div>
 
-            <Button className="w-full bg-black text-white hover:bg-gray-800 py-3">
+            <Button 
+              className="w-full bg-black text-white hover:bg-gray-800 py-3"
+              onClick={handlePurchase}
+              disabled={selectedItems.length === 0}
+            >
               구매하기 ({selectedItems.length}개)
             </Button>
           </div>

@@ -27,6 +27,14 @@ export function usePaymentWidgets(isOpen: boolean, amount: number) {
     value: amount,
   });
 
+  // amount props가 변경될 때 paymentAmount 동기화
+  useEffect(() => {
+    setPaymentAmount({
+      currency: "KRW",
+      value: amount,
+    });
+  }, [amount]);
+
   // 토스페이먼츠 위젯 초기화
   useEffect(() => {
     if (!isOpen) return;

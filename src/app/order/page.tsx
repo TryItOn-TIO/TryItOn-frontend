@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import { ChevronDown } from "lucide-react"
 import { Button } from "@/components/common/button"
@@ -17,12 +17,13 @@ type OrderItem ={
   originalPrice: number
   salePrice: number
   image: string
+  category?: string // 카트에서 전달받을 때 사용
 }
 
 export default function OrderPage() {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false)
   
-  const [orderItems] = useState<OrderItem[]>([
+  const [orderItems, setOrderItems] = useState<OrderItem[]>([
     {
       id: "1",
       name: "Motorcycle Piping Mesh Short Sleeve Black",
@@ -43,6 +44,22 @@ export default function OrderPage() {
     },
   ])
 
+  // 카트에서 전달받은 주문 상품 정보 로드
+  useEffect(() => {
+    const savedOrderItems = localStorage.getItem("orderItems")
+    if (savedOrderItems) {
+      try {
+        const parsedItems = JSON.parse(savedOrderItems)
+        console.log("카트에서 전달받은 주문 상품:", parsedItems)
+        setOrderItems(parsedItems)
+        // 사용 후 localStorage에서 제거
+        localStorage.removeItem("orderItems")
+      } catch (error) {
+        console.error("주문 상품 정보를 불러오는데 실패했습니다:", error)
+      }
+    }
+  }, [])
+
   const [deliveryAddress] = useState({
     name: "설현아",
     address: "경기 용인시 처인구 명륜로 55 C412호",
@@ -56,6 +73,10 @@ export default function OrderPage() {
   const finalAmount = totalSalePrice + shippingFee
 
   const orderName = `${orderItems[0]?.name}${orderItems.length > 1 ? ` 외 ${orderItems.length - 1}건` : ''}`
+
+  // 디버깅용 로그
+  console.log("주문 페이지 - orderItems:", orderItems);
+  console.log("주문 페이지 - finalAmount:", finalAmount);
 
   return (
     <div className="min-h-screen bg-gray-50 w-full overflow-x-hidden">
@@ -244,6 +265,7 @@ export default function OrderPage() {
         onClose={() => setIsPaymentModalOpen(false)}
         amount={finalAmount}
         orderName={orderName}
+        orderItems={orderItems}
       />
     </div>
   )

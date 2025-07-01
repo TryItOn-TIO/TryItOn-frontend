@@ -6,16 +6,32 @@ import CouponSection from "./CouponSection";
 import { usePaymentWidgets } from "./usePaymentWidgets";
 import { useOrderCreation } from "./useOrderCreation";
 
+type OrderItem = {
+  id: string
+  name: string
+  size: string
+  quantity: number
+  originalPrice: number
+  salePrice: number
+  image: string
+  category?: string
+}
+
 type PaymentModalProps ={
   isOpen: boolean;
   onClose: () => void;
   amount: number;
   orderName: string;
+  orderItems: OrderItem[];
 }
 
-export default function PaymentModal({ isOpen, onClose, amount, orderName }: PaymentModalProps) {
+export default function PaymentModal({ isOpen, onClose, amount, orderName, orderItems }: PaymentModalProps) {
   const { ready, widgets, paymentAmount, updateAmount } = usePaymentWidgets(isOpen, amount);
   const { createOrder } = useOrderCreation();
+
+  // 디버깅용 로그
+  console.log("PaymentModal - 전달받은 amount:", amount);
+  console.log("PaymentModal - paymentAmount:", paymentAmount);
 
   const handleCouponChange = async (isChecked: boolean) => {
     await updateAmount({
@@ -83,7 +99,7 @@ export default function PaymentModal({ isOpen, onClose, amount, orderName }: Pay
         {/* 결제 내용 */}
         <div className="p-6">
           {/* 주문 정보 */}
-          <PaymentInfo orderName={orderName} amount={paymentAmount.value} />
+          <PaymentInfo orderName={orderName} amount={paymentAmount.value} orderItems={orderItems} />
 
           {/* 결제 UI */}
           <div id="payment-method" className="mb-4" />
