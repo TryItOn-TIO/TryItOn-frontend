@@ -1,16 +1,5 @@
 import { axiosWithAuth } from '@/api/index';
-import { OrderResponseDto, PaymentConfirmRequestDto, PaymentConfirmResponseDto } from '@/types/payment'; // @는 src를 가리키는 경로 별칭
-import axios from 'axios';
-
-interface OrderRequestDto {
-  userId: number; addressId: number;
-  orderItems: { variantId: number; quantity: number; }[];
-}
-
-export const createOrderApi = async (orderRequest: OrderRequestDto): Promise<OrderResponseDto> => {
-  const response = await axiosWithAuth().post('/api/orders', orderRequest);
-  return response.data;
-};
+import { PaymentConfirmRequestDto, PaymentConfirmResponseDto } from '@/types/payment';
 
 export const confirmPaymentApi = async (confirmRequest: PaymentConfirmRequestDto): Promise<PaymentConfirmResponseDto> => {
   const response = await axiosWithAuth().post('/api/payment/confirm', confirmRequest);

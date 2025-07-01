@@ -1,96 +1,48 @@
-"use client";
-
-import { useEffect, useState } from "react";
+'use client';
+import React, { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
-import Image from "next/image";
+import { confirmPaymentApi } from "@/api/payment";
+import { PaymentConfirmResponseDto } from "@/types/payment";
 
-export default function SuccessPage() {
+function SuccessContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [responseData, setResponseData] = useState(null);
+  const [result, setResult] = useState<PaymentConfirmResponseDto | null>(null);
 
   useEffect(() => {
-    async function confirm() {
-      const requestData = {
-        orderId: searchParams.get("orderId"),
-        amount: searchParams.get("amount"),
-        paymentKey: searchParams.get("paymentKey"),
-      };
-
-      const response = await fetch("http://localhost:8080/api/payment/confirm", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestData),
-      });
-
-      const json = await response.json();
-
-      if (!response.ok) {
-        throw { message: json.message, code: json.code };
-      }
-
-      return json;
-    }
-
-    confirm()
-      .then((data) => {
-        setResponseData(data);
+    const paymentKey = searchParams.get("paymentKey");
+    const orderId = searchParams.get("orderId");
+    const amount = searchParams.get("amount");
+    
+    console.log("Success page params:", { paymentKey, orderId, amount }); // 디버깅용
+    
+    if (paymentKey && orderId && amount) {
+      confirmPaymentApi({ 
+        paymentKey, 
+        orderId: orderId, // 문자열 그대로 전달
+        amount: Number(amount) 
       })
-      .catch((error) => {
-        router.push(`/fail?code=${error.code}&message=${error.message}`);
-      });
-      // eslint-disable-next-line
-  }, [searchParams]);
+        .then(setResult)
+        .catch(err => {
+          console.error("Payment confirmation error:", err);
+          router.push(`/fail?message=${err.response?.data?.message || '알 수 없는 오류'}`);
+        });
+    }
+  }, [router, searchParams]);
 
   return (
-    <>
-      <div className="box_section" style={{ width: "600px" }}>
-        
-        <h2>결제를 완료했어요</h2>
-        <div className="p-grid typography--p" style={{ marginTop: "50px" }}>
-          <div className="p-grid-col text--left">
-            <b>결제금액</b>
-          </div>
-          <div className="p-grid-col text--right" id="amount">
-            {`${Number(searchParams.get("amount")).toLocaleString()}원`}
-          </div>
-        </div>
-        <div className="p-grid typography--p" style={{ marginTop: "10px" }}>
-          <div className="p-grid-col text--left">
-            <b>주문번호</b>
-          </div>
-          <div className="p-grid-col text--right" id="orderId">
-            {`${searchParams.get("orderId")}`}
-          </div>
-        </div>
-        <div className="p-grid typography--p" style={{ marginTop: "10px" }}>
-          <div className="p-grid-col text--left">
-            <b>paymentKey</b>
-          </div>
-          <div className="p-grid-col text--right" id="paymentKey" style={{ whiteSpace: "initial", width: "250px" }}>
-            {`${searchParams.get("paymentKey")}`}
-          </div>
-        </div>
-        <div className="p-grid-col">
-          <Link href="https://docs.tosspayments.com/guides/v2/payment-widget/integration">
-            <button className="button p-grid-col5">연동 문서</button>
-          </Link>
-          <Link href="https://discord.gg/A4fRFXQhRu">
-            <button className="button p-grid-col5" style={{ backgroundColor: "#e8f3ff", color: "#1b64da" }}>
-              실시간 문의
-            </button>
-          </Link>
-        </div>
+    <div className="wrapper">
+      <div className="box_section">
+        <h2>결제 성공</h2>
+        {result ? <>
+          <p>{`주문번호: ${result.orderId}`}</p>
+          <p>{`결제 금액: ${Number(result.totalAmount).toLocaleString()}원`}</p>
+        </> : <p>승인 처리 중...</p>}
       </div>
-      <div className="box_section" style={{ width: "600px", textAlign: "left" }}>
-        <b>Response Data :</b>
-        <div id="response" style={{ whiteSpace: "initial" }}>
-          {responseData && <pre>{JSON.stringify(responseData, null, 4)}</pre>}
-        </div>
-      </div>
-    </>
+    </div>
   );
+}
+
+export default function SuccessPage() {
+  return (<Suspense fallback={<div>Loading...</div>}><SuccessContent /></Suspense>);
 }

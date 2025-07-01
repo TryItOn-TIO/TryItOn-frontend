@@ -12,13 +12,13 @@ export type TossPaymentWidget ={
   
   // 백엔드 Spring Boot의 DTO와 1:1로 매칭되는 타입들입니다.
   export type OrderResponseDto ={
-    orderId: number;
+    orderId: string; // 문자열로 변경
     orderName: string;
     amount: number;
   }
   export type PaymentConfirmRequestDto ={
     paymentKey: string;
-    orderId: number;
+    orderId: string; // 문자열로 변경
     amount: number;
   }
   export type PaymentConfirmResponseDto ={

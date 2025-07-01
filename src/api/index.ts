@@ -43,7 +43,7 @@ function setResponseInterceptor(instance: AxiosInstance): void {
 export const axiosWithAuth = (): AxiosInstance => {
   if (!authInstance) {
     authInstance = axios.create({
-      baseURL: 'http://localhost:8080',
+      baseURL: process.env.NEXT_PUBLIC_API_URL,
     });
     setRequestInterceptor(authInstance);
     setResponseInterceptor(authInstance);
@@ -55,7 +55,7 @@ export const axiosWithAuth = (): AxiosInstance => {
 export const axiosWithoutAuth = (): AxiosInstance => {
   if (!noAuthInstance) {
     noAuthInstance = axios.create({
-      baseURL: 'http://localhost:8080',
+      baseURL: process.env.NEXT_PUBLIC_API_URL,
     });
   }
   return noAuthInstance;

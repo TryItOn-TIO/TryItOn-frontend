@@ -2,6 +2,7 @@ import Link from "next/link";
 
 export default function Home() {
   const pageInfo = [
+    { route: "order", name: "주문"},
     { route: "cart", name: "장바구니" },
     { route: "category", name: "카테고리별 상품" },
     { route: "closet", name: "옷장" },

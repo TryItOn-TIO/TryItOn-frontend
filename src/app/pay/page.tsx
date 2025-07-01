@@ -27,7 +27,7 @@ interface Amount {
 export default function CheckoutPage() {
   const [amount, setAmount] = useState<Amount>({
     currency: "KRW",
-    value: 99800,
+    value: 49900,
   });
   const [ready, setReady] = useState(false);
   const [widgets, setWidgets] = useState<TossPaymentsWidgets | null>(null);
@@ -145,7 +145,7 @@ export default function CheckoutPage() {
               // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
               // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
               await widgets!.requestPayment({
-                orderId: "8661cf33-2565-4b30-a8d0-d1b55abfa5a9",
+                orderId: "6595603b-591d-4f12-8a45-0c3832a60824",
                 orderName: "토스 티셔츠 외 2건",
                 successUrl: window.location.origin + "/success",
                 failUrl: window.location.origin + "/fail",
