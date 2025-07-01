@@ -49,9 +49,6 @@ const AvatarProducts = ({ avatarInfo }: AvatarProductsProps) => {
 
       {/* 착장 상품 리스트 */}
       <div>
-        <h3 className="text-lg font-semibold mb-3 text-gray-800">
-          착장한 상품
-        </h3>
         {productNames.length > 0 ? (
           <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
             {productNames.map((name, idx) => (
