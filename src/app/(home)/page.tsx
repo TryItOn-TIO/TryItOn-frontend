@@ -1,30 +1,17 @@
-import Link from "next/link";
+import AvatarLayout from "@/components/layout/AvatarProducts";
+import { mainProductsDummy } from "@/mock/mainProducts";
+import AvatarProducts from "./_components/AvatarProducts";
+import MainProductList from "./_components/MainProductList";
 
 export default function Home() {
-  const pageInfo = [
-    { route: "order", name: "주문"},
-    { route: "cart", name: "장바구니" },
-    { route: "category", name: "카테고리별 상품" },
-    { route: "closet", name: "옷장" },
-    { route: "detail/1", name: "상품 상세" },
-    { route: "mypage", name: "마이페이지" },
-    { route: "pay", name: "결제" },
-    { route: "signin", name: "로그인" },
-    { route: "signup", name: "회원가입" },
-    { route: "story", name: "스토리" },
-    { route: "tryon-room", name: "친구와 함께 고르기" },
-  ];
+  const { recommended, ranked, avatarInfo } = mainProductsDummy;
 
   return (
-    <div>
-      <h1>Home 페이지 입니다</h1>
-      <ul>
-        {pageInfo.map(({ route, name }) => (
-          <li key={route} className="text-pink-600 underline">
-            <Link href={`/${route}`}>{name} 페이지</Link>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <AvatarLayout
+      avatarSlot={<AvatarProducts avatarInfo={avatarInfo} />}
+      productSlot={
+        <MainProductList recommended={recommended} ranked={ranked} />
+      }
+    />
   );
 }
