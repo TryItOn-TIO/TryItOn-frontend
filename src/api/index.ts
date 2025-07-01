@@ -60,3 +60,4 @@ export const axiosWithoutAuth = (): AxiosInstance => {
   }
   return noAuthInstance;
 };
+
