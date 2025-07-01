@@ -27,8 +27,8 @@ const AvatarProducts = ({ avatarInfo }: AvatarProductsProps) => {
         <Image
           src={
             isBookmarked
-              ? "images/common/bookmark_filled.svg"
-              : "images/common/bookmark.svg"
+              ? "/images/common/bookmark_filled.svg"
+              : "/images/common/bookmark.svg"
           }
           width={24}
           height={24}

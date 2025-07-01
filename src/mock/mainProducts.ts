@@ -5,7 +5,7 @@ export const mainProductsDummy: MainProductResponse = {
     {
       id: 1,
       productName: "디키즈 워크팬츠",
-      img1: "/images/ex10.png",
+      img1: "/images/dummy/ex10.png",
       price: 79000,
       sale: 0,
       liked: false,
@@ -18,7 +18,7 @@ export const mainProductsDummy: MainProductResponse = {
     {
       id: 2,
       productName: "티셔츠",
-      img1: "/images/ex10.png",
+      img1: "/images/dummy/ex10.png",
       price: 49000,
       sale: 2000,
       liked: true,
@@ -33,7 +33,7 @@ export const mainProductsDummy: MainProductResponse = {
     {
       id: 3,
       productName: "아디다스 트랙자켓",
-      img1: "/images/ex10.png",
+      img1: "/images/dummy/ex10.png",
       price: 80000,
       sale: 2890,
       liked: true,
@@ -46,7 +46,7 @@ export const mainProductsDummy: MainProductResponse = {
     {
       id: 4,
       productName: "아디다스 트랙자켓",
-      img1: "/images/ex10.png",
+      img1: "/images/dummy/ex10.png",
       price: 80000,
       sale: 2890,
       liked: true,
@@ -59,7 +59,7 @@ export const mainProductsDummy: MainProductResponse = {
     {
       id: 5,
       productName: "아디다스 트랙자켓",
-      img1: "/images/ex10.png",
+      img1: "/images/dummy/ex10.png",
       price: 80000,
       sale: 2890,
       liked: true,
