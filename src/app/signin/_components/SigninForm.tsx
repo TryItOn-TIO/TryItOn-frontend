@@ -54,7 +54,7 @@ const SigninForm = ({
       <div className="flex flex-col items-center gap-4">
         <InputText
           value={email}
-          handleChange={onEmailChange}
+          onChange={onEmailChange}
           placeholder="이메일"
           type="text"
           isInvalid={emailError}
@@ -62,7 +62,7 @@ const SigninForm = ({
         />
         <InputText
           value={password}
-          handleChange={onPasswordChange}
+          onChange={onPasswordChange}
           placeholder="비밀번호"
           type="password"
           isInvalid={passwordError}

@@ -38,7 +38,7 @@ const PasswordForm = ({ setStep, data, setData }: PasswordFormProps) => {
       <div className="mb-14">비밀번호를 입력해주세요.</div>
       <InputText
         value={data.password}
-        handleChange={handelChange}
+        onChange={handelChange}
         placeholder="비밀번호"
         type="password"
         isInvalid={error}

@@ -48,7 +48,7 @@ const SignupForm = <T extends SignupRequest>({
           placeholder="닉네임"
           type="text"
           value={data.username}
-          handleChange={handleNameChange}
+          onChange={handleNameChange}
         />
       </div>
 
@@ -57,7 +57,7 @@ const SignupForm = <T extends SignupRequest>({
         <InputText
           type="date"
           value={data.birthDate}
-          handleChange={handleDateChange}
+          onChange={handleDateChange}
         />
       </div>
 
@@ -80,7 +80,7 @@ const SignupForm = <T extends SignupRequest>({
           placeholder="010-0000-0000"
           type="tel"
           value={data.phoneNum}
-          handleChange={handlePhoneNumChange}
+          onChange={handlePhoneNumChange}
         />
       </div>
 

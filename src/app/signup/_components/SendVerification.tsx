@@ -63,7 +63,7 @@ const SendVerification = ({
         <InputText
           placeholder="이메일"
           value={data.email}
-          handleChange={handelChange}
+          onChange={handelChange}
           type="email"
           isInvalid={error}
           errorMessage="이메일 형식이 올바르지 않습니다."

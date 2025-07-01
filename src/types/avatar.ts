@@ -3,6 +3,11 @@ export type AvatarProductInfo = {
   productNames: string[];
 };
 
+type AvatarProduct = {
+  productName: string;
+  categoryName: string;
+};
+
 export type AvatarRequest = {
   productId: number;
 };
@@ -10,6 +15,5 @@ export type AvatarRequest = {
 export type AvatarResponse = {
   id: number;
   avatarImgUrl: string;
-  productName: string;
-  categoryName: string;
+  products: AvatarProduct[];
 };
