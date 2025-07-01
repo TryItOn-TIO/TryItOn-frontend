@@ -13,6 +13,8 @@
     "@radix-ui/react-select": "^2.2.5",
     "@radix-ui/react-slot": "^1.2.3",
     "@react-oauth/google": "^0.12.2",
+    "@tanstack/react-query": "^5.81.5",
+    "@tanstack/react-query-devtools": "^5.81.5",
     "@tosspayments/tosspayments-sdk": "^2.3.5",
     "axios": "^1.10.0",
     "framer-motion": "^12.22.0",
