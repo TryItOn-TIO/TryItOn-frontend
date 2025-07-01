@@ -80,7 +80,7 @@ const DetailClient = ({ productId }: DetailClientProps) => {
   };
 
   useEffect(() => {
-    // fetchData();
+    fetchData();
   }, [productId]);
 
   return (

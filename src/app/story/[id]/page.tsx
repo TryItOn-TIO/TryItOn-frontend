@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Comment from "./_components/Comment";
 import Image from "next/image";
-import CommentForm from "@/components/forms/CommentForm";
 import ClothesInfo from "./_components/ClothesInfo";
 import { StoryResponse } from "@/types/story";
 import { dummyStories } from "@/mock/story";
@@ -11,6 +9,8 @@ import MenuBar from "./_components/MenuBar";
 import { getNextStories, getStories } from "@/api/story";
 import { useParams, useRouter } from "next/navigation";
 import { useStories } from "@/hooks/useStories";
+import NavigateBtn from "./_components/NavigateBtn";
+import CommentSection from "./_components/CommentSection";
 
 const Story = () => {
   const params = useParams();
@@ -25,12 +25,17 @@ const Story = () => {
   // 포스트잇 추가 상태 관리
   const [postComment, setPostComment] = useState(true);
   // 댓글 on/off 상태 관리
-  const [commentOn, setCommentOn] = useState(true);
+  const [commentOn, setCommentOn] = useState(false);
   // 착장 정보 on/off 상태 관리
-  const [clothesOn, setClothesOn] = useState(true);
+  const [clothesOn, setClothesOn] = useState(false);
 
   const handleLike = () => {
     // TODO: 스토리 like API
+    setData((prevData) =>
+      prevData.map((story) =>
+        story.id === storyId ? { ...story, liked: !story.liked } : story
+      )
+    );
   };
 
   const handleNext = () => {
@@ -94,21 +99,15 @@ const Story = () => {
               className="object-contain"
             />
 
-            {/* 댓글 포스트잇 */}
-            {commentOn &&
-              currentStory.comments.map((comment) => (
-                <Comment key={comment.id} data={comment} />
-              ))}
-
-            {/* 댓글 입력창 */}
-            {postComment && (
-              <div className="absolute bottom-0 left-0 w-full z-10">
-                <CommentForm />
-              </div>
-            )}
+            {/* 댓글(포스트잇) 섹션 */}
+            <CommentSection
+              commentOn={commentOn}
+              postComment={postComment}
+              storyInfo={currentStory}
+            />
 
             {/* 메뉴바 */}
-            <div className="absolute right-4 bottom-18">
+            <div className="absolute left-4 bottom-18">
               <MenuBar
                 liked={currentStory.liked}
                 onLike={handleLike}
@@ -119,18 +118,9 @@ const Story = () => {
               />
             </div>
 
-            {/* 스토리 전환 버튼 (예시용) */}
-            <div
-              className="absolute top-1/2 left-2 text-white text-2xl"
-              onClick={handlePrev}
-            >
-              ↑
-            </div>
-            <div
-              className="absolute top-1/2 right-2 text-white text-2xl"
-              onClick={handleNext}
-            >
-              ↓
+            {/* 스토리 전환 버튼 */}
+            <div className="space-y-10 absolute top-2/5 right-0">
+              <NavigateBtn onNextPage={handleNext} onPrevPage={handlePrev} />
             </div>
           </div>
 

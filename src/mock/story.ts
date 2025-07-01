@@ -234,7 +234,7 @@ export const dummyStories: StoryResponse[] = [
     },
     content: "비 오는 날은 이렇게 입어요 ☔",
     likeCount: 58,
-    liked: true,
+    liked: false,
     proucts: [
       {
         id: 2,
@@ -392,7 +392,7 @@ export const dummyStories: StoryResponse[] = [
     },
     content: "무채색 좋아하시는 분들 모여요.",
     likeCount: 21,
-    liked: true,
+    liked: false,
     proucts: [
       {
         id: 5,
@@ -421,7 +421,7 @@ export const dummyStories: StoryResponse[] = [
     },
     content: "여름엔 역시 민소매!",
     likeCount: 87,
-    liked: true,
+    liked: false,
     proucts: [],
     comments: [],
     avatarImage: "/images/dummy/avatar6.png",
