@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { AvatarProductInfo } from "@/types/avatar";
-import { addBookmark, removeBookmark } from "@/api/bookmark";
+import { useBookmarkToggle } from "@/hooks/useBookmarkToggle";
 
 type AvatarProductsProps = {
   avatarInfo: AvatarProductInfo & { avatarId: number; bookmarked: boolean };
@@ -11,22 +11,10 @@ type AvatarProductsProps = {
 
 const AvatarProducts = ({ avatarInfo }: AvatarProductsProps) => {
   const { avatarImg, productNames, avatarId, bookmarked } = avatarInfo;
-
-  const [isBookmarked, setIsBookmarked] = useState(bookmarked);
-
-  const toggleBookmark = async () => {
-    try {
-      if (isBookmarked) {
-        await removeBookmark(avatarId);
-        setIsBookmarked(false);
-      } else {
-        await addBookmark(avatarId);
-        setIsBookmarked(true);
-      }
-    } catch (error) {
-      console.log("북마크 처리 중 에러 발생", error);
-    }
-  };
+  const { isBookmarked, toggleBookmark } = useBookmarkToggle(
+    bookmarked,
+    avatarId
+  );
 
   return (
     <div className="w-full h-full p-4 bg-gray-50 rounded-xl shadow-sm flex flex-col relative">
