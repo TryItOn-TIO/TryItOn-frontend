@@ -1,16 +1,12 @@
+import { ProductDetailResponse } from "@/types/productDetail";
 import Image from "next/image";
 
 type SimpleProductCardProps = {
-  id: number;
-  productName: string;
-  brand: string;
-  price: number;
-  sale: number;
-  thumbnail: string;
+  data: ProductDetailResponse;
 };
 
-const SimpleProductCard = (data: SimpleProductCardProps) => {
-  const isDiscounted = data.price !== data.sale;
+const SimpleProductCard = ({ data }: SimpleProductCardProps) => {
+  const isDiscounted = data.price != data.sale;
   const discountPercent = Math.round(
     ((data.price - data.sale) / data.price) * 100
   );
@@ -20,7 +16,7 @@ const SimpleProductCard = (data: SimpleProductCardProps) => {
       {/* 이미지 */}
       <div className="w-full aspect-[3/4] relative rounded-md overflow-hidden bg-neutral-100">
         <Image
-          src={data.thumbnail}
+          src={data.images[0]}
           alt={`${data.productName} 이미지`}
           fill
           className="object-cover"

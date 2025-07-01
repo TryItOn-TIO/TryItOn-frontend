@@ -1,7 +1,7 @@
 type InputTextProps = {
   placeholder?: string;
   value: string;
-  handleChange: (value: string) => void;
+  onChange: (value: string) => void;
   type: string;
   isInvalid?: boolean;
   errorMessage?: string;
@@ -19,7 +19,7 @@ const InputText = (props: InputTextProps) => {
         } rounded-md px-3 py-2 transition duration-300 ease focus:outline-none hover:border-slate-300 shadow-sm focus:shadow`}
         placeholder={props.placeholder}
         value={props.value}
-        onChange={(e) => props.handleChange(e.target.value)}
+        onChange={(e) => props.onChange(e.target.value)}
       />
       {props.isInvalid && (
         <p className="text-xs text-red-500 mt-1 pl-1">{props.errorMessage}</p>

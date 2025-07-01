@@ -1,9 +1,9 @@
 "use client";
 
-import { addWishlist, removeWishlist } from "@/api/wishlist";
 import BlackButton from "@/components/common/BlackButton";
 import Tag from "@/components/common/Tag";
 import WhiteButton from "@/components/common/WhiteButton";
+import { useWishlist } from "@/hooks/useWishlist";
 import { ProductDetailResponse } from "@/types/productDetail";
 import Image from "next/image";
 import { useState } from "react";
@@ -20,6 +20,8 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
     size: data.variant[0].size,
     quantity: 1,
   });
+
+  const { isWished, toggleWishlist } = useWishlist(data.liked, data.id);
 
   const handleColorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setOrderData({ ...orderData, color: e.target.value });
@@ -47,28 +49,6 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
 
   const calculateTotal = () => {
     return data.sale * orderData.quantity;
-  };
-
-  const handleAddwishlist = async () => {
-    try {
-      await addWishlist({ productId: Number(data.id) });
-      confirm("찜 목록에 추가되었습니다.");
-      // 리프레시
-      window.location.reload();
-    } catch (error) {
-      console.error("찜 추가 중 에러 발생", error);
-    }
-  };
-
-  const handleDeletewishlist = async () => {
-    try {
-      await removeWishlist({ productId: Number(data.id) });
-      confirm("찜 목록에서 삭제되었습니다.");
-      // 리프레시
-      window.location.reload();
-    } catch (error) {
-      console.error("찜 삭제 중 에러 발생", error);
-    }
   };
 
   const handleOrder = () => {
@@ -202,13 +182,13 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
       {/* 버튼 영역 */}
       <div className="flex gap-6 mt-10">
         <div className="flex flex-col justify-center gap-1">
-          {data.liked ? (
+          {isWished ? (
             <Image
               src={"/images/common/red_heart.svg"}
               width={30}
               height={30}
               alt="heart"
-              onClick={handleDeletewishlist}
+              onClick={toggleWishlist}
             />
           ) : (
             <Image
@@ -216,7 +196,7 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
               width={30}
               height={30}
               alt="heart"
-              onClick={handleAddwishlist}
+              onClick={toggleWishlist}
             />
           )}
           <p className="text-xs">{data.wishlistCount.toLocaleString()}</p>

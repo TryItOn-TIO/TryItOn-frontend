@@ -23,3 +23,5 @@ export const createIdTokenStore = (
     setIdToken: (idToken: string) => set(() => ({ idToken })),
   }));
 };
+
+export const idTokenStore = createIdTokenStore();

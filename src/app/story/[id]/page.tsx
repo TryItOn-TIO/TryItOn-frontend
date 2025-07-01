@@ -1,7 +1,7 @@
-import DetailClient from "@/app/detail/[id]/_components/DetailClient";
-import { getProductDetail } from "@/api/productDetail";
+import StoryClient from "@/app/story/[id]/_components/StoryClient";
 import { notFound } from "next/navigation";
-import { dummyProductDetail } from "@/mock/productDetail";
+import { getStories } from "@/api/story";
+import { dummyStories } from "@/mock/story";
 
 // 정적으로 생성할 경로 지정
 export async function generateStaticParams() {
@@ -13,11 +13,11 @@ export default async function Page({ params }: { params: { id: string } }) {
   const id = Number(params.id);
 
   try {
-    const product = dummyProductDetail; // 실제 API 요청
-    // const product = await getProductDetail(id); // 실제 API 요청
+    const stories = dummyStories; // 실제 API 요청
+    // const stories = await getStories(); // 실제 API 요청
     return (
       <div className="w-full">
-        <DetailClient productId={id} initialData={product} />
+        <StoryClient storyId={id} initialData={stories} />
       </div>
     );
   } catch (error) {

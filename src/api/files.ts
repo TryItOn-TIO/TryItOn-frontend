@@ -1,4 +1,4 @@
-import { axiosWithoutAuth } from './index';
+import { axiosWithoutAuth } from "./index";
 
 export interface FileUploadResponse {
   presignedUrl: string;
@@ -9,13 +9,15 @@ export interface FileUploadResponse {
  * @param fileName - 업로드할 파일명
  * @returns Pre-signed URL
  */
-export const generatePresignedUrl = async (fileName: string): Promise<string> => {
-  const response = await axiosWithoutAuth().get<string>('/api/files', {
+export const generatePresignedUrl = async (
+  fileName: string
+): Promise<string> => {
+  const response = await axiosWithoutAuth().get<string>("/api/files", {
     params: {
-      fileName,
+      fileName: `temp/${fileName}`,
     },
   });
-  
+
   return response.data;
 };
 
@@ -24,12 +26,15 @@ export const generatePresignedUrl = async (fileName: string): Promise<string> =>
  * @param presignedUrl - Pre-signed URL
  * @param file - 업로드할 파일
  */
-export const uploadFileToS3 = async (presignedUrl: string, file: File): Promise<void> => {
+export const uploadFileToS3 = async (
+  presignedUrl: string,
+  file: File
+): Promise<void> => {
   await fetch(presignedUrl, {
-    method: 'PUT',
+    method: "PUT",
     body: file,
     headers: {
-      'Content-Type': file.type,
+      "Content-Type": file.type,
     },
   });
 };
