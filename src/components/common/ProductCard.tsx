@@ -37,7 +37,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
   };
 
   return (
-    <div className="w-[240px] bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden relative">
+    <div className="w-full bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden relative">
       {/* 이미지 */}
       <div className="w-full h-[240px] bg-gray-100 relative">
         <Link href={`/detail/${id}`}>
