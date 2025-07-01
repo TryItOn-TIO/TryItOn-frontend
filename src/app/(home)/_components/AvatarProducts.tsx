@@ -17,7 +17,7 @@ const AvatarProducts = ({ avatarInfo }: AvatarProductsProps) => {
   );
 
   return (
-    <div className="w-full h-full p-4 bg-gray-50 rounded-xl shadow-sm flex flex-col relative">
+    <div className="w-full h-[85vh] p-4 bg-gray-50 rounded-xl shadow-sm flex flex-col justify-center relative">
       {/* 북마크 아이콘 (우측 상단 고정) */}
       <button
         onClick={toggleBookmark}
