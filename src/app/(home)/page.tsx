@@ -1,25 +1,17 @@
-"use client";
-
-import ProductCard from "@/components/common/ProductCard";
+import AvatarLayout from "@/components/layout/AvatarProducts";
+import { mainProductsDummy } from "@/mock/mainProducts";
+import AvatarProducts from "./_components/AvatarProducts";
+import MainProductList from "./_components/MainProductList";
 
 export default function Home() {
+  const { recommended, ranked, avatarInfo } = mainProductsDummy;
+
   return (
-    <div>
-      <ProductCard
-        product={{
-          id: 1,
-          productName: "테스트 티셔츠",
-          img1: "/images/dummy/ex10.png",
-          brand: "디키즈",
-          price: 75000,
-          sale: 100,
-          liked: true,
-          wishlistCount: 123,
-          createdAt: "2025-06-30T10:00:00",
-          categoryId: 1,
-          categoryName: "하의",
-        }}
-      />
-    </div>
+    <AvatarLayout
+      avatarSlot={<AvatarProducts avatarInfo={avatarInfo} />}
+      productSlot={
+        <MainProductList recommended={recommended} ranked={ranked} />
+      }
+    />
   );
 }

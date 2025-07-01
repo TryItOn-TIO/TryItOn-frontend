@@ -73,5 +73,7 @@ export const mainProductsDummy: MainProductResponse = {
   avatarInfo: {
     avatarImg: "/images/dummy/ex10.png",
     productNames: ["디키즈 워크팬츠", "나이키 에어포스"],
+    avatarId: 1,
+    bookmarked: false,
   },
 };
