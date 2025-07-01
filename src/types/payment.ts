@@ -1,7 +1,7 @@
 // 토스 결제 위젯의 타입을 명확하게 정의하여 'any' 타입 사용을 방지합니다.
 export type TossPaymentWidget ={
-    renderPaymentMethods: (selector: string, amount: { value: number }, options?: any) => any;
-    renderAgreement: (selector: string, options?: any) => void;
+    renderPaymentMethods: (selector: string, amount: { value: number }, options?: Record<string, unknown>) => Promise<void>;
+    renderAgreement: (selector: string, options?: Record<string, unknown>) => void;
     requestPayment: (paymentInfo: {
       orderId: string;
       orderName: string;

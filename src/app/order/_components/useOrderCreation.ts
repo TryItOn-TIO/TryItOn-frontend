@@ -1,4 +1,5 @@
-import { createSimpleOrderApi, SimpleOrderResponseDto } from "@/api/order";
+import { createSimpleOrderApi, } from "@/api/order";
+import { SimpleOrderResponseDto } from "@/types/order"
 
 export function useOrderCreation() {
   const createOrder = async (
@@ -21,15 +22,17 @@ export function useOrderCreation() {
       console.error('주문 생성 오류:', error);
       
       // 에러 메시지 개선
-      if (error.response?.status === 404) {
-        throw new Error('주문 생성 API를 찾을 수 없습니다. 백엔드 서버를 확인해주세요.');
-      } else if (error.response?.status === 401) {
-        throw new Error('로그인이 필요합니다.');
-      } else if (error.response?.status === 400) {
-        throw new Error('주문 정보가 올바르지 않습니다.');
-      } else {
-        throw new Error('주문 생성에 실패했습니다.');
+      if (error && typeof error === 'object' && 'response' in error) {
+        const axiosError = error as { response?: { status: number } };
+        if (axiosError.response?.status === 404) {
+          throw new Error('주문 생성 API를 찾을 수 없습니다. 백엔드 서버를 확인해주세요.');
+        } else if (axiosError.response?.status === 401) {
+          throw new Error('로그인이 필요합니다.');
+        } else if (axiosError.response?.status === 400) {
+          throw new Error('주문 정보가 올바르지 않습니다.');
+        }
       }
+      throw new Error('주문 생성에 실패했습니다.');
     }
   };
 

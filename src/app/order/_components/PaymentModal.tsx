@@ -47,10 +47,14 @@ export default function PaymentModal({ isOpen, onClose, amount, orderName }: Pay
         customerName: "고객",
         customerMobilePhone: "01012345678",
       });
-    } catch (error) {
-      console.error("결제 오류:", error);
-      alert(`결제 요청 중 오류가 발생했습니다: ${error.message || error}`);
+    } catch {
+      console.log("결제 오류");
+      alert('결제 요청 중 오류가 발생했습니다:');
     }
+    // } catch (error) {
+    //   console.error("결제 오류:", error);
+    //   alert(`결제 요청 중 오류가 발생했습니다: ${error.message || error}`);
+    // }
   };
 
   if (!isOpen) return null;

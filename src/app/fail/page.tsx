@@ -2,9 +2,9 @@
 
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
+import { Suspense } from "react";
 
-export default function FailPage() {
+function FailContent() {
   const searchParams = useSearchParams();
 
   return (
@@ -36,5 +36,13 @@ export default function FailPage() {
         </Link>
       </div>
     </div>
+  );
+}
+
+export default function FailPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <FailContent />
+    </Suspense>
   );
 }

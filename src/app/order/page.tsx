@@ -43,7 +43,7 @@ export default function OrderPage() {
     },
   ])
 
-  const [deliveryAddress, setDeliveryAddress] = useState({
+  const [deliveryAddress] = useState({
     name: "설현아",
     address: "경기 용인시 처인구 명륜로 55 C412호",
     phone: "010-9481-7488",

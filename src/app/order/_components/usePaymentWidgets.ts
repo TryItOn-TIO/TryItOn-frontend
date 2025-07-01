@@ -51,6 +51,8 @@ export function usePaymentWidgets(isOpen: boolean, amount: number) {
     if (!isOpen || !widgets) return;
 
     async function renderPaymentWidgets() {
+      if (!widgets) return;
+      
       try {
         await widgets.setAmount(paymentAmount);
 

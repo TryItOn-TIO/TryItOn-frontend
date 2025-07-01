@@ -14,13 +14,15 @@ export type SimpleOrderResponseDto ={
   amount: number;
 }
 
-// 기존 주문 생성 API
+// 기존 주문 생성 API (향후 사용 예정)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type OrderRequestDto ={
   userId: number; 
   addressId: number;
   orderItems: { variantId: number; quantity: number; }[];
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type OrderResponseDto ={
   orderId: string;
   orderName: string;
