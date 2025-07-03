@@ -1,9 +1,9 @@
 "use client";
 
 import { MainProductResponse } from "@/types/product";
-import AvatarProducts from "@/app/(home)/_components/AvatarProducts";
 import MainProductList from "@/app/(home)/_components/MainProductList";
 import AvatarLayout from "@/components/layout/AvatarProducts";
+import AvatarWearInfo from "@/components/common/AvatarWearInfo";
 
 type HomeClientProps = {
   initialData: MainProductResponse;
@@ -14,7 +14,7 @@ const HomeClient = ({ initialData }: HomeClientProps) => {
 
   return (
     <AvatarLayout
-      avatarSlot={<AvatarProducts avatarInfo={avatarInfo} />}
+      avatarSlot={<AvatarWearInfo avatarInfo={avatarInfo} />}
       productSlot={
         <MainProductList recommended={recommended} ranked={ranked} />
       }

@@ -1,7 +1,7 @@
 import AvatarLayout from "@/components/layout/AvatarProducts";
 import { mainProductsDummy } from "@/mock/mainProducts";
-import AvatarProducts from "@/app/(home)/_components/AvatarProducts";
 import CategoryClient from "./_components/CategoryClient";
+import AvatarWearInfo from "@/components/common/AvatarWearInfo";
 
 type Params = {
   params: Promise<{ id: string }>;
@@ -20,7 +20,7 @@ const Category = async ({ params }: Params) => {
 
   return (
     <AvatarLayout
-      avatarSlot={<AvatarProducts avatarInfo={avatarInfo} />}
+      avatarSlot={<AvatarWearInfo avatarInfo={avatarInfo} />}
       productSlot={<CategoryClient categoryId={categoryId} />}
     />
   );
