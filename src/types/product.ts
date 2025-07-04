@@ -30,6 +30,7 @@ export type CategoryProductResponse = {
     totalElements: number; // 전체 상품 개수
     number: number; // 현재 페이지 번호
     size: number; // 페이지당 크기
+    last: boolean; // 페이지 끝을 인식
   };
   avatarInfo: AvatarProductInfo;
 };

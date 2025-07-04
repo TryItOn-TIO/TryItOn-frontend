@@ -1,15 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import { AvatarProductInfo } from "@/types/avatar";
 import { useBookmarkToggle } from "@/hooks/useBookmarkToggle";
 
-type AvatarProductsProps = {
+type AvatarWearInfoProps = {
   avatarInfo: AvatarProductInfo & { avatarId: number; bookmarked: boolean };
 };
 
-const AvatarProducts = ({ avatarInfo }: AvatarProductsProps) => {
+const AvatarWearInfo = ({ avatarInfo }: AvatarWearInfoProps) => {
   const { avatarImg, productNames, avatarId, bookmarked } = avatarInfo;
   const { isBookmarked, toggleBookmark } = useBookmarkToggle(
     bookmarked,
@@ -63,4 +63,4 @@ const AvatarProducts = ({ avatarInfo }: AvatarProductsProps) => {
   );
 };
 
-export default AvatarProducts;
+export default AvatarWearInfo;
