@@ -7,7 +7,7 @@ type Props = {
   categoryId: number;
 };
 
-const CategoryLayout = ({ categoryId }: Props) => {
+const CategoryClient = ({ categoryId }: Props) => {
   return (
     <div className="container mx-auto px-4 py-8">
       <CategoryProductList categoryId={categoryId} />
@@ -15,4 +15,4 @@ const CategoryLayout = ({ categoryId }: Props) => {
   );
 };
 
-export default CategoryLayout;
+export default CategoryClient;
