@@ -3,7 +3,7 @@ import { CommentResponse } from "@/types/comment";
 
 export type Author = {
   id: number;
-  nickname: string;
+  username: string;
   profileImage: string;
 };
 
@@ -24,7 +24,7 @@ export type StoryResponse = {
   contents: string;
   likeCount: number;
   liked: boolean;
-  createAt: string;
+  createdAt: string;
   proucts: ProductResponse[];
   author: Author;
   comments: CommentResponse[];
@@ -35,20 +35,23 @@ export type StoriesResponse = {
   length: number;
 };
 
-export const initialStoriesData: StoryResponse[] = [
-  {
-    storyId: 1,
-    storyImageUrl: "",
-    contents: "",
-    likeCount: 0,
-    liked: false,
-    createAt: "",
-    proucts: [],
-    author: {
-      id: 1,
-      nickname: "",
-      profileImage: "",
+export const initialStoriesData: StoriesResponse = {
+  stories: [
+    {
+      storyId: 1,
+      storyImageUrl: "",
+      contents: "",
+      likeCount: 1,
+      liked: false,
+      createdAt: "",
+      proucts: [],
+      author: {
+        id: 1,
+        username: "",
+        profileImage: "",
+      },
+      comments: [],
     },
-    comments: [],
-  },
-];
+  ],
+  length: 10,
+};

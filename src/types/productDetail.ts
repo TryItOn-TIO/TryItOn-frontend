@@ -11,7 +11,7 @@ export type ProductDetailResponse = {
   brand: string;
   price: number;
   sale: number;
-  content: string;
+  contents: string;
   images: string[];
   wishlistCount: number;
   liked: boolean;
@@ -24,7 +24,7 @@ export const initialProductDetail: ProductDetailResponse = {
   brand: "",
   price: 0,
   sale: 0,
-  content: "",
+  contents: "",
   images: [],
   wishlistCount: 0,
   liked: false,

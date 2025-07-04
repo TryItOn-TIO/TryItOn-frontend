@@ -1,6 +1,4 @@
 import StoryClient from "@/app/story/[id]/_components/StoryClient";
-import { notFound } from "next/navigation";
-import { dummyStories } from "@/mock/story";
 
 // 정적으로 생성할 경로 지정
 export async function generateStaticParams() {

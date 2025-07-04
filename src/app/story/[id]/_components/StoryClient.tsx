@@ -3,21 +3,22 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import ClothesInfo from "@/app/story/[id]/_components/ClothesInfo";
-import { initialStoriesData, StoryResponse } from "@/types/story";
+import { initialStoriesData, StoriesResponse } from "@/types/story";
 import MenuBar from "@/app/story/[id]/_components/MenuBar";
-import { getNextStories, getStories } from "@/api/story";
+import { getNextStories, getStories, toggleStoryLike } from "@/api/story";
 import { useRouter } from "next/navigation";
 import { useStories } from "@/hooks/useStories";
 import NavigateBtn from "@/app/story/[id]/_components/NavigateBtn";
 import CommentSection from "@/app/story/[id]/_components/CommentSection";
+import { SortType } from "@/constants/SortType";
 
 const StoryClient = ({ storyId }: { storyId: number }) => {
   const router = useRouter();
   // TODO: API 연결 테스트 후, 아래 코드로 바꿔껴야 합니다.
   // const { stories: data, setStories: setData } = useStories();
-  const [data, setData] = useState<StoryResponse[]>(initialStoriesData);
+  const [data, setData] = useState<StoriesResponse>(initialStoriesData);
 
-  const currentStory = data.find((story) => story.id == storyId);
+  const currentStory = data.stories.find((story) => story.storyId == storyId);
 
   // 포스트잇 추가 상태 관리
   const [postComment, setPostComment] = useState(true);
@@ -26,33 +27,35 @@ const StoryClient = ({ storyId }: { storyId: number }) => {
   // 착장 정보 on/off 상태 관리
   const [clothesOn, setClothesOn] = useState(false);
 
-  const handleLike = () => {
-    // TODO: 스토리 like API
-    setData((prevData) =>
-      prevData.map((story) =>
-        story.id === storyId ? { ...story, liked: !story.liked } : story
-      )
-    );
+  const handleLike = async () => {
+    try {
+      await toggleStoryLike(storyId);
+      window.location.reload(); // 좋아요 fetch
+    } catch {
+      console.error("좋아요를 누르는 과정에서 에러가 발생했습니다.");
+    }
   };
 
   const handleNext = () => {
-    const nextIndex = data.findIndex((story) => story.id == storyId) + 1;
+    const nextIndex =
+      data.stories.findIndex((story) => story.storyId == storyId) + 1;
     if (nextIndex < data.length) {
-      router.push(`/story/${data[nextIndex].id}`);
+      router.push(`/story/${data.stories[nextIndex].storyId}`);
     }
   };
 
   const handlePrev = () => {
-    const prevIndex = data.findIndex((story) => story.id == storyId) - 1;
+    const prevIndex =
+      data.stories.findIndex((story) => story.storyId == storyId) - 1;
     if (prevIndex >= 0) {
-      router.push(`/story/${data[prevIndex].id}`);
+      router.push(`/story/${data.stories[prevIndex].storyId}`);
     }
   };
 
   // 최초 스토리 데이터 get 요청
   const fetchData = async () => {
     try {
-      const response = await getStories();
+      const response = await getStories(SortType.LATEST, 10);
       setData(response);
     } catch (error) {
       console.error("스토리를 불러오는 중 에러 발생", error);
@@ -62,7 +65,7 @@ const StoryClient = ({ storyId }: { storyId: number }) => {
   // 이후 스토리 데이터 get 요청
   const fetchNextData = async () => {
     try {
-      const response = await getNextStories(storyId);
+      const response = await getNextStories(storyId, SortType.LATEST, 10);
       setData(response);
     } catch (error) {
       console.error("스토리를 불러오는 중 에러 발생", error);

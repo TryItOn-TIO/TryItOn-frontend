@@ -1,8 +1,8 @@
-import { CommentType } from "@/types/story";
+import { CommentResponse } from "@/types/comment";
 import React from "react";
 
 type CommentProps = {
-  data: CommentType;
+  data: CommentResponse;
 };
 
 const Comment = ({ data }: CommentProps) => {
@@ -16,9 +16,9 @@ const Comment = ({ data }: CommentProps) => {
       }}
     >
       <div className="font-semibold">{data.username}</div>
-      <div className="text-sm">{data.content}</div>
+      <div className="text-sm">{data.contents}</div>
       <div className="text-[10px] text-gray-500 mt-1">
-        {data.createAt.slice(0, 10)}
+        {data.createdAt.slice(0, 10)}
       </div>
     </div>
   );

@@ -175,7 +175,7 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
       {/* 사이즈 추천 등 */}
       <div className="mt-10">
         <label className="block text-sm font-medium mb-1 text-neutral-00">
-          {data.content}
+          {data.contents}
         </label>
       </div>
 

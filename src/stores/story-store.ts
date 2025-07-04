@@ -1,13 +1,13 @@
 // 10개씩 불러와지는 스토리 정보를 저장하는 저장소
-import { initialStoriesData, StoryResponse } from "@/types/story";
+import { initialStoriesData, StoriesResponse } from "@/types/story";
 import { createStore } from "zustand/vanilla";
 
 export type StoryState = {
-  stories: StoryResponse[];
+  stories: StoriesResponse;
 };
 
 export type StoryActions = {
-  setStories: (stories: StoryResponse[]) => void;
+  setStories: (stories: StoriesResponse) => void;
 };
 
 export type StoryStore = StoryState & StoryActions;
@@ -19,7 +19,7 @@ export const defaultInitState: StoryState = {
 export const createStoryStore = (initState: StoryState = defaultInitState) => {
   return createStore<StoryStore>()((set) => ({
     ...initState,
-    setStories: (stories: StoryResponse[]) => set(() => ({ stories })),
+    setStories: (stories: StoriesResponse) => set(() => ({ stories })),
   }));
 };
 
