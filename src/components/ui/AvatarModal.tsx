@@ -1,6 +1,7 @@
 "use client";
 
 import { createAvatar } from "@/api/avatar";
+import { AvatarResponse } from "@/types/avatar";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -14,11 +15,15 @@ const AvatarModal = ({ onClose }: AvatarModalProps) => {
   const id = Number(params?.id);
 
   const [loading, setLoading] = useState(false);
-  const [avatar, setAvatar] = useState({
-    id: id,
+  const [avatar, setAvatar] = useState<AvatarResponse>({
+    avatarId: id,
     avatarImgUrl: "/images/dummy/ex10.png",
-    productName: "린넨 셔츠",
-    categoryName: "상의",
+    products: [
+      {
+        productName: "린넨 셔츠",
+        categoryName: "상의",
+      },
+    ],
   });
 
   const makeAvatar = async () => {
@@ -48,9 +53,11 @@ const AvatarModal = ({ onClose }: AvatarModalProps) => {
           <>
             {/* 상품 정보 */}
             <div className="absolute top-6 left-8">
-              <div className="text-sm text-gray-500">{avatar.categoryName}</div>
+              <div className="text-sm text-gray-500">
+                {avatar.products[0]?.categoryName}
+              </div>
               <div className="text-xl font-semibold mb-1">
-                {avatar.productName}
+                {avatar.products[0]?.productName}
               </div>
             </div>
             {/* 닫기 버튼 */}

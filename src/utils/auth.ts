@@ -1,11 +1,21 @@
 export const setAccessToken = (token: string | null) => {
-  localStorage.setItem("access_token", token || "");
+  if (typeof window !== "undefined") {
+    // localStorage 관련 작업 수행 코드
+    // value = localStorage.getItem("pw") || "";
+    localStorage.setItem("access_token", token || "");
+  }
 };
 
 export const getAccessToken = () => {
-  return localStorage.getItem("access_token");
+  if (typeof window !== "undefined") {
+    // localStorage 관련 작업 수행 코드
+    // value = localStorage.getItem("pw") || "";
+    return localStorage.getItem("access_token");
+  }
 };
 
 export const deleteAccessToken = () => {
-  localStorage.removeItem("access_token");
+  if (typeof window !== "undefined") {
+    localStorage.removeItem("access_token");
+  }
 };

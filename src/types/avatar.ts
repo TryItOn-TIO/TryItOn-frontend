@@ -15,7 +15,7 @@ export type AvatarRequest = {
 };
 
 export type AvatarResponse = {
-  id: number;
+  avatarId: number;
   avatarImgUrl: string;
   products: AvatarProduct[];
 };
