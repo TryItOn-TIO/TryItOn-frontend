@@ -16,8 +16,8 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
   // TODO: 주문 구현 후 DTO 수정
   const [orderData, setOrderData] = useState({
     id: data.id,
-    color: data.variant[0].color,
-    size: data.variant[0].size,
+    color: data.variant[0]?.color,
+    size: data.variant[0]?.size,
     quantity: 1,
   });
 
@@ -172,7 +172,7 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
         </div>
       </div>
 
-      {/* 사이즈 추천 */}
+      {/* 사이즈 추천 등 */}
       <div className="mt-10">
         <label className="block text-sm font-medium mb-1 text-neutral-00">
           {data.content}
