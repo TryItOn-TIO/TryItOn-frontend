@@ -10,14 +10,14 @@ export async function generateStaticParams() {
 
 // 정적 페이지에 필요한 데이터 요청
 export default async function Page({ params }: { params: { id: string } }) {
-  const id = Number(params.id);
+  const id = (await params).id;
 
   try {
     const stories = dummyStories; // 실제 API 요청
     // const stories = await getStories(); // 실제 API 요청
     return (
       <div className="w-full">
-        <StoryClient storyId={id} initialData={stories} />
+        <StoryClient storyId={Number(id)} initialData={stories} />
       </div>
     );
   } catch (error) {
