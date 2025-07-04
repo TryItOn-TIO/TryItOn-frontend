@@ -27,11 +27,17 @@ function setResponseInterceptor(instance: AxiosInstance): void {
   instance.interceptors.response.use(
     (response) => response,
     (error) => {
-      if (error.response?.status === 401) {
+      console.log(error);
+
+      // if (error.status === 401) {
+      if (error.status === 401 || error.status === 403) {
         // 1. 토큰 삭제
         deleteAccessToken();
 
-        // 2. 리다이렉트 (SPA 라우팅용)
+        // 2. 확인창으로 안내
+        confirm("로그인이 필요합니다");
+
+        // 3. 리다이렉트 (SPA 라우팅용)
         window.location.href = "/signin";
       }
       return Promise.reject(error);
@@ -60,4 +66,3 @@ export const axiosWithoutAuth = (): AxiosInstance => {
   }
   return noAuthInstance;
 };
-
