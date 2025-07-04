@@ -1,6 +1,6 @@
 import AvatarLayout from "@/components/layout/AvatarProducts";
 import { mainProductsDummy } from "@/mock/mainProducts";
-import CategoryClient from "./_components/CategoryClient";
+import CategoryClient from "@/app/category/[id]/_components/CategoryClient";
 import AvatarWearInfo from "@/components/common/AvatarWearInfo";
 
 type Params = {

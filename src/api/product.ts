@@ -11,16 +11,19 @@ export const fetchMainProducts = async (): Promise<MainProductResponse> => {
   return response.data;
 };
 
-// 카테고리 탭 화면 상품 불러오기
-export const fetchCategoryProducts = async (
-  categoryId: number,
-  page = 0,
-  size = 10
-): Promise<CategoryProductResponse> => {
+export const fetchCategoryProducts = async ({
+  pageParam = 0,
+  categoryId,
+  size = 10,
+}: {
+  pageParam?: number;
+  categoryId: number;
+  size?: number;
+}): Promise<CategoryProductResponse> => {
   const response = await axiosWithAuth().get("/api/home/products/category", {
     params: {
       categoryId,
-      page,
+      page: pageParam,
       size,
     },
   });
