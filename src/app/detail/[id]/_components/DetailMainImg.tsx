@@ -43,7 +43,7 @@ const DetailMainImg = ({ images }: DetailMainImgProps) => {
           </div>
 
           {/* 제품 사진 */}
-          {images.map((img, idx) => (
+          {images.slice(0, 4).map((img, idx) => (
             <SwiperSlide key={idx}>
               {/* 헤더 15vh 제외, 전체 화면 (height) */}
               <div className="relative w-full h-[85vh]">

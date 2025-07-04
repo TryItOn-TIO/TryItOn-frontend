@@ -53,3 +53,16 @@ export const dummyProductDetail: ProductDetailResponse = {
     },
   ],
 };
+
+export const initialProductDetail: ProductDetailResponse = {
+  id: 1,
+  productName: "",
+  brand: "",
+  price: 0,
+  sale: 0,
+  content: "",
+  images: [],
+  wishlistCount: 0,
+  liked: false,
+  variant: [],
+};
