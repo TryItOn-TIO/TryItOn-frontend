@@ -6,8 +6,8 @@ import DetailRecommand from "@/app/detail/[id]/_components/DetailRecommand";
 import DetailInfo from "@/app/detail/[id]/_components/DetailInfo";
 import { getProductDetail } from "@/api/productDetail";
 import { useEffect, useState } from "react";
-import { initialProductDetail } from "@/mock/productDetail";
 import Spinner from "@/components/common/Spinner";
+import { initialProductDetail } from "@/types/productDetail";
 
 type DetailClientProps = {
   productId: number;

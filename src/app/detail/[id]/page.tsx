@@ -5,7 +5,11 @@ export async function generateStaticParams() {
   return Array.from({ length: 1000 }, (_, i) => ({ id: String(i + 1) })); // 범위 넓히기
 }
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const id = (await params).id;
 
   return (

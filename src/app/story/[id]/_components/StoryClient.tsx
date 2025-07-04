@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import ClothesInfo from "@/app/story/[id]/_components/ClothesInfo";
-import { StoryResponse } from "@/types/story";
+import { initialStoriesData, StoryResponse } from "@/types/story";
 import MenuBar from "@/app/story/[id]/_components/MenuBar";
 import { getNextStories, getStories } from "@/api/story";
 import { useRouter } from "next/navigation";
@@ -11,17 +11,11 @@ import { useStories } from "@/hooks/useStories";
 import NavigateBtn from "@/app/story/[id]/_components/NavigateBtn";
 import CommentSection from "@/app/story/[id]/_components/CommentSection";
 
-const StoryClient = ({
-  storyId,
-  initialData,
-}: {
-  storyId: number;
-  initialData: StoryResponse[];
-}) => {
+const StoryClient = ({ storyId }: { storyId: number }) => {
   const router = useRouter();
   // TODO: API 연결 테스트 후, 아래 코드로 바꿔껴야 합니다.
   // const { stories: data, setStories: setData } = useStories();
-  const [data, setData] = useState<StoryResponse[]>(initialData);
+  const [data, setData] = useState<StoryResponse[]>(initialStoriesData);
 
   const currentStory = data.find((story) => story.id == storyId);
 
