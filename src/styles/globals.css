@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  /* --background: #ffffff; */
+  --background: #ffffff;
   --foreground: #171717;
 }
 
@@ -12,12 +12,7 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* --background: #0a0a0a; */
-    --foreground: #ededed;
-  }
-}
+/* 다크모드 미디어 쿼리 제거 - 라이트모드로 고정 */
 
 body {
   background: var(--background);

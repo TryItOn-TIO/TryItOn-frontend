@@ -33,11 +33,49 @@ const SignupForm = <T extends SignupRequest>({
   };
 
   const handleDateChange = (value: string) => {
-    setData((prev) => ({ ...prev, birthDate: value }));
+    // 숫자만 추출
+    const numericValue = value.replace(/\D/g, "");
+
+    // 날짜 포맷팅 (1900.01.01)
+    let formattedValue = "";
+    if (numericValue.length <= 4) {
+      formattedValue = numericValue;
+    } else if (numericValue.length <= 6) {
+      formattedValue = `${numericValue.slice(0, 4)}.${numericValue.slice(4)}`;
+    } else if (numericValue.length <= 8) {
+      formattedValue = `${numericValue.slice(0, 4)}.${numericValue.slice(
+        4,
+        6
+      )}.${numericValue.slice(6)}`;
+    }
+
+    // 8자리 숫자까지만 허용
+    if (numericValue.length <= 8) {
+      setData((prev) => ({ ...prev, birthDate: formattedValue }));
+    }
   };
 
   const handlePhoneNumChange = (value: string) => {
-    setData((prev) => ({ ...prev, phoneNum: value }));
+    // 숫자만 추출
+    const numericValue = value.replace(/\D/g, "");
+
+    // 전화번호 포맷팅 (010-0000-0000)
+    let formattedValue = "";
+    if (numericValue.length <= 3) {
+      formattedValue = numericValue;
+    } else if (numericValue.length <= 7) {
+      formattedValue = `${numericValue.slice(0, 3)}-${numericValue.slice(3)}`;
+    } else if (numericValue.length <= 11) {
+      formattedValue = `${numericValue.slice(0, 3)}-${numericValue.slice(
+        3,
+        7
+      )}-${numericValue.slice(7)}`;
+    }
+
+    // 11자리 숫자까지만 허용
+    if (numericValue.length <= 11) {
+      setData((prev) => ({ ...prev, phoneNum: formattedValue }));
+    }
   };
 
   return (
@@ -55,7 +93,8 @@ const SignupForm = <T extends SignupRequest>({
       <div>
         <label className="block text-sm font-medium mb-1">생년월일 *</label>
         <InputText
-          type="date"
+          placeholder="1900.01.01"
+          type="text"
           value={data.birthDate}
           onChange={handleDateChange}
         />
