@@ -35,10 +35,22 @@ export const useCart = () => {
         totalPrice,
         isLoading: false,
       }));
-    } catch (error) {
+    } catch (error: any) {
+      console.error('장바구니 조회 실패:', error);
+      
+      let errorMessage = '장바구니 조회에 실패했습니다.';
+      
+      if (error.response?.status === 404) {
+        errorMessage = '장바구니 API를 찾을 수 없습니다. 백엔드 서버를 확인해주세요.';
+      } else if (error.response?.status === 401) {
+        errorMessage = '로그인이 필요합니다.';
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+      
       setState(prev => ({
         ...prev,
-        error: error instanceof Error ? error.message : '장바구니 조회에 실패했습니다.',
+        error: errorMessage,
         isLoading: false,
       }));
     }
