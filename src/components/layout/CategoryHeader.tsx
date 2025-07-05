@@ -10,7 +10,11 @@ const CategoryHeader = () => {
   const currentId = pathname === "/" ? 0 : Number(pathname.split("/").pop());
 
   // 카테고리 조건부 렌더링
-  if (pathname == "/signin" || pathname == "/signup" || pathname == "/story") {
+  if (
+    pathname == "/signin" ||
+    pathname == "/signup" ||
+    pathname.includes("/story/")
+  ) {
     return;
   }
 

@@ -17,7 +17,7 @@ const TryonImgUploader = <T extends SignupRequest>({
   data,
   setData,
 }: TryonImgUploaderProps<T>) => {
-  const [preview, setPreview] = useState<string | null>("/images/ex10.png");
+  const [preview, setPreview] = useState<string | null>();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -46,22 +46,21 @@ const TryonImgUploader = <T extends SignupRequest>({
 
     try {
       // S3 업로드 실행
-      console.log('S3 업로드 시작...');
+      console.log("S3 업로드 시작...");
       const presignedUrl = await generatePresignedUrl(selectedFile.name);
       await uploadFileToS3(presignedUrl, selectedFile);
-      const fileUrl = presignedUrl.split('?')[0];
-      
+      const fileUrl = presignedUrl.split("?")[0];
+
       setData((prev) => ({
         ...prev,
         userBaseImageUrl: fileUrl,
       }));
-      
-      console.log('업로드 성공:', fileUrl);
-      setStep((prev) => prev + 1);
 
+      console.log("업로드 성공:", fileUrl);
+      setStep((prev) => prev + 1);
     } catch (error) {
-      console.error('업로드 실패:', error);
-      alert('업로드에 실패했습니다. 다시 시도해주세요.');
+      console.error("업로드 실패:", error);
+      alert("업로드에 실패했습니다. 다시 시도해주세요.");
     } finally {
       setIsUploading(false);
     }
@@ -112,8 +111,8 @@ const TryonImgUploader = <T extends SignupRequest>({
       </div>
 
       {/* submit 버튼 */}
-      <BlackButton 
-        text={isUploading ? "업로드 중..." : "다음"} 
+      <BlackButton
+        text={isUploading ? "업로드 중..." : "다음"}
         handleClick={handleClickNext}
       />
     </div>
