@@ -21,6 +21,8 @@ type CartItem = {
 };
 
 const Cart = () => {
+  useAuthGuard(); // 인증 확인 - 로그인하지 않은 사용자는 signin 페이지로 리다이렉트
+  
   const router = useRouter();
   const { 
     items: backendCartItems, 
