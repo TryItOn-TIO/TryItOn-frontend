@@ -2,23 +2,27 @@
 
 import { StoryResponse } from "@/types/story";
 import React, { useState } from "react";
-import Comment from "./Comment";
-import CommentForm from "@/components/forms/CommentForm";
+import Comment from "@/app/story/[id]/_components/comment/Comment";
+import PositionCommentForm from "@/app/story/[id]/_components/comment/PositionCommentForm";
 
 type CommentSectionProps = {
   commentOn: boolean;
   postComment: boolean;
   storyInfo: StoryResponse;
+  commentPosition: { x: number; y: number } | null;
+  onCancelComment: () => void;
+  onChangePosition: () => void;
 };
 
 const CommentSection = ({
   commentOn,
   postComment,
   storyInfo,
+  commentPosition,
+  onCancelComment,
+  onChangePosition,
 }: CommentSectionProps) => {
   const [comment, setComment] = useState("");
-  const [xPos, setXPos] = useState(0);
-  const [yPos, setYPos] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (value: string) => {
@@ -26,17 +30,29 @@ const CommentSection = ({
   };
 
   // TODO: 댓글 post 요청
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!comment.trim()) {
       alert("댓글을 입력해주세요");
       return;
     }
 
+    if (!commentPosition) {
+      alert("댓글 위치를 선택해주세요");
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-      // await postComment({ comment });
-      console.log("댓글 전송됨:", comment);
+      // await postComment({
+      //   comment,
+      //   position: { x: commentPosition.x, y: commentPosition.y }
+      // });
+      console.log("댓글 전송됨:", {
+        comment,
+        position: commentPosition,
+      });
       setComment(""); // 성공 시 입력창 초기화
+      onCancelComment(); // 댓글 입력 모드 종료
     } catch (error) {
       console.error("댓글 전송 실패", error);
       alert("댓글 등록 중 문제가 발생했어요.");
@@ -53,16 +69,17 @@ const CommentSection = ({
           <Comment key={comment.id} data={comment} />
         ))}
 
-      {/* 댓글 입력창 */}
-      {postComment && (
-        <div className="absolute bottom-0 left-0 w-full z-10">
-          <CommentForm
-            comment={comment}
-            onChange={handleChange}
-            onSubmit={handleSubmit}
-            isSubmitting={isSubmitting}
-          />
-        </div>
+      {/* 좌표 기반 댓글 입력창 */}
+      {postComment && commentPosition && (
+        <PositionCommentForm
+          position={commentPosition}
+          comment={comment}
+          onChange={handleChange}
+          onSubmit={handleSubmit}
+          onCancel={onCancelComment}
+          onChangePosition={onChangePosition}
+          isSubmitting={isSubmitting}
+        />
       )}
     </div>
   );
