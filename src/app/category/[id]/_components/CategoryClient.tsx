@@ -1,3 +1,5 @@
+/* 카테고리 상품 목록 표시 */
+
 "use client";
 
 import React from "react";
@@ -7,7 +9,7 @@ type Props = {
   categoryId: number;
 };
 
-const CategoryLayout = ({ categoryId }: Props) => {
+const CategoryClient = ({ categoryId }: Props) => {
   return (
     <div className="container mx-auto px-4 py-8">
       <CategoryProductList categoryId={categoryId} />
@@ -15,4 +17,4 @@ const CategoryLayout = ({ categoryId }: Props) => {
   );
 };
 
-export default CategoryLayout;
+export default CategoryClient;

@@ -1,5 +1,3 @@
-import { AvatarProductInfo } from "@/types/avatar";
-
 // 홈 화면(전체 탭) 제품 응답
 export type ProductResponse = {
   id: number;
@@ -19,7 +17,6 @@ export type ProductResponse = {
 export type MainProductResponse = {
   recommended: ProductResponse[];
   ranked: ProductResponse[];
-  avatarInfo: AvatarProductInfo;
 };
 
 // 카테고리 제품 응답
@@ -32,5 +29,4 @@ export type CategoryProductResponse = {
     size: number; // 페이지당 크기
     last: boolean; // 페이지 끝을 인식
   };
-  avatarInfo: AvatarProductInfo;
 };
