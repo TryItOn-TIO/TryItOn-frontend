@@ -46,7 +46,17 @@ jobs:
       - name: Verify build output
         run: |
           echo "Verifying build output..."
-          ls -la .next/
+          if [ -d ".next" ]; then
+            echo "✅ .next directory created successfully"
+            ls -la .next/
+            echo "Build files:"
+            find .next -type f -name "*.js" -o -name "*.json" | head -10
+          else
+            echo "❌ .next directory not found after build"
+            echo "Current directory contents:"
+            ls -la
+            exit 1
+          fi
           echo "Build verification completed"
 
       - name: Upload build artifacts
@@ -73,6 +83,19 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: nextjs-build-${{ github.sha }}
+
+      - name: Verify static artifacts
+        run: |
+          echo "Verifying static artifacts..."
+          ls -la
+          if [ -d ".next/static" ]; then
+            echo "✅ .next/static directory found"
+            ls -la .next/static/
+          else
+            echo "❌ .next/static directory not found"
+            echo "Available directories:"
+            find . -type d -name ".next*" -o -name "static*" | head -10
+          fi
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -113,6 +136,20 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: nextjs-build-${{ github.sha }}
+
+      - name: Verify SSR artifacts
+        run: |
+          echo "Verifying SSR artifacts..."
+          ls -la
+          echo "Checking for .next directory..."
+          if [ -d ".next" ]; then
+            echo "✅ .next directory found"
+            ls -la .next/
+          else
+            echo "❌ .next directory not found"
+            echo "Available files and directories:"
+            find . -type f -name "*.json" -o -name "*.js" -o -name "*.ts" | head -20
+          fi
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
