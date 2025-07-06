@@ -13,7 +13,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const { id, productName, img1, brand, price, sale, liked } = product;
 
   const formattedPrice = new Intl.NumberFormat("ko-KR").format(price);
-  const formattedSale = new Intl.NumberFormat("ko-KR").format(sale);
+  
+  // sale이 할인율(%)인 경우 실제 할인가 계산
+  const discountedPrice = sale > 0 ? Math.round(price * (1 - sale / 100)) : price;
+  const formattedDiscountedPrice = new Intl.NumberFormat("ko-KR").format(discountedPrice);
 
   const { isWished, toggleWishlist } = useWishlist(liked, id);
   const { tryOnProduct } = useAvatarTryon();
@@ -91,9 +94,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <div className="h-[40px]">
             {sale > 0 ? (
               <div>
+                {/* 할인가 */}
                 <div className="text-base font-bold text-red-500">
-                  {formattedSale}원
+                  {formattedDiscountedPrice}원
                 </div>
+                {/* 정가 */}
                 <div className="text-sm text-gray-400 line-through">
                   {formattedPrice}원
                 </div>
