@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import Image from "next/image";
 import { StoryResponse } from "@/types/story";
 import CommentSection from "./comment/CommentSection";
@@ -34,12 +34,13 @@ const StoryImage = forwardRef<HTMLDivElement, StoryImageProps>(
         className="relative w-full max-w-[500px] h-full bg-gradient-to-b from-gray-50 to-gray-100 overflow-hidden rounded-lg shadow-xl cursor-pointer"
         onClick={onImageClick}
       >
-        {/* 이미지 */}
         <Image
-          src="/images/dummy/ex10.png"
+          src={currentStory.storyImageUrl}
           alt="스토리 사진"
           fill
           className="object-contain rounded-lg"
+          priority={true}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
 
         {/* 댓글(포스트잇) 섹션 */}

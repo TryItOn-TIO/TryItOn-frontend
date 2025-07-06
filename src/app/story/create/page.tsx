@@ -34,7 +34,7 @@ const CreateStoryPage = () => {
   const isSubmitDisabled = isSubmitting || !selectedAvatar || !contents.trim();
 
   return (
-    <div className="w-screen min-h-screen bg-gray-50 py-4 sm:py-8">
+    <div className="w-screen min-h-screen py-4 sm:py-8">
       <div className="max-w-4xl mx-auto px-4">
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           {/* 헤더 */}
