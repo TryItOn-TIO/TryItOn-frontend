@@ -14,7 +14,7 @@ import { dummyStoryList } from "@/mock/story";
 const StoryPage = () => {
   const router = useRouter();
   const [stories, setStories] = useState<StoryResponse[]>(dummyStoryList);
-  const [isLoading, setIsLoading] = useState<boolean>(false); // TODO: API 테스트 후 true로 변경
+  const [isLoading, setIsLoading] = useState<boolean>(true); // TODO: API 테스트 후 true로 변경
   const [error, setError] = useState<string | null>(null);
   const [sortType, setSortType] = useState<SortType>(SortType.LATEST);
 
@@ -32,7 +32,7 @@ const StoryPage = () => {
   };
 
   useEffect(() => {
-    // fetchStories();
+    fetchStories();
   }, [sortType]);
 
   const handleStoryClick = (storyId: number) => {

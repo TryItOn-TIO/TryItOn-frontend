@@ -1,10 +1,13 @@
-import { AvatarResponse } from "@/types/avatar";
+import { ClosetAvatarResponse } from "@/types/closet";
+import ClosetEmptyState from "./ClosetEmptyState";
 
 type AvatarSelectorProps = {
-  avatars: AvatarResponse[];
-  selectedAvatar: AvatarResponse | null;
-  onAvatarSelect: (avatar: AvatarResponse) => void;
+  avatars: ClosetAvatarResponse[];
+  selectedAvatar: ClosetAvatarResponse | null;
+  onAvatarSelect: (avatar: ClosetAvatarResponse) => void;
   isLoading: boolean;
+  hasAvatars: boolean;
+  error?: string | null;
 };
 
 const AvatarSelector = ({
@@ -12,7 +15,10 @@ const AvatarSelector = ({
   selectedAvatar,
   onAvatarSelect,
   isLoading,
+  hasAvatars,
+  error,
 }: AvatarSelectorProps) => {
+  // 로딩 상태
   if (isLoading) {
     return (
       <div>
@@ -32,14 +38,59 @@ const AvatarSelector = ({
         </h2>
         <div className="flex justify-center items-center py-12">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-          <span className="ml-3 text-gray-600">
-            아바타 목록을 불러오는 중...
-          </span>
+          <span className="ml-3 text-gray-600">옷장 목록을 불러오는 중...</span>
         </div>
       </div>
     );
   }
 
+  // 에러 상태
+  if (error) {
+    return (
+      <div>
+        <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+          <svg
+            className="w-5 h-5 mr-2 text-blue-600"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              fillRule="evenodd"
+              d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+              clipRule="evenodd"
+            />
+          </svg>
+          아바타 선택
+        </h2>
+        <div className="flex flex-col justify-center items-center py-12 bg-red-50 rounded-xl border border-red-200">
+          <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-4">
+            <svg
+              className="w-6 h-6 text-red-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"
+              />
+            </svg>
+          </div>
+          <p className="text-red-800 font-medium mb-2">오류가 발생했습니다</p>
+          <p className="text-red-600 text-sm text-center">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // 아바타가 없는 경우 빈 상태 컴포넌트 표시
+  if (!hasAvatars) {
+    return <ClosetEmptyState />;
+  }
+
+  // 정상 상태 - 아바타 목록 표시
   return (
     <div>
       <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
@@ -55,6 +106,9 @@ const AvatarSelector = ({
           />
         </svg>
         아바타 선택
+        <span className="ml-2 text-sm font-normal text-gray-500">
+          ({avatars.length}개)
+        </span>
       </h2>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -70,7 +124,7 @@ const AvatarSelector = ({
           >
             <div className="aspect-square bg-gray-100 rounded-lg mb-3 flex items-center justify-center overflow-hidden">
               <img
-                src={avatar.avatarImgUrl}
+                src={avatar.avatarImage}
                 alt={`Avatar ${avatar.avatarId}`}
                 className="w-full h-full object-cover rounded-lg"
                 onError={(e) => {
@@ -81,14 +135,16 @@ const AvatarSelector = ({
               />
             </div>
             <div className="text-xs text-gray-600 space-y-1">
-              {avatar.products.slice(0, 2).map((product, index) => (
-                <div key={index} className="truncate font-medium">
-                  {product.productName}
-                </div>
-              ))}
-              {avatar.products.length > 2 && (
+              {Object.values(avatar.itemsByCategory)
+                .slice(0, 2)
+                .map((product, index) => (
+                  <div key={index} className="truncate font-medium">
+                    {product.productName}
+                  </div>
+                ))}
+              {Object.values(avatar.itemsByCategory).length > 2 && (
                 <div className="text-gray-400">
-                  +{avatar.products.length - 2}개 더
+                  +{Object.values(avatar.itemsByCategory).length - 2}개 더
                 </div>
               )}
             </div>

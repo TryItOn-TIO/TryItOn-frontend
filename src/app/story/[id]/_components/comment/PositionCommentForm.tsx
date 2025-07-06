@@ -21,7 +21,7 @@ const PositionCommentForm = ({
   onChangePosition,
   isSubmitting,
 }: PositionCommentFormProps) => {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement | null>(null);
 
   useEffect(() => {
     // 컴포넌트가 마운트되면 자동으로 입력창에 포커스
@@ -56,7 +56,7 @@ const PositionCommentForm = ({
     if (left + FORM_WIDTH > STORY_MAX_WIDTH) {
       left = STORY_MAX_WIDTH - FORM_WIDTH - 10;
     }
-    
+
     // 왼쪽 경계 체크
     if (left < 10) {
       left = 10;
@@ -135,7 +135,7 @@ const PositionCommentForm = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           <textarea
             ref={inputRef}
-            placeholder="이 위치에 댓글을 남겨보세요..."
+            placeholder="이 위치에 댓글을 남겨보세요"
             value={comment}
             onChange={(e) => onChange(e.target.value)}
             onKeyDown={handleKeyDown}

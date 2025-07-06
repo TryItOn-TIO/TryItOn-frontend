@@ -1,7 +1,7 @@
-import { AvatarResponse } from "@/types/avatar";
+import { ClosetAvatarResponse } from "@/types/closet";
 
 type BackgroundColorPickerProps = {
-  selectedAvatar: AvatarResponse;
+  selectedAvatar: ClosetAvatarResponse;
   selectedColor: string;
   onColorChange: (color: string) => void;
 };
@@ -110,7 +110,7 @@ const BackgroundColorPicker = ({
             style={{ backgroundColor: selectedColor }}
           >
             <img
-              src={selectedAvatar.avatarImgUrl}
+              src={selectedAvatar.avatarImage}
               alt="Preview"
               className="max-w-full max-h-full object-contain rounded-lg"
               onError={(e) => {

@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const StoryEmptyState = () => {
   return (
-    <div className="text-center py-16">
+    <div className="w-[40rem] text-center py-16">
       <div className="text-gray-400 mb-4">
         <svg
           className="w-16 h-16 mx-auto"

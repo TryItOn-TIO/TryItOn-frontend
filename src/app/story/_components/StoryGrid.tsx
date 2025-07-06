@@ -15,11 +15,7 @@ const StoryGrid = ({ stories, onStoryClick }: StoryGridProps) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {stories.map((story) => (
-        <StoryCard
-          key={story.storyId}
-          story={story}
-          onClick={onStoryClick}
-        />
+        <StoryCard key={story.storyId} story={story} onClick={onStoryClick} />
       ))}
     </div>
   );
