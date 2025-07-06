@@ -1,12 +1,13 @@
-name: TIO Frontend CI/CD
+
+name: TIO Frontend SSR CI/CD
 
 on:
   push:
-    branches: [ "main", "develop", "feat/cicd" ]
+    branches: [ "main", "develop" ]
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment to deploy'
+        description: 'Deployment environment'
         required: false
         default: 'production'
 
@@ -14,39 +15,250 @@ permissions:
   contents: read
 
 jobs:
-  build-and-deploy:
+  # Job 1: 빌드
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '23.11.0' # 프로젝트에 맞는 버전
+          node-version: '18'
           cache: 'npm'
 
-      - name: Install Dependencies
-        run: npm ci
+      - name: Install dependencies
+        run: |
+          echo "Installing dependencies..."
+          npm ci
 
-      - name: Build Next.js
+      - name: Build Next.js application
         env:
+          NEXT_PUBLIC_API_URL: http://TIO-ALB-173623777.ap-northeast-2.elb.amazonaws.com
           NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
-        run: npm run build
+          NODE_ENV: production
+        run: |
+          echo "Building Next.js application for SSR..."
+          npm run build
+
+      - name: Verify build output
+        run: |
+          echo "Verifying build output..."
+          ls -la .next/
+          echo "Build verification completed"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: nextjs-build-${{ github.sha }}
+          path: |
+            .next/
+            package.json
+            package-lock.json
+            next.config.ts
+            ecosystem.config.js
+            appspec.yml
+            scripts/
+          retention-days: 7
+
+  # Job 2: 정적 파일 S3 배포
+  deploy-static:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: nextjs-build-${{ github.sha }}
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Deploy to S3
+      - name: Deploy static files to S3
         run: |
-          aws s3 sync ./out s3://${{ secrets.AWS_S3_FRONTEND_BUCKET_NAME }} --delete
+          echo "Deploying static files to S3..."
 
-      - name: Invalidate CloudFront Cache
+          # 정적 파일만 S3에 업로드 (하이브리드 배포)
+          if [ -d ".next/static" ]; then
+            aws s3 sync .next/static s3://${{ secrets.AWS_S3_FRONTEND_BUCKET_NAME }}/_next/static/ \
+              --delete \
+              --cache-control "public, max-age=31536000, immutable"
+            echo "Static files deployed successfully"
+          else
+            echo "No static files found to deploy"
+          fi
+
+      - name: Invalidate CloudFront cache
         run: |
+          echo "Invalidating CloudFront cache for static files..."
           aws cloudfront create-invalidation \
             --distribution-id ${{ secrets.AWS_CLOUDFRONT_DISTRIBUTION_ID }} \
-            --paths "/*"
+            --paths "/_next/static/*"
+          echo "CloudFront cache invalidated"
+
+  # Job 3: SSR 서버 배포
+  deploy-ssr:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: nextjs-build-${{ github.sha }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Create deployment package
+        run: |
+          echo "Creating deployment package..."
+
+          # 배포 패키지 디렉토리 생성
+          mkdir -p deploy
+
+          # 필요한 파일들 복사
+          cp -r .next deploy/
+          cp package.json deploy/
+          cp package-lock.json deploy/
+          cp next.config.ts deploy/
+          cp ecosystem.config.js deploy/
+          cp appspec.yml deploy/
+          cp -r scripts deploy/
+
+          # 배포 패키지 압축
+          cd deploy
+          zip -r ../deploy.zip . -x "*.git*" "node_modules/*"
+          cd ..
+
+          # 패키지 크기 확인
+          ls -lh deploy.zip
+          echo "Deployment package created successfully"
+
+      - name: Upload deployment package to S3
+        run: |
+          echo "Uploading deployment package to S3..."
+
+          # 타임스탬프 추가로 고유한 키 생성
+          TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+          S3_KEY="frontend-ssr/deploy-${TIMESTAMP}-${{ github.sha }}.zip"
+
+          aws s3 cp deploy.zip s3://${{ secrets.AWS_S3_BUCKET_NAME }}/${S3_KEY}
+
+          # 환경 변수로 S3 키 저장 (다음 단계에서 사용)
+          echo "S3_DEPLOYMENT_KEY=${S3_KEY}" >> $GITHUB_ENV
+          echo "Deployment package uploaded to S3"
+
+      - name: Create CodeDeploy deployment
+        run: |
+          echo "Creating CodeDeploy deployment..."
+
+          # 배포 생성
+          DEPLOYMENT_ID=$(aws deploy create-deployment \
+            --application-name TIO-Frontend-Application \
+            --deployment-group-name TIO-Frontend-DeploymentGroup \
+            --s3-location bucket=${{ secrets.AWS_S3_BUCKET_NAME }},bundleType=zip,key=${{ env.S3_DEPLOYMENT_KEY }} \
+            --deployment-config-name CodeDeployDefault.AllAtOnceHalfAtATime \
+            --description "Frontend SSR deployment from GitHub Actions - ${{ github.sha }}" \
+            --query 'deploymentId' \
+            --output text)
+
+          echo "Deployment created with ID: $DEPLOYMENT_ID"
+          echo "DEPLOYMENT_ID=$DEPLOYMENT_ID" >> $GITHUB_ENV
+
+      - name: Wait for deployment completion
+        run: |
+          echo "Waiting for deployment completion..."
+
+          # 배포 상태 모니터링 (최대 10분)
+          for i in {1..60}; do
+            STATUS=$(aws deploy get-deployment \
+              --deployment-id ${{ env.DEPLOYMENT_ID }} \
+              --query 'deploymentInfo.status' \
+              --output text)
+
+            echo "Deployment status: $STATUS (attempt $i/60)"
+
+            case $STATUS in
+              "Succeeded")
+                echo "✅ Deployment completed successfully!"
+                exit 0
+                ;;
+              "Failed"|"Stopped")
+                echo "❌ Deployment failed with status: $STATUS"
+
+                # 실패 원인 조회
+                aws deploy get-deployment \
+                  --deployment-id ${{ env.DEPLOYMENT_ID }} \
+                  --query 'deploymentInfo.errorInformation'
+                exit 1
+                ;;
+              "InProgress"|"Queued"|"Created")
+                sleep 10
+                ;;
+              *)
+                echo "Unknown deployment status: $STATUS"
+                sleep 10
+                ;;
+            esac
+          done
+
+          echo "❌ Deployment timeout after 10 minutes"
+          exit 1
+
+  # Job 4: 배포 후 검증
+  post-deployment:
+    runs-on: ubuntu-latest
+    needs: [deploy-static, deploy-ssr]
+    if: always()
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Verify deployment
+        run: |
+          echo "Verifying deployment..."
+
+          # ALB 헬스체크 확인
+          TARGET_GROUP_ARN="${{ secrets.TARGET_GROUP_ARN }}"
+
+          if [ -n "$TARGET_GROUP_ARN" ]; then
+            HEALTH_STATUS=$(aws elbv2 describe-target-health \
+              --target-group-arn $TARGET_GROUP_ARN \
+              --query 'TargetHealthDescriptions[0].TargetHealth.State' \
+              --output text 2>/dev/null || echo "unknown")
+
+            echo "Target group health status: $HEALTH_STATUS"
+
+            if [ "$HEALTH_STATUS" = "healthy" ]; then
+              echo "✅ Target group is healthy"
+            else
+              echo "⚠️ Target group health status: $HEALTH_STATUS"
+            fi
+          fi
+
+      - name: Send deployment notification
+        if: always()
+        run: |
+          if [ "${{ needs.deploy-ssr.result }}" = "success" ] && [ "${{ needs.deploy-static.result }}" = "success" ]; then
+            echo "🎉 Deployment completed successfully!"
+            echo "Frontend URL: https://tio-style.com"
+          else
+            echo "❌ Deployment failed. Check the logs for details."
+          fi

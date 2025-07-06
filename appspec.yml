@@ -1,0 +1,57 @@
+
+version: 0.0
+os: linux
+
+# 파일 복사 설정
+files:
+  - source: /
+    destination: /var/www/tryiton-frontend
+    overwrite: yes
+
+# 파일 권한 설정
+permissions:
+  - object: /
+    pattern: "**"
+    owner: ec2-user
+    group: ec2-user
+    mode: 755
+  - object: /scripts
+    pattern: "*.sh"
+    owner: ec2-user
+    group: ec2-user
+    mode: 755
+
+# 배포 생명주기 훅
+hooks:
+  # 1. 애플리케이션 중지
+  ApplicationStop:
+    - location: scripts/stop_server.sh
+      timeout: 60
+      runas: ec2-user
+
+  # 2. 파일 설치 전 준비
+  BeforeInstall:
+    - location: scripts/before_install.sh
+      timeout: 300
+      runas: ec2-user
+
+  # 3. 파일 설치 후 의존성 설치
+  AfterInstall:
+    - location: scripts/setup_env.sh
+      timeout: 60
+      runas: ec2-user
+    - location: scripts/install_dependencies.sh
+      timeout: 300
+      runas: ec2-user
+
+  # 4. 애플리케이션 시작
+  ApplicationStart:
+    - location: scripts/start_server.sh
+      timeout: 120
+      runas: ec2-user
+
+  # 5. 애플리케이션 검증
+  ValidateService:
+    - location: scripts/validate_service.sh
+      timeout: 60
+      runas: ec2-user
