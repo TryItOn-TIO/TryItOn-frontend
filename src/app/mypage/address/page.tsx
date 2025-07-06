@@ -50,7 +50,7 @@ export default function AddressPage() {
       addressDetail: address.addressDetail,
       receiver: address.receiver,
       primaryNum: address.primaryNum,
-      alternateNum: address.alternateNum,
+      alternateNum: address.alternateNum || '', // null인 경우 빈 문자열로 처리
       isDefaultAddr: address.isDefaultAddr,
       deliverRequest: address.deliverRequest,
     });
@@ -63,7 +63,7 @@ export default function AddressPage() {
     
     try {
       if (editingAddress) {
-        await updateAddress(editingAddress.id, formData);
+        await updateAddress(editingAddress.addressId, formData);
       } else {
         await addAddress(formData);
       }
@@ -138,7 +138,7 @@ export default function AddressPage() {
         ) : (
           <div className="space-y-4">
             {addresses.map((address, index) => (
-              <div key={address.id || index} className="bg-white rounded-lg shadow-sm p-6">
+              <div key={address.addressId || index} className="bg-white rounded-lg shadow-sm p-6">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center mb-2">
@@ -174,7 +174,7 @@ export default function AddressPage() {
                       <Edit className="w-4 h-4" />
                     </button>
                     <button
-                      onClick={() => handleDelete(address.id)}
+                      onClick={() => handleDelete(address.addressId)}
                       className="p-2 text-gray-400 hover:text-red-600"
                     >
                       <Trash2 className="w-4 h-4" />

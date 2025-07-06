@@ -32,6 +32,11 @@ export const mypageApi = {
     return response.data;
   },
 
+  // 주문 삭제
+  deleteOrder: async (orderId: number): Promise<void> => {
+    await axiosWithAuth().delete(`/api/orders/${orderId}`);
+  },
+
   // 배송지 목록 조회
   getAddresses: async (): Promise<Address[]> => {
     const response = await axiosWithAuth().get('/api/addresses');
@@ -48,7 +53,7 @@ export const mypageApi = {
     await axiosWithAuth().put(`/api/addresses/${addressId}`, data);
   },
 
-  // 배송지 삭제 (API 명세에는 없지만 일반적으로 필요)
+  // 배송지 삭제
   deleteAddress: async (addressId: number): Promise<void> => {
     await axiosWithAuth().delete(`/api/addresses/${addressId}`);
   },

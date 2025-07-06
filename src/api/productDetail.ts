@@ -1,5 +1,5 @@
 import { ProductDetailResponse } from "@/types/productDetail";
-import { axiosWithAuth, axiosWithoutAuth } from "@/api";
+import { axiosWithAuth } from "@/api";
 
 export const getProductDetail = async (
   productId: number
