@@ -25,7 +25,7 @@ export type StoryResponse = {
   likeCount: number;
   liked: boolean;
   createdAt: string;
-  proucts: ProductResponse[];
+  products: ProductResponse[];
   author: Author;
   comments: CommentResponse[];
 };
@@ -44,7 +44,7 @@ export const initialStoriesData: StoriesResponse = {
       likeCount: 1,
       liked: false,
       createdAt: "2024-01-01",
-      proucts: [],
+      products: [],
       author: {
         id: 1,
         username: "사용자1",
@@ -67,7 +67,7 @@ export const initialStoriesData: StoriesResponse = {
       likeCount: 5,
       liked: true,
       createdAt: "2024-01-02",
-      proucts: [],
+      products: [],
       author: {
         id: 2,
         username: "사용자2",
@@ -90,7 +90,7 @@ export const initialStoriesData: StoriesResponse = {
       likeCount: 3,
       liked: false,
       createdAt: "2024-01-03",
-      proucts: [],
+      products: [],
       author: {
         id: 3,
         username: "사용자3",

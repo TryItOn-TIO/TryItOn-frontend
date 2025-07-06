@@ -8,7 +8,7 @@ import {
 } from "@/types/story";
 
 export const postStories = async (data: StoryRequest): Promise<Boolean> => {
-  const response = await axiosWithAuth().post("/api/stories", { data });
+  const response = await axiosWithAuth().post("/api/stories", data);
   return response.data;
 };
 

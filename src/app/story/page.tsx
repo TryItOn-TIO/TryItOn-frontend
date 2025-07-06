@@ -52,7 +52,7 @@ const StoryPage = () => {
   }
 
   return (
-    <div className="flex flex-col items-center w-screen min-h-screen bg-gray-50">
+    <div className="flex flex-col items-center w-screen min-h-screen">
       <div className="max-w-6xl mx-auto px-4 py-8">
         <StoryHeader sortType={sortType} onSortChange={handleSortChange} />
         <StoryGrid stories={stories} onStoryClick={handleStoryClick} />
