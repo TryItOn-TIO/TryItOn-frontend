@@ -7,7 +7,7 @@ import { Button } from "@/components/common/button";
 import { Checkbox } from "@/components/common/checkbox";
 import { Separator } from "@/components/common/separator";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
-import { useCart } from "@/hooks/useCart";
+import { useCartItems } from "@/hooks/useCartItems";
 
 type CartItem = {
   id: string;
@@ -21,6 +21,8 @@ type CartItem = {
 };
 
 const Cart = () => {
+  useAuthGuard(); // 인증 확인 - 로그인하지 않은 사용자는 signin 페이지로 리다이렉트
+  
   const router = useRouter();
   const { 
     items: backendCartItems, 
@@ -29,24 +31,26 @@ const Cart = () => {
     updateCartItemQuantity, 
     deleteCartItem,
     clearError 
-  } = useCart();
+  } = useCartItems();
 
   // 백엔드 데이터를 UI 형태로 변환
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   useEffect(() => {
-    if (backendCartItems.length > 0) {
+    if (backendCartItems && backendCartItems.length > 0) {
       const transformedItems = backendCartItems.map(item => ({
         id: item.cartItemId.toString(),
         name: item.productName,
         size: item.size,
-        originalPrice: item.price, // 할인 전 가격이 없어서 동일하게 설정
-        salePrice: item.price,
+        originalPrice: item.originalPrice || item.price, // originalPrice가 없으면 price 사용
+        salePrice: item.price, // API에서 제공하는 할인된 가격
         quantity: item.quantity,
         image: item.imageUrl || "/placeholder.svg?height=120&width=120",
         category: item.brand,
       }));
       setCartItems(transformedItems);
+    } else {
+      setCartItems([]);
     }
   }, [backendCartItems]);
 
@@ -183,7 +187,7 @@ const Cart = () => {
       )}
 
       {/* 장바구니가 비어있을 때 */}
-      {!isLoading && cartItems.length === 0 && (
+      {!isLoading && (!backendCartItems || backendCartItems.length === 0) && (
         <div className="text-center py-16">
           <div className="text-xl font-semibold text-gray-600 mb-4">
             장바구니가 비어있습니다
@@ -198,7 +202,7 @@ const Cart = () => {
       )}
 
       {/* 기존 장바구니 UI */}
-      {!isLoading && cartItems.length > 0 && (
+      {!isLoading && backendCartItems && backendCartItems.length > 0 && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8 w-full max-w-none">
           {/* 장바구니 섹션 */}
           <div className="lg:col-span-2">

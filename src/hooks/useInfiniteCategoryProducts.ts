@@ -12,7 +12,7 @@ export const useInfiniteCategoryProducts = (
     queryKey: ["categoryProducts", categoryId],
     queryFn: ({ pageParam = 0 }) => {
       const token = getAccessToken();
-      
+
       if (!token) {
         return new Promise<CategoryProductResponse>((resolve) => {
           setTimeout(() => {

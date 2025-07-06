@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  /* --background: #ffffff; */
+  --background: #ffffff;
   --foreground: #171717;
 }
 
@@ -12,12 +12,7 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* --background: #0a0a0a; */
-    --foreground: #ededed;
-  }
-}
+/* 다크모드 미디어 쿼리 제거 - 라이트모드로 고정 */
 
 body {
   background: var(--background);
@@ -32,4 +27,31 @@ body {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* 애니메이션 클래스 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* 스토리 페이지 전용 스타일 */
+.story-container {
+  backdrop-filter: blur(10px);
+}
+
+/* 댓글 포스트잇 호버 효과 */
+.comment-postit:hover {
+  transform: scale(1.05) rotate(1deg);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
