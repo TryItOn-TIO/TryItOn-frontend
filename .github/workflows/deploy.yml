@@ -3,7 +3,7 @@ name: TIO Frontend SSR CI/CD
 
 on:
   push:
-    branches: [ "main", "develop" ]
+    branches: [ "main", "develop", "feat/cicd" ]
   workflow_dispatch:
     inputs:
       environment:
@@ -59,18 +59,25 @@ jobs:
           fi
           echo "Build verification completed"
 
+      - name: Create build archive
+        run: |
+          echo "Creating build archive..."
+          tar -czf build-artifacts.tar.gz \
+            .next/ \
+            package.json \
+            package-lock.json \
+            next.config.ts \
+            ecosystem.config.js \
+            appspec.yml \
+            scripts/
+          ls -lh build-artifacts.tar.gz
+          echo "Build archive created successfully"
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: nextjs-build-${{ github.sha }}
-          path: |
-            .next/
-            package.json
-            package-lock.json
-            next.config.ts
-            ecosystem.config.js
-            appspec.yml
-            scripts/
+          path: build-artifacts.tar.gz
           retention-days: 7
 
   # Job 2: 정적 파일 S3 배포
@@ -84,10 +91,16 @@ jobs:
         with:
           name: nextjs-build-${{ github.sha }}
 
+      - name: Extract build artifacts
+        run: |
+          echo "Extracting build artifacts..."
+          tar -xzf build-artifacts.tar.gz
+          ls -la
+          echo "Build artifacts extracted successfully"
+
       - name: Verify static artifacts
         run: |
           echo "Verifying static artifacts..."
-          ls -la
           if [ -d ".next/static" ]; then
             echo "✅ .next/static directory found"
             ls -la .next/static/
@@ -137,10 +150,16 @@ jobs:
         with:
           name: nextjs-build-${{ github.sha }}
 
+      - name: Extract build artifacts
+        run: |
+          echo "Extracting build artifacts..."
+          tar -xzf build-artifacts.tar.gz
+          ls -la
+          echo "Build artifacts extracted successfully"
+
       - name: Verify SSR artifacts
         run: |
           echo "Verifying SSR artifacts..."
-          ls -la
           echo "Checking for .next directory..."
           if [ -d ".next" ]; then
             echo "✅ .next directory found"
