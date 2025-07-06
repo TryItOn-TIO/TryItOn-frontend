@@ -5,7 +5,8 @@ export enum CATEGORY {
   OUTER = 2,
   PANTS = 3,
   DRESS = 4,
-  BAG = 5,
+  SHOES = 5,
+  PROPS = 6,
 }
 
 // UI 매핑
@@ -13,7 +14,8 @@ export const CATEGORY_LABELS: Record<CATEGORY, string> = {
   [CATEGORY.ALL]: "전체",
   [CATEGORY.TOP]: "상의",
   [CATEGORY.OUTER]: "아우터",
-  [CATEGORY.PANTS]: "바지",
+  [CATEGORY.PANTS]: "하의",
   [CATEGORY.DRESS]: "원피스/스커트",
-  [CATEGORY.BAG]: "가방",
+  [CATEGORY.SHOES]: "신발",
+  [CATEGORY.PROPS]: "소품/악세사리",
 };
