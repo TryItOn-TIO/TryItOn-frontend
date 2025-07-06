@@ -2,10 +2,10 @@ export type AvatarProductInfo = {
   avatarImg: string;
   productNames: string[];
   avatarId: number;
-  bookmarked: boolean;
 };
 
 type AvatarProduct = {
+  productId: number;
   productName: string;
   categoryName: string;
 };
