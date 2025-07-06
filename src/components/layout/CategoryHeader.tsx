@@ -7,10 +7,13 @@ import React from "react";
 const CategoryHeader = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const currentId = pathname === "/" ? 0 : Number(pathname.split("/").pop());
 
   // 카테고리 조건부 렌더링
-  if (pathname == "/signin" || pathname == "/signup" || pathname == "/story") {
+  if (
+    pathname == "/signin" ||
+    pathname == "/signup" ||
+    (pathname.includes("/story/") && pathname != "/story/create") // 스토리 상세 페이지
+  ) {
     return;
   }
 
@@ -24,7 +27,7 @@ const CategoryHeader = () => {
               key={categoryId}
               className={`cursor-pointer ${
                 pathname == `/category/${categoryId}` ||
-                (pathname === "/" && categoryId === 0)
+                (pathname == "/" && categoryId === 0)
                   ? "font-semibold border-b-2"
                   : ""
               }`}

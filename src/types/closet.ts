@@ -1,6 +1,37 @@
 import { ProductResponse } from "./product";
 import { AvatarProductInfo } from "./avatar";
 
+export type ClosetAvatarItemResponse = {
+  productId: number;
+  productName: string;
+  brand: string;
+};
+
+export type ClosetAvatarResponse = {
+  avatarId: number;
+  avatarImage: string;
+  itemsByCategory: {
+    [categoryName: string]: ClosetAvatarItemResponse;
+  };
+};
+
+export const initailavatarResponse: ClosetAvatarResponse = {
+  avatarId: 1,
+  avatarImage: "",
+  itemsByCategory: {
+    상의: {
+      productId: 1,
+      productName: "",
+      brand: "",
+    },
+    하의: {
+      productId: 2,
+      productName: "",
+      brand: "",
+    },
+  },
+};
+
 // 현재 착장 아이템
 export type CurrentOutfitItem = {
   id: number;

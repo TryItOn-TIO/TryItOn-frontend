@@ -1,10 +1,17 @@
 import { axiosWithAuth } from "@/api";
-import type { 
-  ClosetResponse, 
-  WishlistResponse, 
-  SaveOutfitRequest, 
-  SavedOutfit 
+import { ClosetAvatarResponse } from "@/types/closet";
+
+import type {
+  ClosetResponse,
+  WishlistResponse,
+  SaveOutfitRequest,
+  SavedOutfit,
 } from "@/types/closet";
+
+export const getCloset = async (): Promise<ClosetAvatarResponse[]> => {
+  const response = await axiosWithAuth().get(`/api/closet`);
+  return response.data;
+};
 
 /* 옷장 관련 API - 인증 필요 */
 
@@ -35,9 +42,12 @@ export const fetchWishlist = async ({
 };
 
 // 착장 북마크 토글
-export const toggleOutfitBookmark = async (avatarId: number, bookmark: boolean): Promise<void> => {
+export const toggleOutfitBookmark = async (
+  avatarId: number,
+  bookmark: boolean
+): Promise<void> => {
   await axiosWithAuth().put(`/api/closet/outfits/${avatarId}/bookmark`, null, {
-    params: { bookmark }
+    params: { bookmark },
   });
 };
 
@@ -52,7 +62,9 @@ export const removeFromWishlist = async (productId: number): Promise<void> => {
 };
 
 // 착장 저장하기 (기존 avatar API 활용)
-export const saveOutfit = async (data: SaveOutfitRequest): Promise<SavedOutfit> => {
+export const saveOutfit = async (
+  data: SaveOutfitRequest
+): Promise<SavedOutfit> => {
   const response = await axiosWithAuth().post("/api/avatar", data);
   return response.data;
 };

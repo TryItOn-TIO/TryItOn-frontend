@@ -3,6 +3,9 @@ import { Gender } from "@/constants/Gender";
 import { Style } from "@/constants/Style";
 import InputText from "@/components/forms/InputText";
 import BlackButton from "@/components/common/BlackButton";
+import DateInput from "@/components/forms/DateInput";
+import { useState } from "react";
+import { validateDate } from "@/utils/validator";
 
 type SignupFormProps<T extends SignupRequest> = {
   data: T;
@@ -15,7 +18,16 @@ const SignupForm = <T extends SignupRequest>({
   setData,
   setStep,
 }: SignupFormProps<T>) => {
+  const [dateError, setDateError] = useState<string>("");
+
   const handleSubmit = () => {
+    // 날짜 유효성 검사
+    if (data.birthDate && !validateDate(data.birthDate)) {
+      setDateError("올바른 날짜를 입력해주세요.");
+      return;
+    }
+
+    setDateError("");
     setStep((prev) => prev + 1);
   };
 
@@ -33,11 +45,36 @@ const SignupForm = <T extends SignupRequest>({
   };
 
   const handleDateChange = (value: string) => {
+    setDateError("");
     setData((prev) => ({ ...prev, birthDate: value }));
+
+    // 완전한 날짜가 입력되면 유효성 검사
+    if (value.length === 10 && !validateDate(value)) {
+      setDateError("올바른 날짜를 입력해주세요.");
+    }
   };
 
   const handlePhoneNumChange = (value: string) => {
-    setData((prev) => ({ ...prev, phoneNum: value }));
+    // 숫자만 추출
+    const numericValue = value.replace(/\D/g, "");
+
+    // 전화번호 포맷팅 (010-0000-0000)
+    let formattedValue = "";
+    if (numericValue.length <= 3) {
+      formattedValue = numericValue;
+    } else if (numericValue.length <= 7) {
+      formattedValue = `${numericValue.slice(0, 3)}-${numericValue.slice(3)}`;
+    } else if (numericValue.length <= 11) {
+      formattedValue = `${numericValue.slice(0, 3)}-${numericValue.slice(
+        3,
+        7
+      )}-${numericValue.slice(7)}`;
+    }
+
+    // 11자리 숫자까지만 허용
+    if (numericValue.length <= 11) {
+      setData((prev) => ({ ...prev, phoneNum: formattedValue }));
+    }
   };
 
   return (
@@ -54,10 +91,10 @@ const SignupForm = <T extends SignupRequest>({
 
       <div>
         <label className="block text-sm font-medium mb-1">생년월일 *</label>
-        <InputText
-          type="date"
+        <DateInput
           value={data.birthDate}
           onChange={handleDateChange}
+          error={dateError}
         />
       </div>
 

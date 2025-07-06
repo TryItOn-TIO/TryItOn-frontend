@@ -18,3 +18,22 @@ export const validatphoneNum = (phoneNum: string) => {
   const phoneNumRegex = /^01[016789]-?\d{3,4}-?\d{4}$/;
   return phoneNum === "" || phoneNumRegex.test(phoneNum);
 };
+
+export const validateDate = (dateString: string): boolean => {
+  if (dateString.length !== 10) return false;
+
+  const [year, month, day] = dateString.split("-").map(Number);
+
+  // 기본 범위 체크
+  if (year < 1900 || year > new Date().getFullYear()) return false;
+  if (month < 1 || month > 12) return false;
+  if (day < 1 || day > 31) return false;
+
+  // 실제 날짜 유효성 체크
+  const date = new Date(year, month - 1, day);
+  return (
+    date.getFullYear() === year &&
+    date.getMonth() === month - 1 &&
+    date.getDate() === day
+  );
+};
