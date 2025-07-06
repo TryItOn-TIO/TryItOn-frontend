@@ -14,7 +14,7 @@ export const generatePresignedUrl = async (
 ): Promise<string> => {
   const response = await axiosWithoutAuth().get<string>("/api/files", {
     params: {
-      fileName: `temp/${fileName}`,
+      fileName: fileName,
     },
   });
 

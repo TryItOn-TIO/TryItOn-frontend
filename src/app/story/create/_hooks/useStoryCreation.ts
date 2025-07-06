@@ -16,11 +16,15 @@ export const useStoryCreation = () => {
   const generateStoryImage = async (
     selectedAvatar: ClosetAvatarResponse
   ): Promise<string> => {
-    if (!selectedAvatar || !canvasRef.current) return "";
+    if (!selectedAvatar || !canvasRef.current) {
+      throw new Error("아바타 또는 캔버스가 없습니다.");
+    }
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
-    if (!ctx) return "";
+    if (!ctx) {
+      throw new Error("캔버스 컨텍스트를 가져올 수 없습니다.");
+    }
 
     // 캔버스 크기 설정 (3:4 비율)
     canvas.width = 400;
@@ -34,6 +38,7 @@ export const useStoryCreation = () => {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.crossOrigin = "anonymous";
+
       img.onload = async () => {
         try {
           // 이미지 비율 계산
@@ -68,22 +73,35 @@ export const useStoryCreation = () => {
               }
 
               try {
-                // 파일명 생성
-                const fileName = `story-${Date.now()}-${Math.random()
+                // 파일명 생성 - stories 폴더 사용
+                const fileName = `stories/story-${Date.now()}-${Math.random()
                   .toString(36)
                   .substr(2, 9)}.png`;
 
+                console.log("Pre-signed URL 요청 중...", fileName);
+
                 // S3 presigned URL 생성
                 const presignedUrl = await generatePresignedUrl(fileName);
+                console.log("받아온 Pre-signed URL:", presignedUrl);
 
                 // File 객체 생성
-                const file = new File([blob], fileName, { type: "image/png" });
+                const file = new File(
+                  [blob],
+                  fileName.split("/").pop() || "story.png",
+                  {
+                    type: "image/png",
+                  }
+                );
+
+                console.log("S3 업로드 시작...");
 
                 // S3에 업로드
                 await uploadFileToS3(presignedUrl, file);
 
-                // 업로드된 파일의 URL 반환 (presigned URL에서 query parameter 제거)
+                // 업로드된 파일의 공개 URL 반환 (presigned URL에서 query parameter 제거)
                 const uploadedUrl = presignedUrl.split("?")[0];
+                console.log("업로드 성공! 파일 URL:", uploadedUrl);
+
                 resolve(uploadedUrl);
               } catch (error) {
                 console.error("S3 업로드 실패:", error);
@@ -100,6 +118,8 @@ export const useStoryCreation = () => {
 
       img.onerror = () => {
         // 이미지 로드 실패 시에도 배경색만으로 이미지 생성
+        console.log("아바타 이미지 로드 실패, 배경색만으로 이미지 생성");
+
         canvas.toBlob(
           async (blob) => {
             if (!blob) {
@@ -108,16 +128,30 @@ export const useStoryCreation = () => {
             }
 
             try {
-              const fileName = `story-bg-${Date.now()}-${Math.random()
+              const fileName = `stories/story-bg-${Date.now()}-${Math.random()
                 .toString(36)
                 .substr(2, 9)}.png`;
+
+              console.log("Pre-signed URL 요청 중 (배경만)...", fileName);
               const presignedUrl = await generatePresignedUrl(fileName);
-              const file = new File([blob], fileName, { type: "image/png" });
+
+              const file = new File(
+                [blob],
+                fileName.split("/").pop() || "story-bg.png",
+                {
+                  type: "image/png",
+                }
+              );
+
+              console.log("S3 업로드 시작 (배경만)...");
               await uploadFileToS3(presignedUrl, file);
+
               const uploadedUrl = presignedUrl.split("?")[0];
+              console.log("업로드 성공 (배경만)! 파일 URL:", uploadedUrl);
+
               resolve(uploadedUrl);
             } catch (error) {
-              console.error("S3 업로드 실패:", error);
+              console.error("S3 업로드 실패 (배경만):", error);
               reject(error);
             }
           },
@@ -131,9 +165,6 @@ export const useStoryCreation = () => {
   };
 
   const handleSubmit = async (selectedAvatar: ClosetAvatarResponse | null) => {
-    console.log("selectedAvatar:", selectedAvatar);
-    console.log("selectedAvatar.avatarId:", selectedAvatar?.avatarId);
-
     if (!selectedAvatar || !contents.trim()) {
       alert("아바타를 선택하고 내용을 입력해주세요.");
       return;
@@ -142,6 +173,8 @@ export const useStoryCreation = () => {
     setIsSubmitting(true);
 
     try {
+      console.log("스토리 이미지 생성 시작...");
+
       // 이미지 생성 및 S3 업로드
       const storyImageUrl = await generateStoryImage(selectedAvatar);
 
@@ -149,13 +182,17 @@ export const useStoryCreation = () => {
         throw new Error("이미지 업로드에 실패했습니다.");
       }
 
+      console.log("스토리 데이터 전송 중...");
+
       const storyData: StoryRequest = {
-        avatarId: selectedAvatar?.avatarId || 1,
+        avatarId: selectedAvatar.avatarId,
         storyImageUrl,
         contents: contents.trim(),
       };
 
       await postStories(storyData);
+
+      console.log("스토리 작성 완료!");
       alert("스토리가 성공적으로 작성되었습니다!");
       router.push("/story");
     } catch (error) {
@@ -170,6 +207,9 @@ export const useStoryCreation = () => {
             "이미지 업로드에 실패했습니다. 네트워크 연결을 확인해주세요.";
         } else if (error.message.includes("변환")) {
           errorMessage = "이미지 처리에 실패했습니다. 다시 시도해주세요.";
+        } else if (error.message.includes("아바타")) {
+          errorMessage =
+            "아바타 이미지를 불러올 수 없습니다. 다른 아바타를 선택해주세요.";
         }
       }
 

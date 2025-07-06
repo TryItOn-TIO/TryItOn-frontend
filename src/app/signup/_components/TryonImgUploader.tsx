@@ -47,7 +47,9 @@ const TryonImgUploader = <T extends SignupRequest>({
     try {
       // S3 업로드 실행
       console.log("S3 업로드 시작...");
-      const presignedUrl = await generatePresignedUrl(selectedFile.name);
+      const presignedUrl = await generatePresignedUrl(
+        `temp/${selectedFile.name}`
+      );
       await uploadFileToS3(presignedUrl, selectedFile);
       const fileUrl = presignedUrl.split("?")[0];
 
