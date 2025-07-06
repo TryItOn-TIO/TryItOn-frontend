@@ -3,6 +3,9 @@ import { Gender } from "@/constants/Gender";
 import { Style } from "@/constants/Style";
 import InputText from "@/components/forms/InputText";
 import BlackButton from "@/components/common/BlackButton";
+import DateInput from "@/components/forms/DateInput";
+import { useState } from "react";
+import { validateDate } from "@/utils/validator";
 
 type SignupFormProps<T extends SignupRequest> = {
   data: T;
@@ -15,7 +18,16 @@ const SignupForm = <T extends SignupRequest>({
   setData,
   setStep,
 }: SignupFormProps<T>) => {
+  const [dateError, setDateError] = useState<string>("");
+
   const handleSubmit = () => {
+    // 날짜 유효성 검사
+    if (data.birthDate && !validateDate(data.birthDate)) {
+      setDateError("올바른 날짜를 입력해주세요.");
+      return;
+    }
+
+    setDateError("");
     setStep((prev) => prev + 1);
   };
 
@@ -33,25 +45,12 @@ const SignupForm = <T extends SignupRequest>({
   };
 
   const handleDateChange = (value: string) => {
-    // 숫자만 추출
-    const numericValue = value.replace(/\D/g, "");
+    setDateError("");
+    setData((prev) => ({ ...prev, birthDate: value }));
 
-    // 날짜 포맷팅 (1900.01.01)
-    let formattedValue = "";
-    if (numericValue.length <= 4) {
-      formattedValue = numericValue;
-    } else if (numericValue.length <= 6) {
-      formattedValue = `${numericValue.slice(0, 4)}.${numericValue.slice(4)}`;
-    } else if (numericValue.length <= 8) {
-      formattedValue = `${numericValue.slice(0, 4)}.${numericValue.slice(
-        4,
-        6
-      )}.${numericValue.slice(6)}`;
-    }
-
-    // 8자리 숫자까지만 허용
-    if (numericValue.length <= 8) {
-      setData((prev) => ({ ...prev, birthDate: formattedValue }));
+    // 완전한 날짜가 입력되면 유효성 검사
+    if (value.length === 10 && !validateDate(value)) {
+      setDateError("올바른 날짜를 입력해주세요.");
     }
   };
 
@@ -92,11 +91,10 @@ const SignupForm = <T extends SignupRequest>({
 
       <div>
         <label className="block text-sm font-medium mb-1">생년월일 *</label>
-        <InputText
-          placeholder="1900.01.01"
-          type="text"
+        <DateInput
           value={data.birthDate}
           onChange={handleDateChange}
+          error={dateError}
         />
       </div>
 
