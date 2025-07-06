@@ -8,7 +8,8 @@ export const dummyProductDetails: ProductDetailResponse[] = [
     productName: "린넨 오버셔츠",
     brand: "CoolWear",
     price: 49000,
-    sale: 39000,
+    sale: 20,  // 할인율 20%
+    salePrice: 39000,  // 할인된 가격
     content: "시원한 린넨 소재로 제작된 여름용 오버셔츠입니다.",
     images: ["/images/dummy/product1_1.jpg", "/images/dummy/product1_2.jpg"],
     wishlistCount: 12,

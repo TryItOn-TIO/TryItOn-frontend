@@ -1,8 +1,10 @@
 "use client";
 
-import { User, ChevronRight } from "lucide-react";
+import { User, ChevronRight, LogOut } from "lucide-react";
 import { useProfile } from "@/hooks/useMypage";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
+import { deleteAccessToken } from "@/utils/auth";
+import { useRouter } from "next/navigation";
 
 interface MenuSectionProps {
   title: string;
@@ -48,6 +50,23 @@ export default function MyPage() {
   useAuthGuard(); // 인증 확인
   
   const { profile, isLoading, error } = useProfile();
+  const router = useRouter();
+
+  // 로그아웃 함수
+  const handleLogout = () => {
+    const confirmLogout = confirm("정말 로그아웃 하시겠습니까?");
+    
+    if (confirmLogout) {
+      // 토큰 삭제
+      deleteAccessToken();
+      
+      // 홈페이지로 리다이렉트
+      router.push("/");
+      
+      // 성공 메시지 (선택사항)
+      alert("로그아웃되었습니다.");
+    }
+  };
 
   if (isLoading) {
     return (
@@ -141,7 +160,13 @@ export default function MyPage() {
 
         {/* 로그아웃 */}
         <div className="mt-8 pt-6 border-t border-gray-200">
-          <button className="text-gray-600 hover:text-gray-800 text-sm">로그아웃</button>
+          <button 
+            onClick={handleLogout}
+            className="flex items-center space-x-2 text-gray-600 hover:text-red-600 text-sm transition-colors duration-200"
+          >
+            <LogOut className="w-4 h-4" />
+            <span>로그아웃</span>
+          </button>
         </div>
       </div>
     </div>

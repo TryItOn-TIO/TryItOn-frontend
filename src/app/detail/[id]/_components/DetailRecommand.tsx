@@ -8,15 +8,10 @@ import "swiper/css/pagination";
 import { FreeMode } from "swiper/modules";
 
 import SimpleProductCard from "@/components/ui/SimpleProductCard";
-import { ProductDetailResponse } from "@/types/productDetail";
 import Link from "next/link";
 import { dummyProductDetails } from "@/mock/story";
 
-type DetailRecommandProps = {
-  data: ProductDetailResponse;
-};
-
-const DetailRecommand = ({ data }: DetailRecommandProps) => {
+const DetailRecommand = ({}: {}) => {
   const dummyData = dummyProductDetails;
 
   return (

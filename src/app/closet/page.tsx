@@ -3,11 +3,16 @@
 import { useState } from "react";
 import Image from "next/image";
 import AvatarLayout from "@/components/layout/AvatarProducts";
-import AvatarWearInfo from "@/app/(home)/_components/AvatarProducts";
+import AvatarWearInfo from "@/components/common/AvatarWearInfo";
 import ProductCard from "@/components/common/ProductCard";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import type { ProductResponse } from "@/types/product";
 import type { AvatarProductInfo } from "@/types/avatar";
+
+// 확장된 아바타 타입 정의
+type ExtendedAvatarInfo = AvatarProductInfo & {
+  createdAt: string;
+};
 
 // 더미 데이터 - 카트 페이지 패턴 따라서
 const closetDummyData = {
@@ -18,7 +23,7 @@ const closetDummyData = {
     avatarId: 1,
     bookmarked: false,
     createdAt: "2025-07-05T10:00:00Z"
-  } as AvatarProductInfo & { avatarId: number; bookmarked: boolean },
+  } as ExtendedAvatarInfo,
 
   // 저장된 착장들 (북마크된 아바타들)
   bookmarkedAvatars: [
@@ -43,7 +48,7 @@ const closetDummyData = {
       bookmarked: true,
       createdAt: "2025-07-02T10:00:00Z"
     },
-  ] as (AvatarProductInfo & { avatarId: number; bookmarked: boolean })[],
+  ] as ExtendedAvatarInfo[],
 
   // 찜 목록
   wishlistProducts: [
@@ -185,7 +190,7 @@ export default function ClosetPage() {
   );
 
   // 저장된 착장 카드 컴포넌트
-  const SavedOutfitCard = ({ outfit }: { outfit: AvatarProductInfo & { avatarId: number; bookmarked: boolean } }) => (
+  const SavedOutfitCard = ({ outfit }: { outfit: ExtendedAvatarInfo }) => (
     <div className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
       <div className="aspect-[3/4] relative bg-gray-100">
         <Image

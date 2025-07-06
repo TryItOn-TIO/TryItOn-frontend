@@ -8,7 +8,9 @@ export interface CartItemDto {
   brand: string;
   size: string;
   color: string;
-  price: number;
+  originalPrice: number;    // 정가
+  salePercentage: number;   // 할인율
+  price: number;            // 할인된 가격
   quantity: number;
   imageUrl: string;
 }

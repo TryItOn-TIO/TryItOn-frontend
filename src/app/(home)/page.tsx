@@ -1,5 +1,4 @@
 import { mainProductsDummy } from "@/mock/mainProducts";
-import { fetchMainProducts } from "@/api/product";
 import HomeClient from "@/app/(home)/_components/HomeClient";
 
 export default async function Home() {

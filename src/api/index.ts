@@ -27,18 +27,26 @@ function setResponseInterceptor(instance: AxiosInstance): void {
   instance.interceptors.response.use(
     (response) => response,
     (error) => {
-      console.log(error);
+      console.log("API Error:", error);
+      console.log("Current URL:", window.location.pathname);
 
-      // if (error.status === 401) {
       if (error.status === 401 || error.status === 403) {
+        // 결제 성공 페이지에서는 자동 리다이렉트 하지 않음
+        if (window.location.pathname === '/success') {
+          console.warn("결제 성공 페이지에서 인증 오류 발생 - 자동 리다이렉트 방지");
+          return Promise.reject(error);
+        }
+        
         // 1. 토큰 삭제
         deleteAccessToken();
 
         // 2. 확인창으로 안내
-        confirm("로그인이 필요합니다");
-
-        // 3. 리다이렉트 (SPA 라우팅용)
-        window.location.href = "/signin";
+        const shouldRedirect = confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?");
+        
+        if (shouldRedirect) {
+          // 3. 리다이렉트 (SPA 라우팅용)
+          window.location.href = "/signin";
+        }
       }
       return Promise.reject(error);
     }
