@@ -95,11 +95,5 @@ export const getCategoryProducts = (
       size,
       last,
     },
-    avatarInfo: {
-      avatarImg: "/images/dummy/ex10.png",
-      productNames: content.map((p) => p.productName),
-      avatarId: 1,
-      bookmarked: false,
-    },
   };
 };
