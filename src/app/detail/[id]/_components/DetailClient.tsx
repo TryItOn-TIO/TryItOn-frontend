@@ -22,8 +22,12 @@ const DetailClient = ({ productId }: DetailClientProps) => {
       const data = await getProductDetail(productId);
       setData(data);
       setLoading(false);
-    } catch {
-      console.error("에러가 발생했습니다.");
+    } catch (error: any) {
+      console.error("상품 상세 조회 에러:", error);
+      console.error("에러 응답:", error.response?.data);
+      console.error("에러 상태:", error.response?.status);
+      console.error("요청 URL:", error.config?.url);
+      console.error("요청 productId:", productId);
     }
   };
 
@@ -38,7 +42,7 @@ const DetailClient = ({ productId }: DetailClientProps) => {
         {/* 좌측 상품 이미지 등 상세정보 */}
         <div className="w-[65%]">
           <DetailMainImg images={data.images} />
-          <DetailRecommand data={data} />
+          <DetailRecommand />
           {data.images[4] && <DetailInfo image={data.images[4]} />}
         </div>
 

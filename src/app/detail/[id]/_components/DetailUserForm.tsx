@@ -4,27 +4,56 @@ import BlackButton from "@/components/common/BlackButton";
 import Tag from "@/components/common/Tag";
 import WhiteButton from "@/components/common/WhiteButton";
 import { useWishlist } from "@/hooks/useWishlist";
+import { useCart } from "@/hooks/useCart";
 import { ProductDetailResponse } from "@/types/productDetail";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 type ProductDetailInfoProps = {
   data: ProductDetailResponse;
 };
 
 const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
+  const router = useRouter();
+
   // TODO: 주문 구현 후 DTO 수정
   const [orderData, setOrderData] = useState({
     id: data.id,
-    color: data.variant[0]?.color,
-    size: data.variant[0]?.size,
+    color: data.variant[0]?.color || "", // 첫 번째 색상으로 설정
+    size: "", // 초기값을 빈 문자열로 설정
     quantity: 1,
   });
 
+  // 컴포넌트 마운트 시 색상이 없으면 첫 번째 색상으로 설정
+  useEffect(() => {
+    if (!orderData.color && data.variant.length > 0) {
+      setOrderData((prev) => ({
+        ...prev,
+        color: data.variant[0].color,
+      }));
+    }
+  }, [data.variant, orderData.color]);
+
   const { isWished, toggleWishlist } = useWishlist(data.liked, data.id);
+  const { addToCart, isLoading } = useCart();
+
+  // 현재 선택된 색상과 사이즈에 해당하는 variantId 찾기
+  const getCurrentVariantId = () => {
+    const currentVariant = data.variant.find(
+      (v) => v.color === orderData.color && v.size === orderData.size
+    );
+    return currentVariant?.variantId;
+  };
 
   const handleColorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setOrderData({ ...orderData, color: e.target.value });
+    const newColor = e.target.value;
+    // 색상 변경 시 사이즈를 초기화하여 사용자가 다시 선택하도록 함
+    setOrderData({
+      ...orderData,
+      color: newColor,
+      size: "", // 사이즈 초기화
+    });
   };
 
   const handleSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -48,19 +77,99 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
   };
 
   const calculateTotal = () => {
-    return data.sale * orderData.quantity;
+    // salePrice가 있으면 할인가 사용, 없으면 정가 사용
+    const price = data.salePrice || data.price;
+    return price * orderData.quantity;
   };
 
   const handleOrder = () => {
-    // TODO: 주문 구현 후 수정
-    console.log("주문 정보:", orderData);
-    console.log("총 금액:", calculateTotal());
+    // 필수 옵션 선택 확인
+    if (!orderData.color || !orderData.size) {
+      alert("색상과 사이즈를 선택해주세요.");
+      return;
+    }
+
+    const variantId = getCurrentVariantId();
+    if (!variantId) {
+      alert("선택한 옵션에 해당하는 상품을 찾을 수 없습니다.");
+      return;
+    }
+
+    // 재고 확인
+    const currentVariant = data.variant.find((v) => v.variantId === variantId);
+    if (!currentVariant) {
+      alert("상품 정보를 찾을 수 없습니다.");
+      return;
+    }
+
+    if (currentVariant.quantity === 0) {
+      alert("품절된 상품입니다.");
+      return;
+    }
+
+    if (currentVariant.quantity < orderData.quantity) {
+      alert(`재고가 부족합니다. (현재 재고: ${currentVariant.quantity}개)`);
+      return;
+    }
+
+    // 주문 정보를 URL 파라미터로 전달
+    const orderInfo = {
+      type: "direct", // 직접 구매
+      productId: data.id,
+      productName: data.productName,
+      brand: data.brand,
+      price: data.salePrice || data.price,
+      originalPrice: data.price,
+      image: data.images[0] || "",
+      color: orderData.color,
+      size: orderData.size,
+      quantity: orderData.quantity,
+      variantId: variantId,
+      sale: data.sale || 0,
+    };
+
+    // URL 파라미터로 주문 정보 전달
+    const params = new URLSearchParams({
+      data: JSON.stringify(orderInfo),
+    });
+
+    router.push(`/order?${params.toString()}`);
   };
 
-  const handleAddCart = () => {
-    // TODO: 주문 구현 후 수정
-    console.log("장바구니 정보:", orderData);
-    console.log("총 금액:", calculateTotal());
+  const handleAddCart = async () => {
+    const variantId = getCurrentVariantId();
+
+    if (!variantId) {
+      alert("선택한 옵션에 해당하는 상품을 찾을 수 없습니다.");
+      return;
+    }
+
+    // 재고 확인
+    const currentVariant = data.variant.find((v) => v.variantId === variantId);
+    if (!currentVariant) {
+      alert("상품 정보를 찾을 수 없습니다.");
+      return;
+    }
+
+    if (currentVariant.quantity === 0) {
+      alert("품절된 상품입니다.");
+      return;
+    }
+
+    if (currentVariant.quantity < orderData.quantity) {
+      alert(`재고가 부족합니다. (현재 재고: ${currentVariant.quantity}개)`);
+      return;
+    }
+
+    await addToCart(variantId, orderData.quantity);
+  };
+
+  // 현재 선택된 상품이 품절인지 확인
+  const isCurrentVariantOutOfStock = () => {
+    const currentVariant = data.variant.find(
+      (v) => v.color === orderData.color && v.size === orderData.size
+    );
+    return currentVariant?.quantity === 0;
   };
 
   return (
@@ -74,10 +183,15 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
       </div>
 
       {/* 가격 정보 */}
-      {data.sale ? (
+      {data.sale && data.sale > 0 ? (
         <div className="space-y-1 mb-6">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="bg-red-500 text-white px-2 py-1 text-xs font-bold rounded">
+              {data.sale}% OFF
+            </span>
+          </div>
           <div className="text-2xl font-bold text-red-600">
-            {data.sale.toLocaleString()}원
+            {(data.salePrice || data.price).toLocaleString()}원
           </div>
           <div className="text-sm text-gray-400 line-through">
             {data.price.toLocaleString()}원
@@ -115,11 +229,19 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
           onChange={handleSizeChange}
           className="w-full border border-gray-300 px-3 py-2 rounded-md text-sm"
         >
-          {[...new Set(data.variant.map((v) => v.size))].map((size) => (
-            <option key={size} value={size}>
-              {size}
-            </option>
-          ))}
+          <option value="" disabled>
+            사이즈를 선택해주세요
+          </option>
+          {data.variant
+            .filter((v) => v.color === orderData.color)
+            .map((variant, index) => (
+              <option key={index} value={variant.size}>
+                {variant.size}{" "}
+                {variant.quantity === 0
+                  ? "(품절)"
+                  : `(재고: ${variant.quantity}개)`}
+              </option>
+            ))}
         </select>
       </div>
 
@@ -201,8 +323,22 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
           )}
           <p className="text-xs">{data.wishlistCount.toLocaleString()}</p>
         </div>
-        <WhiteButton text="장바구니" handleClick={handleOrder} />
-        <BlackButton text="구매하기" handleClick={handleAddCart} />
+        <WhiteButton
+          text={
+            isCurrentVariantOutOfStock()
+              ? "품절"
+              : isLoading
+              ? "추가 중..."
+              : "장바구니"
+          }
+          handleClick={handleAddCart}
+          disabled={isLoading || isCurrentVariantOutOfStock()}
+        />
+        <BlackButton
+          text={isCurrentVariantOutOfStock() ? "품절" : "구매하기"}
+          handleClick={handleOrder}
+          disabled={isCurrentVariantOutOfStock()}
+        />
       </div>
     </div>
   );

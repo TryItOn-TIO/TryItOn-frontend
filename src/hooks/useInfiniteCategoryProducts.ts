@@ -1,5 +1,4 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { fetchCategoryProducts } from "@/api/product";
 import { getCategoryProducts } from "@/mock/categoryProducts"; // 목업 데이터
 import type { CategoryProductResponse } from "@/types/product";
 

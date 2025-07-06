@@ -9,8 +9,9 @@ export type ProductDetailResponse = {
   id: number;
   productName: string;
   brand: string;
-  price: number;
-  sale: number;
+  price: number; // 정가
+  sale: number; // 할인율
+  salePrice?: number; // 할인된 가격 (optional로 변경)
   contents: string;
   images: string[];
   wishlistCount: number;
@@ -24,6 +25,7 @@ export const initialProductDetail: ProductDetailResponse = {
   brand: "",
   price: 0,
   sale: 0,
+  salePrice: 0,
   contents: "",
   images: [],
   wishlistCount: 0,
