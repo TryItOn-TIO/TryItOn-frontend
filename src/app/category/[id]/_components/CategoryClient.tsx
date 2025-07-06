@@ -1,3 +1,5 @@
+/* 카테고리 상품 목록 표시 */
+
 "use client";
 
 import React from "react";

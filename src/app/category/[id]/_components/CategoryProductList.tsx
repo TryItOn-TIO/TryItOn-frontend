@@ -32,10 +32,7 @@ const CategoryProductList = ({ categoryId }: Props) => {
             productIndex === page.products.content.length - 1;
 
           return (
-            <div
-              key={product.id}
-              ref={isLastItem && observerRef ? observerRef : undefined}
-            >
+            <div key={product.id} ref={isLastItem ? observerRef : undefined}>
               <ProductCard product={product} />
             </div>
           );
