@@ -124,7 +124,7 @@ export const dummyStories: StoriesResponse = {
         username: "패션왕",
         profileImage: "/images/dummy/ex10.png",
       },
-      proucts: [
+      products: [
         {
           id: 1,
           productName: "린넨 오버셔츠",
@@ -237,7 +237,7 @@ export const dummyStories: StoriesResponse = {
         username: "스타일러버",
         profileImage: "/images/dummy/ex10.png",
       },
-      proucts: [
+      products: [
         {
           id: 2,
           productName: "방수 트렌치코트",
@@ -337,7 +337,7 @@ export const dummyStories: StoriesResponse = {
         username: "옷잘알",
         profileImage: "/images/dummy/ex10.png",
       },
-      proucts: [
+      products: [
         {
           id: 3,
           productName: "그레이 슬랙스",
@@ -366,7 +366,7 @@ export const dummyStories: StoriesResponse = {
         username: "꾸안꾸",
         profileImage: "/images/dummy/ex10.png",
       },
-      proucts: [
+      products: [
         {
           id: 4,
           productName: "스트라이프 셔츠",
@@ -395,7 +395,7 @@ export const dummyStories: StoriesResponse = {
         username: "데일리룩마스터",
         profileImage: "/images/dummy/ex10.png",
       },
-      proucts: [
+      products: [
         {
           id: 5,
           productName: "블랙 반팔 티셔츠",
@@ -424,7 +424,7 @@ export const dummyStories: StoriesResponse = {
         username: "여름바다",
         profileImage: "/images/dummy/ex10.png",
       },
-      proucts: [],
+      products: [],
       comments: [],
     },
     {
@@ -439,7 +439,7 @@ export const dummyStories: StoriesResponse = {
         username: "빈티지러버",
         profileImage: "/images/dummy/ex10.png",
       },
-      proucts: [],
+      products: [],
       comments: [],
     },
     {
@@ -454,7 +454,7 @@ export const dummyStories: StoriesResponse = {
         username: "시티보이",
         profileImage: "/images/dummy/ex10.png",
       },
-      proucts: [],
+      products: [],
       comments: [],
     },
     {
@@ -469,7 +469,7 @@ export const dummyStories: StoriesResponse = {
         username: "옷덕후",
         profileImage: "/images/dummy/ex10.png",
       },
-      proucts: [],
+      products: [],
       comments: [],
     },
     {
@@ -484,7 +484,7 @@ export const dummyStories: StoriesResponse = {
         username: "소프트톤",
         profileImage: "/images/dummy/ex10.png",
       },
-      proucts: [],
+      products: [],
       comments: [],
     },
   ],
@@ -504,7 +504,7 @@ export const dummyStoryList: StoryResponse[] = [
       username: "패션왕",
       profileImage: "/images/dummy/ex10.png",
     },
-    proucts: [
+    products: [
       {
         id: 1,
         productName: "린넨 오버셔츠",
@@ -617,7 +617,7 @@ export const dummyStoryList: StoryResponse[] = [
       username: "스타일러버",
       profileImage: "/images/dummy/ex10.png",
     },
-    proucts: [
+    products: [
       {
         id: 2,
         productName: "방수 트렌치코트",
@@ -717,7 +717,7 @@ export const dummyStoryList: StoryResponse[] = [
       username: "옷잘알",
       profileImage: "/images/dummy/ex10.png",
     },
-    proucts: [
+    products: [
       {
         id: 3,
         productName: "그레이 슬랙스",
@@ -746,7 +746,7 @@ export const dummyStoryList: StoryResponse[] = [
       username: "꾸안꾸",
       profileImage: "/images/dummy/ex10.png",
     },
-    proucts: [
+    products: [
       {
         id: 4,
         productName: "스트라이프 셔츠",
@@ -775,7 +775,7 @@ export const dummyStoryList: StoryResponse[] = [
       username: "데일리룩마스터",
       profileImage: "/images/dummy/ex10.png",
     },
-    proucts: [
+    products: [
       {
         id: 5,
         productName: "블랙 반팔 티셔츠",
@@ -804,7 +804,7 @@ export const dummyStoryList: StoryResponse[] = [
       username: "여름바다",
       profileImage: "/images/dummy/ex10.png",
     },
-    proucts: [],
+    products: [],
     comments: [],
   },
   {
@@ -819,7 +819,7 @@ export const dummyStoryList: StoryResponse[] = [
       username: "빈티지러버",
       profileImage: "/images/dummy/ex10.png",
     },
-    proucts: [],
+    products: [],
     comments: [],
   },
   {
@@ -834,7 +834,7 @@ export const dummyStoryList: StoryResponse[] = [
       username: "시티보이",
       profileImage: "/images/dummy/ex10.png",
     },
-    proucts: [],
+    products: [],
     comments: [],
   },
   {
@@ -849,7 +849,7 @@ export const dummyStoryList: StoryResponse[] = [
       username: "옷덕후",
       profileImage: "/images/dummy/ex10.png",
     },
-    proucts: [],
+    products: [],
     comments: [],
   },
   {
@@ -864,7 +864,7 @@ export const dummyStoryList: StoryResponse[] = [
       username: "소프트톤",
       profileImage: "/images/dummy/ex10.png",
     },
-    proucts: [],
+    products: [],
     comments: [],
   },
 ];
