@@ -4,6 +4,7 @@ import { StoryResponse } from "@/types/story";
 import React, { useState } from "react";
 import Comment from "@/app/story/[id]/_components/comment/Comment";
 import PositionCommentForm from "@/app/story/[id]/_components/comment/PositionCommentForm";
+import { createComment } from "@/api/comment";
 
 type CommentSectionProps = {
   commentOn: boolean;
@@ -29,7 +30,6 @@ const CommentSection = ({
     setComment(value);
   };
 
-  // TODO: 댓글 post 요청
   const handleSubmit = async () => {
     if (!comment.trim()) {
       alert("댓글을 입력해주세요");
@@ -43,10 +43,10 @@ const CommentSection = ({
 
     setIsSubmitting(true);
     try {
-      // await postComment({
-      //   comment,
-      //   position: { x: commentPosition.x, y: commentPosition.y }
-      // });
+      await createComment(storyInfo.storyId, {
+        contents: comment,
+        position: { x: commentPosition.x, y: commentPosition.y },
+      });
       console.log("댓글 전송됨:", {
         comment,
         position: commentPosition,

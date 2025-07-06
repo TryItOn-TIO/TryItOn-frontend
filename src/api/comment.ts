@@ -1,13 +1,13 @@
 import { CommentRequest, CommentResponse } from "@/types/comment";
 import { axiosWithAuth } from ".";
 
-export const postComment = async (
+export const createComment = async (
   storyId: number,
   data: CommentRequest
 ): Promise<CommentResponse> => {
   const response = await axiosWithAuth().post(
     `/api/story/${storyId}/comments`,
-    { data }
+    data
   );
   return response.data;
 };
