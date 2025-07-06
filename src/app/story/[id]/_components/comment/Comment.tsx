@@ -11,8 +11,8 @@ const Comment = ({ data }: CommentProps) => {
       key={data.id}
       className="absolute bg-gradient-to-br from-yellow-100 to-yellow-200 text-black text-xs px-3 py-2 rounded-lg shadow-lg max-w-[180px] break-words z-50 border border-yellow-300 animate-fadeIn hover:scale-105 transition-transform cursor-pointer"
       style={{
-        top: data.position.x,
-        left: data.position.y,
+        top: data.position.y,
+        left: data.position.x,
       }}
     >
       {/* 포스트잇 상단 테이프 효과 */}
