@@ -22,15 +22,15 @@ type CartItem = {
 
 const Cart = () => {
   useAuthGuard(); // 인증 확인 - 로그인하지 않은 사용자는 signin 페이지로 리다이렉트
-  
+
   const router = useRouter();
-  const { 
-    items: backendCartItems, 
-    isLoading, 
-    error, 
-    updateCartItemQuantity, 
+  const {
+    items: backendCartItems,
+    isLoading,
+    error,
+    updateCartItemQuantity,
     deleteCartItem,
-    clearError 
+    clearError,
   } = useCartItems();
 
   // 백엔드 데이터를 UI 형태로 변환
@@ -38,7 +38,7 @@ const Cart = () => {
 
   useEffect(() => {
     if (backendCartItems && backendCartItems.length > 0) {
-      const transformedItems = backendCartItems.map(item => ({
+      const transformedItems = backendCartItems.map((item) => ({
         id: item.cartItemId.toString(),
         name: item.productName,
         size: item.size,
@@ -89,16 +89,16 @@ const Cart = () => {
   };
 
   const handleQuantityChange = async (itemId: string, change: number) => {
-    const currentItem = cartItems.find(item => item.id === itemId);
+    const currentItem = cartItems.find((item) => item.id === itemId);
     if (!currentItem) return;
 
     const newQuantity = Math.max(1, currentItem.quantity + change);
-    
+
     try {
       await updateCartItemQuantity(parseInt(itemId), newQuantity);
       // useCart 훅에서 자동으로 데이터를 다시 가져오므로 별도 상태 업데이트 불필요
     } catch (error) {
-      console.error('수량 변경 실패:', error);
+      console.error("수량 변경 실패:", error);
     }
   };
 
@@ -108,7 +108,7 @@ const Cart = () => {
       // useCart 훅에서 자동으로 데이터를 다시 가져오므로 별도 상태 업데이트 불필요
       setSelectedItems(selectedItems.filter((id) => id !== itemId));
     } catch (error) {
-      console.error('상품 삭제 실패:', error);
+      console.error("상품 삭제 실패:", error);
     }
   };
 
@@ -121,7 +121,7 @@ const Cart = () => {
       setSelectedItems([]);
       setAllSelected(false);
     } catch (error) {
-      console.error('선택 상품 삭제 실패:', error);
+      console.error("선택 상품 삭제 실패:", error);
     }
   };
 
@@ -193,7 +193,7 @@ const Cart = () => {
             장바구니가 비어있습니다
           </div>
           <Button
-            onClick={() => router.push('/')}
+            onClick={() => router.push("/")}
             className="bg-black text-white hover:bg-gray-800"
           >
             쇼핑 계속하기
@@ -273,7 +273,9 @@ const Cart = () => {
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={async () => await handleRemoveItem(item.id)}
+                                onClick={async () =>
+                                  await handleRemoveItem(item.id)
+                                }
                               >
                                 <X className="h-4 w-4" />
                               </Button>
@@ -304,18 +306,13 @@ const Cart = () => {
                                   variant="outline"
                                   size="sm"
                                   className="border-black text-black hover:bg-black hover:text-white"
-                                  onClick={async () => await handleQuantityChange(item.id, 1)}
+                                  onClick={async () =>
+                                    await handleQuantityChange(item.id, 1)
+                                  }
                                 >
                                   <Plus className="h-3 w-3" />
                                 </Button>
                               </div>
-                              <Button
-                                variant="outline"
-                                className="border-black text-black hover:bg-black hover:text-white"
-                                size="sm"
-                              >
-                                구매 서용
-                              </Button>
                             </div>
                           </div>
                         </div>
