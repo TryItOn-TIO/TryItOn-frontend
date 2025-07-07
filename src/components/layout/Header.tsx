@@ -1,8 +1,13 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const Header = () => {
+  const pathname = usePathname();
+
   return (
     <>
       <div className="w-screen h-[10vh] py-6 bg-black flex justify-center">
@@ -32,9 +37,27 @@ const Header = () => {
           {/* 옷장, 장바구니, 마이페이지 */}
           <div className="flex items-center gap-3 text-white text-[1rem] font-light">
             <div className="flex gap-2 items-center">
-              <Link href={"/closet"}>옷장</Link>
+              <Link 
+                href={"/closet"}
+                className={`${
+                  pathname === "/closet" 
+                    ? "font-semibold border-b-2" 
+                    : ""
+                }`}
+              >
+                옷장
+              </Link>
               <div className="bg-white w-[1px] h-[16px]" />
-              <Link href={"/cart"}>장바구니</Link>
+              <Link 
+                href={"/cart"}
+                className={`${
+                  pathname === "/cart" 
+                    ? "font-semibold border-b-2" 
+                    : ""
+                }`}
+              >
+                장바구니
+              </Link>
             </div>
             <Link href={"/mypage"}>
               <Image
