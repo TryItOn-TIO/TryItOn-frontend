@@ -160,6 +160,19 @@ const Cart = () => {
     return acc;
   }, {} as Record<string, CartItem[]>);
 
+  const getDeliveryDateText = () => {
+    const today = new Date();
+    today.setDate(today.getDate() + 2); // 2일 후
+
+    const month = String(today.getMonth() + 1).padStart(2, "0"); // 월: 0-based
+    const date = String(today.getDate()).padStart(2, "0");
+
+    const days = ["일", "월", "화", "수", "목", "금", "토"];
+    const day = days[today.getDay()]; // 요일
+
+    return `${month}/${date}(${day})`;
+  };
+
   return (
     <div className="w-full px-4 py-8 overflow-x-hidden">
       {/* 로딩 상태 */}
@@ -282,8 +295,8 @@ const Cart = () => {
                             </div>
 
                             <div className="mt-4 text-xs text-black mb-3">
-                              택배 배송 07/1(화) 밤 12시 이전 주문 시 내일 도착
-                              예정
+                              택배 배송 {getDeliveryDateText()} 밤 12시 이전
+                              주문 시 내일 도착 예정
                             </div>
 
                             <div className="flex items-center justify-between">
