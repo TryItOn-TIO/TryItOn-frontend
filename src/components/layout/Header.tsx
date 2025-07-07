@@ -5,11 +5,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { CATEGORY, CATEGORY_LABELS } from "@/constants/category";
+import { useAuth } from "@/hooks/useAuth";
 
 const Header = () => {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const { isAuthenticated, isLoading } = useAuth();
 
   // Hydration 문제 해결을 위해 클라이언트에서만 pathname 사용
   useEffect(() => {
@@ -19,7 +21,16 @@ const Header = () => {
   // 클라이언트에서만 활성 상태 확인
   const isActiveCategory = (categoryId: number) => {
     if (!isClient) return false;
-    return pathname === `/category/${categoryId}` || (pathname === "/" && categoryId === 0);
+    return (
+      pathname === `/category/${categoryId}` ||
+      (pathname === "/" && categoryId === 0)
+    );
+  };
+
+  // 사용자 메뉴 활성 상태 확인
+  const isActiveUserMenu = (menuPath: string) => {
+    if (!isClient) return false;
+    return pathname.startsWith(menuPath);
   };
 
   return (
@@ -79,27 +90,154 @@ const Header = () => {
 
           {/* Right Actions */}
           <div className="flex items-center gap-4">
-            {/* Login Button */}
-            <Link 
-              href="/signin" 
-              className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors duration-200 p-2 rounded-lg hover:bg-gray-50"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-              <span className="hidden lg:inline text-sm">로그인</span>
-            </Link>
+            {!isLoading && (
+              <>
+                {isAuthenticated ? (
+                  // 로그인한 사용자 메뉴
+                  <>
+                    {/* 옷장 */}
+                    <Link
+                      href="/closet"
+                      className={`flex items-center gap-2 transition-colors duration-200 p-2 rounded-lg hover:bg-gray-50 ${
+                        isActiveUserMenu("/closet")
+                          ? "text-black font-bold"
+                          : "text-gray-700 hover:text-gray-900"
+                      }`}
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <rect
+                          x="4"
+                          y="3"
+                          width="16"
+                          height="18"
+                          rx="2"
+                          strokeWidth={2}
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 3v18M8 8v2M16 8v2"
+                        />
+                        <circle cx="10" cy="12" r="0.5" fill="currentColor" />
+                        <circle cx="14" cy="12" r="0.5" fill="currentColor" />
+                      </svg>
+                      <span className="hidden lg:inline text-sm">옷장</span>
+                    </Link>
+
+                    {/* 장바구니 */}
+                    <Link
+                      href="/cart"
+                      className={`flex items-center gap-2 transition-colors duration-200 p-2 rounded-lg hover:bg-gray-50 ${
+                        isActiveUserMenu("/cart")
+                          ? "text-black font-bold"
+                          : "text-gray-700 hover:text-gray-900"
+                      }`}
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M6 6h12l-1.5 9H7.5L6 6zM6 6L4 4"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M8 10v2M12 10v2M16 10v2"
+                        />
+                      </svg>
+                      <span className="hidden lg:inline text-sm">장바구니</span>
+                    </Link>
+
+                    {/* 마이페이지 */}
+                    <Link
+                      href="/mypage"
+                      className={`flex items-center gap-2 transition-colors duration-200 p-2 rounded-lg hover:bg-gray-50 ${
+                        isActiveUserMenu("/mypage")
+                          ? "text-black font-bold"
+                          : "text-gray-700 hover:text-gray-900"
+                      }`}
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                        />
+                      </svg>
+                      <span className="hidden lg:inline text-sm">
+                        마이페이지
+                      </span>
+                    </Link>
+                  </>
+                ) : (
+                  // 로그인하지 않은 사용자 메뉴
+                  <Link
+                    href="/signin"
+                    className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors duration-200 p-2 rounded-lg hover:bg-gray-50"
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                      />
+                    </svg>
+                    <span className="hidden lg:inline text-sm">로그인</span>
+                  </Link>
+                )}
+              </>
+            )}
 
             {/* Mobile Menu Button */}
-            <button 
+            <button
               className="lg:hidden p-2 text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors duration-200"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
                 {isMobileMenuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
                 )}
               </svg>
             </button>
@@ -107,9 +245,11 @@ const Header = () => {
         </div>
 
         {/* Mobile Menu */}
-        <div className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-          isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-        }`}>
+        <div
+          className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+            isMobileMenuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+          }`}
+        >
           <div className="border-t border-gray-100 py-4 space-y-4">
             {/* Mobile Search */}
             <div className="px-2">
@@ -155,15 +295,127 @@ const Header = () => {
                 ))}
             </nav>
 
-            {/* Mobile Login */}
+            {/* Mobile Login/User Menu */}
             <div className="px-2 pt-2 border-t border-gray-100">
-              <Link 
-                href="/signin"
-                className="block py-3 px-3 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors duration-200"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                로그인
-              </Link>
+              {!isLoading && (
+                <>
+                  {isAuthenticated ? (
+                    // 로그인한 사용자 모바일 메뉴
+                    <div className="space-y-1">
+                      <Link
+                        href="/closet"
+                        className={`flex items-center gap-3 py-3 px-3 text-sm font-medium rounded-lg transition-colors duration-200 ${
+                          isActiveUserMenu("/closet")
+                            ? "text-black font-bold bg-gray-100"
+                            : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                        }`}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <rect
+                            x="4"
+                            y="3"
+                            width="16"
+                            height="18"
+                            rx="2"
+                            strokeWidth={2}
+                          />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 3v18M8 8v2M16 8v2"
+                          />
+                          <circle cx="10" cy="12" r="0.5" fill="currentColor" />
+                          <circle cx="14" cy="12" r="0.5" fill="currentColor" />
+                        </svg>
+                        옷장
+                      </Link>
+                      <Link
+                        href="/cart"
+                        className={`flex items-center gap-3 py-3 px-3 text-sm font-medium rounded-lg transition-colors duration-200 ${
+                          isActiveUserMenu("/cart")
+                            ? "text-black font-bold bg-gray-100"
+                            : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                        }`}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 6h12l-1.5 9H7.5L6 6zM6 6L4 4"
+                          />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M8 10v2M12 10v2M16 10v2"
+                          />
+                        </svg>
+                        장바구니
+                      </Link>
+                      <Link
+                        href="/mypage"
+                        className={`flex items-center gap-3 py-3 px-3 text-sm font-medium rounded-lg transition-colors duration-200 ${
+                          isActiveUserMenu("/mypage")
+                            ? "text-black font-bold bg-gray-100"
+                            : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                        }`}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                          />
+                        </svg>
+                        마이페이지
+                      </Link>
+                    </div>
+                  ) : (
+                    // 로그인하지 않은 사용자 모바일 메뉴
+                    <Link
+                      href="/signin"
+                      className="flex items-center gap-3 py-3 px-3 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors duration-200"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                        />
+                      </svg>
+                      로그인
+                    </Link>
+                  )}
+                </>
+              )}
             </div>
           </div>
         </div>
