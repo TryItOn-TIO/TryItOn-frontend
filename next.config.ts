@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true, // (임시) 빌드 시 ESLint 검사 건너뛰기
   },
   images: {
-    // unoptimized: true, // 이미지 최적화 활성화
+    unoptimized: true, // 이미지 최적화 비활성화
     remotePatterns: [
       {
         protocol: "https",
