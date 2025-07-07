@@ -45,25 +45,25 @@ export default function OrderPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [addressError, setAddressError] = useState<string | null>(null);
   const [showAddressForm, setShowAddressForm] = useState(false);
-  const [orderType, setOrderType] = useState<'cart' | 'direct'>('cart'); // 주문 타입 추가
+  const [orderType, setOrderType] = useState<"cart" | "direct">("cart"); // 주문 타입 추가
   const [newAddress, setNewAddress] = useState({
-    zipCode: '',
-    address: '',
-    addressDetail: '',
-    receiver: '',
-    primaryNum: '',
-    alternateNum: '',
+    zipCode: "",
+    address: "",
+    addressDetail: "",
+    receiver: "",
+    primaryNum: "",
+    alternateNum: "",
     isDefaultAddr: true,
-    deliverRequest: '문 앞에 놓아주세요'
+    deliverRequest: "문 앞에 놓아주세요",
   });
 
   // 간단 배송지 등록
   const handleQuickAddressAdd = () => {
     // 사용자 프로필 정보로 초기값 설정
     if (userProfile) {
-      setNewAddress(prev => ({
+      setNewAddress((prev) => ({
         ...prev,
-        receiver: userProfile.username || '',
+        receiver: userProfile.username || "",
       }));
     }
     setShowAddressForm(true);
@@ -72,54 +72,56 @@ export default function OrderPage() {
   // 배송지 등록 처리
   const handleAddressSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!newAddress.receiver || !newAddress.address || !newAddress.primaryNum) {
-      alert('필수 정보를 모두 입력해주세요.');
+      alert("필수 정보를 모두 입력해주세요.");
       return;
     }
 
     try {
-      console.log('배송지 등록 시도:', newAddress);
-      
+      console.log("배송지 등록 시도:", newAddress);
+
       // 백엔드 API 호출 시도
       try {
         await mypageApi.addAddress(newAddress);
-        console.log('배송지 등록 성공');
-        
+        console.log("배송지 등록 성공");
+
         // 배송지 목록 다시 조회
         const addressList = await mypageApi.getAddresses();
         setAddresses(addressList);
-        const addedAddress = addressList.find(addr => addr.receiver === newAddress.receiver);
+        const addedAddress = addressList.find(
+          (addr) => addr.receiver === newAddress.receiver
+        );
         setSelectedAddress(addedAddress || addressList[0]);
         setAddressError(null);
         setShowAddressForm(false);
-        
-        alert('배송지가 등록되었습니다.');
+
+        alert("배송지가 등록되었습니다.");
       } catch (apiError: any) {
-        console.error('배송지 등록 API 실패:', apiError);
-        
+        console.error("배송지 등록 API 실패:", apiError);
+
         // API가 없는 경우 로컬에서 처리 (개발 환경)
-        if (process.env.NODE_ENV === 'development') {
+        if (process.env.NODE_ENV === "development") {
           const tempAddress: Address = {
             addressId: Date.now(), // 임시 ID
-            ...newAddress
+            ...newAddress,
           };
-          
+
           const updatedAddresses = [...addresses, tempAddress];
           setAddresses(updatedAddresses);
           setSelectedAddress(tempAddress);
           setAddressError(null);
           setShowAddressForm(false);
-          
-          console.log('개발 환경에서 로컬 배송지 추가:', tempAddress);
-          alert('배송지가 등록되었습니다. (개발 모드)');
+
+          console.log("개발 환경에서 로컬 배송지 추가:", tempAddress);
+          alert("배송지가 등록되었습니다. (개발 모드)");
         } else {
           throw apiError;
         }
       }
     } catch (error) {
-      console.error('배송지 등록 실패:', error);
-      alert('배송지 등록에 실패했습니다.');
+      console.error("배송지 등록 실패:", error);
+      alert("배송지 등록에 실패했습니다.");
     }
   };
 
@@ -129,63 +131,67 @@ export default function OrderPage() {
       try {
         setIsLoading(true);
         setAddressError(null);
-        
+
         // 사용자 프로필 조회
         const profile = await mypageApi.getProfile();
         setUserProfile(profile);
 
         // 배송지 목록 조회
         try {
-          console.log('배송지 목록 조회 시작...');
+          console.log("배송지 목록 조회 시작...");
           const addressList = await mypageApi.getAddresses();
-          console.log('배송지 목록 조회 결과:', addressList);
+          console.log("배송지 목록 조회 결과:", addressList);
           setAddresses(addressList);
-          
+
           if (addressList.length > 0) {
             // 기본 배송지 우선 선택, 없으면 첫 번째 배송지 선택
-            const defaultAddress = addressList.find(addr => addr.isDefaultAddr) || addressList[0];
+            const defaultAddress =
+              addressList.find((addr) => addr.isDefaultAddr) || addressList[0];
             setSelectedAddress(defaultAddress);
-            console.log('기본 배송지 설정:', defaultAddress);
+            console.log("기본 배송지 설정:", defaultAddress);
           } else {
-            console.log('등록된 배송지가 없음');
-            setAddressError('등록된 배송지가 없습니다. 배송지를 먼저 등록해주세요.');
+            console.log("등록된 배송지가 없음");
+            setAddressError(
+              "등록된 배송지가 없습니다. 배송지를 먼저 등록해주세요."
+            );
           }
         } catch (addressApiError: any) {
-          console.error('배송지 조회 실패:', addressApiError);
-          console.error('배송지 API 응답:', addressApiError.response);
-          
+          console.error("배송지 조회 실패:", addressApiError);
+          console.error("배송지 API 응답:", addressApiError.response);
+
           // API 엔드포인트가 없는 경우 임시 처리
           if (addressApiError.response?.status === 404) {
-            console.log('배송지 API가 구현되지 않음 - 개발 환경에서 기본 배송지 생성');
-            
+            console.log(
+              "배송지 API가 구현되지 않음 - 개발 환경에서 기본 배송지 생성"
+            );
+
             // 개발 환경에서만 기본 배송지 생성
-            if (process.env.NODE_ENV === 'development') {
+            if (process.env.NODE_ENV === "development") {
               const defaultAddress: Address = {
                 addressId: 1,
-                zipCode: '12345',
-                address: '서울시 강남구 테헤란로 123',
-                addressDetail: '456호',
-                receiver: userProfile?.username || '사용자',
-                primaryNum: '010-1234-5678',
+                zipCode: "12345",
+                address: "서울시 강남구 테헤란로 123",
+                addressDetail: "456호",
+                receiver: userProfile?.username || "사용자",
+                primaryNum: "010-1234-5678",
                 alternateNum: null,
                 isDefaultAddr: true,
-                deliverRequest: '문 앞에 놓아주세요'
+                deliverRequest: "문 앞에 놓아주세요",
               };
-              
+
               setAddresses([defaultAddress]);
               setSelectedAddress(defaultAddress);
-              console.log('개발용 기본 배송지 생성:', defaultAddress);
+              console.log("개발용 기본 배송지 생성:", defaultAddress);
             } else {
-              setAddressError('배송지 API가 구현되지 않았습니다.');
+              setAddressError("배송지 API가 구현되지 않았습니다.");
             }
           } else {
-            setAddressError('배송지 정보를 불러올 수 없습니다.');
+            setAddressError("배송지 정보를 불러올 수 없습니다.");
           }
         }
-
       } catch (error) {
-        console.error('사용자 정보 로드 실패:', error);
-        setAddressError('사용자 정보를 불러올 수 없습니다.');
+        console.error("사용자 정보 로드 실패:", error);
+        setAddressError("사용자 정보를 불러올 수 없습니다.");
       } finally {
         setIsLoading(false);
       }
@@ -197,14 +203,14 @@ export default function OrderPage() {
   // 주문 상품 정보 로드 (카트 또는 직접 구매)
   useEffect(() => {
     // URL 파라미터에서 직접 구매 정보 확인
-    const directOrderData = searchParams.get('data');
-    
+    const directOrderData = searchParams.get("data");
+
     if (directOrderData) {
       // 직접 구매
       try {
         const orderInfo = JSON.parse(directOrderData);
         console.log("직접 구매 상품 정보:", orderInfo);
-        
+
         const directOrderItem: OrderItem = {
           id: orderInfo.productId.toString(),
           name: orderInfo.productName,
@@ -215,11 +221,11 @@ export default function OrderPage() {
           originalPrice: orderInfo.originalPrice,
           salePrice: orderInfo.price,
           image: orderInfo.image,
-          variantId: orderInfo.variantId
+          variantId: orderInfo.variantId,
         };
-        
+
         setOrderItems([directOrderItem]);
-        setOrderType('direct');
+        setOrderType("direct");
       } catch (error) {
         console.error("직접 구매 상품 정보를 불러오는데 실패했습니다:", error);
         alert("상품 정보를 불러오는데 실패했습니다.");
@@ -232,7 +238,7 @@ export default function OrderPage() {
           const parsedItems = JSON.parse(savedOrderItems);
           console.log("카트에서 전달받은 주문 상품:", parsedItems);
           setOrderItems(parsedItems);
-          setOrderType('cart');
+          setOrderType("cart");
           // localStorage 삭제를 결제 완료 후로 연기
           // localStorage.removeItem("orderItems");
         } catch (error) {
@@ -255,19 +261,19 @@ export default function OrderPage() {
   const finalAmount = totalSalePrice + shippingFee;
 
   const handlePaymentModalOpen = () => {
-    console.log('결제 모달 열기 시도:', {
+    console.log("결제 모달 열기 시도:", {
       selectedAddress,
       addressId: selectedAddress?.addressId,
-      addressError
+      addressError,
     });
 
     if (!selectedAddress) {
-      alert('배송지를 선택해주세요.');
+      alert("배송지를 선택해주세요.");
       return;
     }
 
     if (addressError) {
-      alert('배송지 정보에 오류가 있습니다. 배송지를 다시 확인해주세요.');
+      alert("배송지 정보에 오류가 있습니다. 배송지를 다시 확인해주세요.");
       return;
     }
 
@@ -281,11 +287,15 @@ export default function OrderPage() {
   // 로딩 중일 때
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center w-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto mb-4"></div>
-          <div className="text-lg text-gray-600">주문 정보를 불러오는 중...</div>
-          <div className="text-sm text-gray-500 mt-2">사용자 정보 및 배송지를 확인하고 있습니다.</div>
+          <div className="text-lg text-gray-600">
+            주문 정보를 불러오는 중...
+          </div>
+          <div className="text-sm text-gray-500 mt-2">
+            사용자 정보 및 배송지를 확인하고 있습니다.
+          </div>
         </div>
       </div>
     );
@@ -294,13 +304,13 @@ export default function OrderPage() {
   // 주문 상품이 없을 때
   if (orderItems.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center w-screen">
         <div className="text-center">
           <div className="text-xl font-semibold text-gray-600 mb-4">
             주문할 상품이 없습니다
           </div>
           <Button
-            onClick={() => window.location.href = '/cart'}
+            onClick={() => (window.location.href = "/cart")}
             className="bg-black text-white hover:bg-gray-800"
           >
             장바구니로 이동
@@ -325,8 +335,8 @@ export default function OrderPage() {
                   <h2 className="text-lg font-semibold text-black">
                     배송지 정보
                   </h2>
-                  <button 
-                    onClick={() => window.location.href = '/mypage/address'}
+                  <button
+                    onClick={() => (window.location.href = "/mypage/address")}
                     className="text-sm text-blue-600 cursor-pointer hover:underline"
                   >
                     배송지 관리
@@ -338,8 +348,16 @@ export default function OrderPage() {
                     <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                       <div className="flex items-start space-x-3">
                         <div className="flex-shrink-0">
-                          <svg className="w-5 h-5 text-yellow-600 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                          <svg
+                            className="w-5 h-5 text-yellow-600 mt-0.5"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                              clipRule="evenodd"
+                            />
                           </svg>
                         </div>
                         <div className="flex-1">
@@ -351,7 +369,9 @@ export default function OrderPage() {
                           </p>
                           <div className="flex space-x-3">
                             <button
-                              onClick={() => window.location.href = '/mypage/address'}
+                              onClick={() =>
+                                (window.location.href = "/mypage/address")
+                              }
                               className="text-sm bg-yellow-600 text-white px-4 py-2 rounded-md hover:bg-yellow-700 transition-colors"
                             >
                               배송지 관리 페이지로 이동
@@ -366,11 +386,16 @@ export default function OrderPage() {
                         </div>
                       </div>
                     </div>
-                    
+
                     {showAddressForm && (
                       <div className="bg-white border border-gray-200 rounded-lg p-6">
-                        <h4 className="font-medium text-black mb-4">배송지 등록</h4>
-                        <form onSubmit={handleAddressSubmit} className="space-y-4">
+                        <h4 className="font-medium text-black mb-4">
+                          배송지 등록
+                        </h4>
+                        <form
+                          onSubmit={handleAddressSubmit}
+                          className="space-y-4"
+                        >
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -379,7 +404,12 @@ export default function OrderPage() {
                               <input
                                 type="text"
                                 value={newAddress.receiver}
-                                onChange={(e) => setNewAddress({...newAddress, receiver: e.target.value})}
+                                onChange={(e) =>
+                                  setNewAddress({
+                                    ...newAddress,
+                                    receiver: e.target.value,
+                                  })
+                                }
                                 className="w-full border border-gray-300 px-3 py-2 rounded-md text-sm"
                                 placeholder="수령인 이름"
                                 required
@@ -392,14 +422,19 @@ export default function OrderPage() {
                               <input
                                 type="tel"
                                 value={newAddress.primaryNum}
-                                onChange={(e) => setNewAddress({...newAddress, primaryNum: e.target.value})}
+                                onChange={(e) =>
+                                  setNewAddress({
+                                    ...newAddress,
+                                    primaryNum: e.target.value,
+                                  })
+                                }
                                 className="w-full border border-gray-300 px-3 py-2 rounded-md text-sm"
                                 placeholder="010-1234-5678"
                                 required
                               />
                             </div>
                           </div>
-                          
+
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -408,7 +443,12 @@ export default function OrderPage() {
                               <input
                                 type="text"
                                 value={newAddress.zipCode}
-                                onChange={(e) => setNewAddress({...newAddress, zipCode: e.target.value})}
+                                onChange={(e) =>
+                                  setNewAddress({
+                                    ...newAddress,
+                                    zipCode: e.target.value,
+                                  })
+                                }
                                 className="w-full border border-gray-300 px-3 py-2 rounded-md text-sm"
                                 placeholder="12345"
                               />
@@ -420,14 +460,19 @@ export default function OrderPage() {
                               <input
                                 type="text"
                                 value={newAddress.address}
-                                onChange={(e) => setNewAddress({...newAddress, address: e.target.value})}
+                                onChange={(e) =>
+                                  setNewAddress({
+                                    ...newAddress,
+                                    address: e.target.value,
+                                  })
+                                }
                                 className="w-full border border-gray-300 px-3 py-2 rounded-md text-sm"
                                 placeholder="서울시 강남구 테헤란로 123"
                                 required
                               />
                             </div>
                           </div>
-                          
+
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                               상세주소
@@ -435,12 +480,17 @@ export default function OrderPage() {
                             <input
                               type="text"
                               value={newAddress.addressDetail}
-                              onChange={(e) => setNewAddress({...newAddress, addressDetail: e.target.value})}
+                              onChange={(e) =>
+                                setNewAddress({
+                                  ...newAddress,
+                                  addressDetail: e.target.value,
+                                })
+                              }
                               className="w-full border border-gray-300 px-3 py-2 rounded-md text-sm"
                               placeholder="아파트, 동/호수 등"
                             />
                           </div>
-                          
+
                           <div className="flex space-x-3 pt-4">
                             <button
                               type="submit"
@@ -474,7 +524,9 @@ export default function OrderPage() {
                         )}
                       </div>
                       <div className="space-y-1 text-sm text-gray-700">
-                        <p>[{selectedAddress.zipCode}] {selectedAddress.address}</p>
+                        <p>
+                          [{selectedAddress.zipCode}] {selectedAddress.address}
+                        </p>
                         <p>{selectedAddress.addressDetail}</p>
                         <p>{selectedAddress.primaryNum}</p>
                         {selectedAddress.alternateNum && (
@@ -495,15 +547,21 @@ export default function OrderPage() {
                           value={selectedAddress.addressId}
                           onChange={(e) => {
                             const addressId = parseInt(e.target.value);
-                            const address = addresses.find(addr => addr.addressId === addressId);
+                            const address = addresses.find(
+                              (addr) => addr.addressId === addressId
+                            );
                             setSelectedAddress(address || null);
                           }}
                           className="w-full border border-gray-300 px-3 py-2 rounded-md text-sm"
                         >
                           {addresses.map((address) => (
-                            <option key={address.addressId} value={address.addressId}>
-                              {address.receiver} - {address.address} {address.addressDetail}
-                              {address.isDefaultAddr ? ' (기본)' : ''}
+                            <option
+                              key={address.addressId}
+                              value={address.addressId}
+                            >
+                              {address.receiver} - {address.address}{" "}
+                              {address.addressDetail}
+                              {address.isDefaultAddr ? " (기본)" : ""}
                             </option>
                           ))}
                         </select>
@@ -512,13 +570,17 @@ export default function OrderPage() {
                   </div>
                 ) : (
                   <div className="text-center py-8">
-                    <div className="text-gray-500 mb-4">배송지 정보를 불러오는 중...</div>
+                    <div className="text-gray-500 mb-4">
+                      배송지 정보를 불러오는 중...
+                    </div>
                   </div>
                 )}
 
                 {selectedAddress && (
                   <div className="mt-4">
-                    <Select defaultValue={selectedAddress.deliverRequest || "default"}>
+                    <Select
+                      defaultValue={selectedAddress.deliverRequest || "default"}
+                    >
                       <SelectTrigger
                         className="w-full bg-white text-black border-gray-300"
                         style={{
@@ -599,13 +661,16 @@ export default function OrderPage() {
                         </div>
                         <div className="flex-1 space-y-1 min-w-0 overflow-hidden">
                           {item.brand && (
-                            <p className="text-xs text-gray-500">{item.brand}</p>
+                            <p className="text-xs text-gray-500">
+                              {item.brand}
+                            </p>
                           )}
                           <h3 className="font-medium text-sm text-black break-words line-clamp-2">
                             {item.name}
                           </h3>
                           <p className="text-sm text-black">
-                            {item.color && `${item.color} / `}{item.size} / {item.quantity}개
+                            {item.color && `${item.color} / `}
+                            {item.size} / {item.quantity}개
                           </p>
                           <div className="space-y-1">
                             {item.originalPrice !== item.salePrice && (
@@ -618,10 +683,14 @@ export default function OrderPage() {
                             </p>
                           </div>
                           <p className="text-xs text-black">
-                            택배 배송 {new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toLocaleDateString('ko-KR', {
-                              month: 'numeric',
-                              day: 'numeric'
-                            })} 출고 예정
+                            택배 배송{" "}
+                            {new Date(
+                              Date.now() + 2 * 24 * 60 * 60 * 1000
+                            ).toLocaleDateString("ko-KR", {
+                              month: "numeric",
+                              day: "numeric",
+                            })}{" "}
+                            출고 예정
                           </p>
                         </div>
                       </div>
@@ -704,7 +773,8 @@ export default function OrderPage() {
                     <p>• 주문 내용을 확인했으며, 결제에 동의합니다.</p>
                     <p>• 회원님의 개인정보는 안전하게 관리됩니다.</p>
                     <p>
-                      • TIO는 통신판매중개자로, 상품정보/주문/배송/환불의 의무와 책임은 각 판매자에게 있습니다.
+                      • TIO는 통신판매중개자로, 상품정보/주문/배송/환불의 의무와
+                      책임은 각 판매자에게 있습니다.
                     </p>
                   </div>
                 </CardContent>
@@ -716,12 +786,11 @@ export default function OrderPage() {
                 onClick={handlePaymentModalOpen}
                 disabled={!selectedAddress || addressError !== null}
               >
-                {addressError 
-                  ? '배송지를 등록해주세요'
-                  : selectedAddress 
-                    ? `${finalAmount.toLocaleString()}원 결제하기`
-                    : '배송지 정보를 확인하는 중...'
-                }
+                {addressError
+                  ? "배송지를 등록해주세요"
+                  : selectedAddress
+                  ? `${finalAmount.toLocaleString()}원 결제하기`
+                  : "배송지 정보를 확인하는 중..."}
               </Button>
             </div>
           </div>

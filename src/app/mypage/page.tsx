@@ -48,21 +48,21 @@ function MenuSection({ title, items }: MenuSectionProps) {
 
 export default function MyPage() {
   useAuthGuard(); // 인증 확인
-  
+
   const { profile, isLoading, error } = useProfile();
   const router = useRouter();
 
   // 로그아웃 함수
   const handleLogout = () => {
     const confirmLogout = confirm("정말 로그아웃 하시겠습니까?");
-    
+
     if (confirmLogout) {
       // 토큰 삭제
       deleteAccessToken();
-      
+
       // 홈페이지로 리다이렉트
       router.push("/");
-      
+
       // 성공 메시지 (선택사항)
       alert("로그아웃되었습니다.");
     }
@@ -70,7 +70,7 @@ export default function MyPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center w-screen">
         <div className="text-lg text-gray-600">프로필을 불러오는 중...</div>
       </div>
     );
@@ -78,14 +78,14 @@ export default function MyPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center w-screen">
         <div className="text-lg text-red-600">오류: {error}</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 w-screen">
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* 페이지 제목 */}
         <h1 className="text-2xl font-bold text-gray-900 mb-8">마이 페이지</h1>
@@ -98,11 +98,9 @@ export default function MyPage() {
             </div>
             <div>
               <h2 className="text-xl font-semibold text-gray-900">
-                {profile?.username || '사용자'}
+                {profile?.username || "사용자"}
               </h2>
-              <p className="text-sm text-gray-600 mt-1">
-                {profile?.email}
-              </p>
+              <p className="text-sm text-gray-600 mt-1">{profile?.email}</p>
               <button className="text-blue-600 text-sm hover:underline flex items-center mt-1">
                 등급 혜택 보러가기
                 <ChevronRight className="w-4 h-4 ml-1" />
@@ -160,7 +158,7 @@ export default function MyPage() {
 
         {/* 로그아웃 */}
         <div className="mt-8 pt-6 border-t border-gray-200">
-          <button 
+          <button
             onClick={handleLogout}
             className="flex items-center space-x-2 text-gray-600 hover:text-red-600 text-sm transition-colors duration-200"
           >

@@ -42,7 +42,7 @@ const DetailClient = ({ productId }: DetailClientProps) => {
         {/* 좌측 상품 이미지 등 상세정보 */}
         <div className="w-[65%]">
           <DetailMainImg images={data.images} />
-          <DetailRecommand />
+          <DetailRecommand productId={Number(productId)} />
           {data.images[4] && <DetailInfo image={data.images[4]} />}
         </div>
 
