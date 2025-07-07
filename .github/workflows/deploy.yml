@@ -36,7 +36,7 @@ jobs:
 
       - name: Build Next.js application
         env:
-          NEXT_PUBLIC_API_URL: http://TIO-ALB-173623777.ap-northeast-2.elb.amazonaws.com
+          NEXT_PUBLIC_API_URL: https://www.tio-style.com
           NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
           NODE_ENV: production
         run: |
