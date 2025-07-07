@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -9,6 +9,18 @@ import { CATEGORY, CATEGORY_LABELS } from "@/constants/category";
 const Header = () => {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  // Hydration 문제 해결을 위해 클라이언트에서만 pathname 사용
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // 클라이언트에서만 활성 상태 확인
+  const isActiveCategory = (categoryId: number) => {
+    if (!isClient) return false;
+    return pathname === `/category/${categoryId}` || (pathname === "/" && categoryId === 0);
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-gray-100">
@@ -30,8 +42,7 @@ const Header = () => {
                     key={categoryId}
                     href={categoryId === 0 ? "/" : `/category/${categoryId}`}
                     className={`text-sm font-medium transition-colors duration-200 hover:text-gray-900 ${
-                      pathname === `/category/${categoryId}` ||
-                      (pathname === "/" && categoryId === 0)
+                      isActiveCategory(categoryId as number)
                         ? "text-black font-bold"
                         : "text-gray-700"
                     }`}
@@ -133,8 +144,7 @@ const Header = () => {
                     key={categoryId}
                     href={categoryId === 0 ? "/" : `/category/${categoryId}`}
                     className={`block py-3 px-3 text-sm font-medium rounded-lg transition-colors duration-200 ${
-                      pathname === `/category/${categoryId}` ||
-                      (pathname === "/" && categoryId === 0)
+                      isActiveCategory(categoryId as number)
                         ? "text-black font-bold bg-gray-100"
                         : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
                     }`}

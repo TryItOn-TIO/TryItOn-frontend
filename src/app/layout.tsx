@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body className="min-h-screen">
         <GoogleOAuthProvider
           clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
         >
@@ -28,13 +28,9 @@ export default function RootLayout({
             {/* 새로운 통합 헤더 */}
             <Header />
             
-            {/* 메인 컨텐츠 - 헤더가 sticky이므로 pt 추가 */}
-            <main className="pt-4">
-              <div className="flex justify-center">
-                <div className="flex justify-start w-full max-w-[1280px]">
-                  {children}
-                </div>
-              </div>
+            {/* 메인 컨텐츠 - 전체 너비 사용 */}
+            <main className="w-full">
+              {children}
             </main>
           </Providers>
         </GoogleOAuthProvider>
