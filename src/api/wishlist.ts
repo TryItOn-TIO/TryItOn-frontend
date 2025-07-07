@@ -1,4 +1,5 @@
 import { axiosWithAuth } from "@/api";
+import { ProductResponse } from "@/types/product";
 import { DeleteWishlist, PostWishlist } from "@/types/wishlist";
 import { getAccessToken } from "@/utils/auth";
 
@@ -25,5 +26,11 @@ export const removeWishlist = async (data: DeleteWishlist) => {
   const response = await axiosWithAuth().delete(
     `/api/wishlist/remove?productId=${data.productId}`
   );
+  return response.data;
+};
+
+// 옷장에서 사용
+export const getWishlist = async (): Promise<ProductResponse[]> => {
+  const response = await axiosWithAuth().get("/api/wishlist");
   return response.data;
 };

@@ -4,38 +4,40 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useAvatarStore } from "@/stores/avatar-store";
 import { saveClosetAvatar } from "@/api/closet";
+import { AvatarResponse } from "@/types/avatar";
 
-type AvatarWearInfoProps = {
-  avatarId: number;
-  productNames: string[];
-};
-
-const AvatarWearInfo = ({
-  avatarId,
-  productNames,
-}: AvatarWearInfoProps) => {
+const AvatarWearInfo = () => {
   const avatarImg = useAvatarStore((state) => state.avatarImg);
-  const selectedProductIds = useAvatarStore((state) => state.selectedProductIds);
+  const selectedProductIds = useAvatarStore(
+    (state) => state.selectedProductIds
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+
+  const [avatar, setAvatar] = useState<AvatarResponse>({
+    avatarId: 1,
+    avatarImgUrl: "",
+    products: [],
+  });
 
   const handleAddToCloset = async () => {
     try {
       setIsLoading(true);
       setMessage(null);
 
-      await saveClosetAvatar({
-        avatarId: avatarId,
-        items: selectedProductIds.map(productId => ({ productId }))
+      const response = await saveClosetAvatar({
+        items: [{ productId: 2003 }], // TODO: 아래 코드로 변경
+        // items: selectedProductIds.map(productId => ({ productId }))
       });
 
+      setAvatar(response);
       setMessage("옷장에 성공적으로 추가되었습니다!");
-      
+
       // 3초 후 메시지 제거
       setTimeout(() => setMessage(null), 3000);
     } catch (error: any) {
       console.error("옷장 추가 실패:", error);
-      
+
       // 백엔드 에러 상태에 따른 메시지 처리
       if (error.response?.status === 409) {
         setMessage("이미 옷장에 있는 착장입니다.");
@@ -46,7 +48,7 @@ const AvatarWearInfo = ({
       } else {
         setMessage("옷장 추가에 실패했습니다. 다시 시도해주세요.");
       }
-      
+
       // 3초 후 메시지 제거
       setTimeout(() => setMessage(null), 3000);
     } finally {
@@ -72,11 +74,13 @@ const AvatarWearInfo = ({
 
       {/* 메시지 표시 */}
       {message && (
-        <div className={`absolute top-16 right-4 z-10 px-3 py-2 rounded-lg text-sm ${
-          message.includes("성공") 
-            ? "bg-green-100 text-green-800 border border-green-200"
-            : "bg-yellow-100 text-yellow-800 border border-yellow-200"
-        }`}>
+        <div
+          className={`absolute top-16 right-4 z-10 px-3 py-2 rounded-lg text-sm ${
+            message.includes("성공")
+              ? "bg-green-100 text-green-800 border border-green-200"
+              : "bg-yellow-100 text-yellow-800 border border-yellow-200"
+          }`}
+        >
           {message}
         </div>
       )}
@@ -98,10 +102,12 @@ const AvatarWearInfo = ({
 
       {/* 착장 상품 리스트 */}
       <div>
-        {productNames.length > 0 ? (
+        {avatar.products.length > 0 ? (
           <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
-            {productNames.map((name, idx) => (
-              <li key={idx}>{name}</li>
+            {avatar.products.map((product, idx) => (
+              <li key={idx}>
+                {product.categoryName} / {product.productName}
+              </li>
             ))}
           </ul>
         ) : (
