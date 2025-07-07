@@ -7,11 +7,11 @@ module.exports = {
         script: 'npm',
         args: 'start',  // npm start 명령어 실행
 
-        // 클러스터 설정
-        instances: 'max',        // CPU 코어 수만큼 프로세스 생성
-        exec_mode: 'cluster',    // 클러스터 모드 활성화
+        // 클러스터 설정 (단일 인스턴스로 변경)
+        instances: 1,            // 포트 충돌 방지를 위해 단일 인스턴스
+        exec_mode: 'fork',       // fork 모드로 변경
 
-        // 환경 변수 설정 (실제 값은 배포 시 주입됨)
+        // 환경 변수 설정 (실제 값은 process.env에서 가져옴)
         env: {
             NODE_ENV: 'production',
             PORT: 3000,
