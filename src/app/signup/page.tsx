@@ -11,7 +11,6 @@ import TryonImgUploader from "@/app/signup/_components/TryonImgUploader";
 import { signup } from "@/api/auth";
 import PasswordForm from "@/app/signup/_components/PasswordForm";
 import SignupForm from "@/app/signup/_components/SignupForm";
-import AvatarImageSelector from "@/app/signup/_components/AvatarImageSelector";
 import { useRouter } from "next/navigation";
 
 const Signup = () => {
@@ -27,22 +26,33 @@ const Signup = () => {
     gender: Gender.F,
     phoneNum: "",
     shoeSize: 0,
-    avatarBaseImageUrl: "",
+    avatarBaseImageUrl: "temp",
     userBaseImageUrl: "",
   });
 
   const router = useRouter();
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (fileUrl?: string) => {
     // 필수 필드 검증
-    console.log(data);
 
     if (!data.username || !data.birthDate || !data.phoneNum) {
       alert("필수 정보를 모두 입력해주세요.");
       return;
     }
     try {
-      const response = await signup(data);
+      // fileUrl이 전달되면 data 상태 업데이트
+      const finalData = fileUrl
+        ? {
+            ...data,
+            userBaseImageUrl: fileUrl,
+          }
+        : {
+            ...data,
+          };
+
+      console.log(data);
+      console.log("이메일 회원가입 데이터:", finalData);
+      const response = await signup(finalData);
 
       if (response) {
         setStep((prev) => prev + 1);
@@ -69,16 +79,13 @@ const Signup = () => {
           <SignupForm setStep={setStep} data={data} setData={setData} />
         )}
         {step == 5 && (
-          <TryonImgUploader setStep={setStep} data={data} setData={setData} />
-        )}
-        {step == 6 && (
-          <AvatarImageSelector
+          <TryonImgUploader
+            onSubmit={handleSubmit}
             data={data}
             setData={setData}
-            onSubmit={handleSubmit}
           />
         )}
-        {step == 7 && <Success />}
+        {step == 6 && <Success />}
       </div>
     </div>
   );
