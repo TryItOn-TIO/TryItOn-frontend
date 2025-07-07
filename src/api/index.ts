@@ -37,6 +37,20 @@ function setResponseInterceptor(instance: AxiosInstance): void {
           return Promise.reject(error);
         }
         
+        // 메인 페이지에서는 팝업 방지 (비로그인 사용자도 접근 가능)
+        if (window.location.pathname === '/') {
+          console.warn("메인 페이지에서 인증 오류 발생 - 팝업 방지");
+          deleteAccessToken();
+          return Promise.reject(error);
+        }
+        
+        // 상세페이지에서는 팝업 방지 (비로그인 사용자도 접근 가능)
+        if (window.location.pathname.startsWith('/detail/')) {
+          console.warn("상세페이지에서 인증 오류 발생 - 팝업 방지");
+          deleteAccessToken();
+          return Promise.reject(error);
+        }
+        
         // 1. 토큰 삭제
         deleteAccessToken();
 

@@ -11,8 +11,28 @@ import {
 export const mypageApi = {
   // 내 프로필 조회
   getProfile: async (): Promise<UserProfile> => {
-    const response = await axiosWithAuth().get('/api/mypage/profile');
-    return response.data;
+    try {
+      console.log('프로필 조회 API 호출 시작');
+      const response = await axiosWithAuth().get('/api/mypage/profile');
+      console.log('프로필 조회 성공:', response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error('프로필 조회 실패:', error);
+      console.error('에러 상태:', error.response?.status);
+      console.error('에러 메시지:', error.response?.data);
+      console.error('요청 URL:', error.config?.url);
+      
+      // 인증 오류인 경우 더 구체적인 에러 메시지
+      if (error.response?.status === 401) {
+        throw new Error('로그인이 필요합니다. 다시 로그인해주세요.');
+      } else if (error.response?.status === 403) {
+        throw new Error('접근 권한이 없습니다.');
+      } else if (error.response?.status === 404) {
+        throw new Error('프로필 정보를 찾을 수 없습니다.');
+      }
+      
+      throw error;
+    }
   },
 
   // 프로필 수정
