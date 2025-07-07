@@ -5,7 +5,7 @@ export type AvatarProductInfo = {
 };
 
 type AvatarProduct = {
-  productId: number;
+  // productId: number;
   productName: string;
   categoryName: string;
 };

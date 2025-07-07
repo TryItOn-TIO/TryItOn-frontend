@@ -1,9 +1,36 @@
+import { AvatarProductInfo } from "./avatar";
+import { ProductResponse } from "./product";
+
 // 옷장 아바타 응답 타입
+export type ClosetAvatarItemResponse = {
+  productId: number;
+  productName: string;
+  brand: string;
+};
+
 export type ClosetAvatarResponse = {
-  closetAvatarId: number;
+  avatarId: number;
   avatarImage: string;
-  productNames: string[];
-  createdAt: string;
+  itemsByCategory: {
+    [categoryName: string]: ClosetAvatarItemResponse;
+  };
+};
+
+export const initailavatarResponse: ClosetAvatarResponse = {
+  avatarId: 1,
+  avatarImage: "",
+  itemsByCategory: {
+    상의: {
+      productId: 1,
+      productName: "",
+      brand: "",
+    },
+    하의: {
+      productId: 2,
+      productName: "",
+      brand: "",
+    },
+  },
 };
 
 // 옷장 아바타 아이템 요청 타입
@@ -15,4 +42,46 @@ export type ClosetAvatarItemRequest = {
 export type ClosetAvatarSaveRequest = {
   avatarId: number;
   items: ClosetAvatarItemRequest[];
+};
+
+// 현재 착장 아이템
+export type CurrentOutfitItem = {
+  id: number;
+  name: string;
+  image: string;
+  category: string;
+};
+
+// 저장된 착장 (Avatar 기반)
+export type SavedOutfit = {
+  id: number;
+  name?: string;
+  avatarImg: string;
+  productNames: string[];
+  createdAt: string;
+  bookmarked: boolean;
+};
+
+// 옷장 메인 응답 (백엔드 ClosetPageResponse와 매칭)
+export type ClosetResponse = {
+  latestAvatar: AvatarProductInfo | null;
+  bookmarkedAvatars: AvatarProductInfo[];
+  wishlistProducts: ProductResponse[];
+};
+
+// 찜 목록 페이징 응답 (백엔드 WishlistPageResponseDto와 매칭)
+export type WishlistResponse = {
+  products: ProductResponse[];
+  totalPages: number;
+  totalElements: number;
+  currentPage: number;
+  size: number;
+  last: boolean;
+};
+
+// 착장 저장 요청
+export type SaveOutfitRequest = {
+  name?: string;
+  productIds: number[];
+  modelImage?: string;
 };

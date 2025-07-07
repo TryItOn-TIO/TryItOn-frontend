@@ -5,7 +5,7 @@ import type { AvatarProductInfo } from "@/types/avatar";
 export const createAvatar = async (
   data: AvatarRequest
 ): Promise<AvatarResponse> => {
-  const response = await axiosWithAuth().post("/api/avatars", data);
+  const response = await axiosWithAuth().post("/api/avatars/try-on", data);
   return response.data;
 };
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { ClosetAvatarResponse } from "@/types/closet";
-import { getCloset } from "@/api/closet";
+import { getClosetAvatars } from "@/api/closet";
 
 export const useAvatarData = () => {
   const [avatars, setAvatars] = useState<ClosetAvatarResponse[]>([]);
@@ -14,7 +14,7 @@ export const useAvatarData = () => {
       setAvatarLoading(true);
       setError(null);
 
-      const response = await getCloset();
+      const response = await getClosetAvatars();
 
       // 응답이 배열이고 비어있지 않은 경우
       if (Array.isArray(response) && response.length > 0) {
