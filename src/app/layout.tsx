@@ -28,9 +28,9 @@ export default function RootLayout({
           <Providers>
             {/* 새로운 통합 헤더 */}
             <Header />
-            
+
             {/* 고정된 헤더 높이만큼 상단 여백 추가 */}
-            <main className="w-full pt-20">
+            <main className="w-full pt-20 px-4 pb-8 max-w-screen-2xl mx-auto">
               {children}
             </main>
 
