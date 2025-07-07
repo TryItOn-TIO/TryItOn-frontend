@@ -18,12 +18,7 @@ const AvatarModal = ({ onClose }: AvatarModalProps) => {
   const [avatar, setAvatar] = useState<AvatarResponse>({
     avatarId: id,
     avatarImgUrl: "/images/dummy/ex10.png",
-    products: [
-      {
-        productName: "린넨 셔츠",
-        categoryName: "상의",
-      },
-    ],
+    products: [],
   });
 
   const makeAvatar = async () => {
@@ -38,7 +33,7 @@ const AvatarModal = ({ onClose }: AvatarModalProps) => {
   };
 
   useEffect(() => {
-    // makeAvatar();
+    makeAvatar();
   }, []);
 
   return (
