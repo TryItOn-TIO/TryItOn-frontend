@@ -11,14 +11,14 @@ export default function ProfilePage() {
   useAuthGuard();
   const router = useRouter();
   const { profile, isLoading, error, updateProfile } = useProfile();
-  
+
   const [formData, setFormData] = useState<ProfileUpdateRequest>({
-    username: '',
+    username: "",
     height: 0,
     weight: 0,
     shoeSize: 0,
   });
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -35,10 +35,13 @@ export default function ProfilePage() {
     }
   }, [profile]);
 
-  const handleInputChange = (field: keyof ProfileUpdateRequest, value: string | number) => {
-    setFormData(prev => ({
+  const handleInputChange = (
+    field: keyof ProfileUpdateRequest,
+    value: string | number
+  ) => {
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
     setSubmitError(null);
     setSubmitSuccess(false);
@@ -48,13 +51,15 @@ export default function ProfilePage() {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitError(null);
-    
+
     try {
       await updateProfile(formData);
       setSubmitSuccess(true);
       setTimeout(() => setSubmitSuccess(false), 3000);
     } catch (error) {
-      setSubmitError(error instanceof Error ? error.message : '프로필 수정에 실패했습니다.');
+      setSubmitError(
+        error instanceof Error ? error.message : "프로필 수정에 실패했습니다."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -77,7 +82,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 w-screen">
       <div className="max-w-2xl mx-auto px-4 py-8">
         {/* 헤더 */}
         <div className="flex items-center mb-8">
@@ -100,11 +105,13 @@ export default function ProfilePage() {
               </label>
               <input
                 type="email"
-                value={profile?.email || ''}
+                value={profile?.email || ""}
                 disabled
                 className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-500"
               />
-              <p className="text-xs text-gray-500 mt-1">이메일은 변경할 수 없습니다.</p>
+              <p className="text-xs text-gray-500 mt-1">
+                이메일은 변경할 수 없습니다.
+              </p>
             </div>
 
             {/* 사용자명 */}
@@ -115,7 +122,7 @@ export default function ProfilePage() {
               <input
                 type="text"
                 value={formData.username}
-                onChange={(e) => handleInputChange('username', e.target.value)}
+                onChange={(e) => handleInputChange("username", e.target.value)}
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
                 placeholder="사용자명을 입력하세요"
@@ -129,8 +136,10 @@ export default function ProfilePage() {
               </label>
               <input
                 type="number"
-                value={formData.height || ''}
-                onChange={(e) => handleInputChange('height', parseInt(e.target.value) || 0)}
+                value={formData.height || ""}
+                onChange={(e) =>
+                  handleInputChange("height", parseInt(e.target.value) || 0)
+                }
                 required
                 min="100"
                 max="250"
@@ -146,8 +155,10 @@ export default function ProfilePage() {
               </label>
               <input
                 type="number"
-                value={formData.weight || ''}
-                onChange={(e) => handleInputChange('weight', parseInt(e.target.value) || 0)}
+                value={formData.weight || ""}
+                onChange={(e) =>
+                  handleInputChange("weight", parseInt(e.target.value) || 0)
+                }
                 required
                 min="30"
                 max="200"
@@ -163,8 +174,10 @@ export default function ProfilePage() {
               </label>
               <input
                 type="number"
-                value={formData.shoeSize || ''}
-                onChange={(e) => handleInputChange('shoeSize', parseInt(e.target.value) || 0)}
+                value={formData.shoeSize || ""}
+                onChange={(e) =>
+                  handleInputChange("shoeSize", parseInt(e.target.value) || 0)
+                }
                 required
                 min="200"
                 max="350"
@@ -183,7 +196,9 @@ export default function ProfilePage() {
             {/* 성공 메시지 */}
             {submitSuccess && (
               <div className="bg-green-50 border border-green-200 rounded-md p-3">
-                <p className="text-green-600 text-sm">프로필이 성공적으로 수정되었습니다!</p>
+                <p className="text-green-600 text-sm">
+                  프로필이 성공적으로 수정되었습니다!
+                </p>
               </div>
             )}
 
@@ -195,7 +210,7 @@ export default function ProfilePage() {
                 className="flex items-center px-6 py-2 bg-black text-white rounded-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Save className="w-4 h-4 mr-2" />
-                {isSubmitting ? '저장 중...' : '저장하기'}
+                {isSubmitting ? "저장 중..." : "저장하기"}
               </button>
             </div>
           </form>
