@@ -11,7 +11,8 @@ const AvatarWearInfo = () => {
   const selectedProductIds = useAvatarStore(
     (state) => state.selectedProductIds
   );
-  const [isLoading, setIsLoading] = useState(false);
+  const isAvatarLoading = useAvatarStore((state) => state.isLoading);
+  const [isClosetLoading, setIsClosetLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
   const [avatar, setAvatar] = useState<AvatarResponse>({
@@ -22,7 +23,7 @@ const AvatarWearInfo = () => {
 
   const handleAddToCloset = async () => {
     try {
-      setIsLoading(true);
+      setIsClosetLoading(true);
       setMessage(null);
 
       const response = await saveClosetAvatar({
@@ -52,7 +53,7 @@ const AvatarWearInfo = () => {
       // 3초 후 메시지 제거
       setTimeout(() => setMessage(null), 3000);
     } finally {
-      setIsLoading(false);
+      setIsClosetLoading(false);
     }
   };
 
@@ -61,15 +62,15 @@ const AvatarWearInfo = () => {
       {/* 옷장에 추가 버튼 (우측 상단 고정) */}
       <button
         onClick={handleAddToCloset}
-        disabled={isLoading}
+        disabled={isClosetLoading || isAvatarLoading}
         className={`absolute top-4 right-4 z-10 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-          isLoading
+          isClosetLoading || isAvatarLoading
             ? "bg-gray-300 text-gray-500 cursor-not-allowed"
             : "bg-blue-500 text-white hover:bg-blue-600"
         }`}
         aria-label="옷장에 추가"
       >
-        {isLoading ? "추가 중..." : "옷장에 추가"}
+        {isClosetLoading ? "추가 중..." : "옷장에 추가"}
       </button>
 
       {/* 메시지 표시 */}
@@ -85,18 +86,44 @@ const AvatarWearInfo = () => {
         </div>
       )}
 
+      {/* 아바타 착용 중 안내 메시지 */}
+      {isAvatarLoading && (
+        <div className="absolute top-4 left-4 z-10 px-3 py-2 rounded-lg text-sm bg-blue-100 text-blue-800 border border-blue-200 flex items-center gap-2">
+          <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+          옷을 입고 있어요... (최대 2분 소요됩니다)
+        </div>
+      )}
+
       {/* 아바타 이미지 */}
-      <div className="w-full flex justify-center mb-6">
+      <div className="w-full flex justify-center mb-6 relative">
         {avatarImg ? (
-          <Image
-            src={avatarImg}
-            alt="착장한 아바타"
-            width={180}
-            height={180}
-            className="object-contain"
-          />
+          <div className="relative">
+            <Image
+              src={avatarImg}
+              alt="착장한 아바타"
+              width={180}
+              height={180}
+              className={`object-contain transition-opacity duration-300 ${
+                isAvatarLoading ? "opacity-50" : "opacity-100"
+              }`}
+            />
+            {isAvatarLoading && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+              </div>
+            )}
+          </div>
         ) : (
-          <div className="w-[180px] h-[180px] bg-gray-200 rounded-md" />
+          <div className="w-[180px] h-[180px] bg-gray-200 rounded-md flex items-center justify-center">
+            {isAvatarLoading ? (
+              <div className="flex flex-col items-center gap-2">
+                <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                <span className="text-sm text-gray-600">착용 중...</span>
+              </div>
+            ) : (
+              <span className="text-sm text-gray-500">아바타 이미지 없음</span>
+            )}
+          </div>
         )}
       </div>
 
@@ -111,7 +138,9 @@ const AvatarWearInfo = () => {
             ))}
           </ul>
         ) : (
-          <p className="text-sm text-gray-500">입은 상품이 없습니다.</p>
+          <p className="text-sm text-gray-500">
+            {isAvatarLoading ? "옷을 입는 중입니다." : "입은 상품이 없습니다."}
+          </p>
         )}
       </div>
     </div>
