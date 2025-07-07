@@ -85,7 +85,7 @@ export default function OrdersPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center w-screen">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto mb-4"></div>
           <div className="text-lg text-gray-600">주문내역을 불러오는 중...</div>
@@ -96,7 +96,7 @@ export default function OrdersPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center w-screen">
         <div className="text-center">
           <div className="text-xl font-semibold text-red-600 mb-4">
             오류가 발생했습니다

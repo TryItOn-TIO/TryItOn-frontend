@@ -92,7 +92,7 @@ export default function AddressPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center w-screen">
         <div className="text-lg text-gray-600">배송지를 불러오는 중...</div>
       </div>
     );
@@ -100,7 +100,7 @@ export default function AddressPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center w-screen">
         <div className="text-lg text-red-600">오류: {error}</div>
       </div>
     );
