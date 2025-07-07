@@ -7,12 +7,12 @@ import { CredentialResponse } from "@react-oauth/google";
 
 const OAuthGoogle = () => {
   const { setIdToken } = useIdToken();
-
   const router = useRouter();
 
   const handleSuccess = async (credentialResponse: CredentialResponse) => {
     if (!credentialResponse?.credential) {
       console.error("Google 인증 토큰을 받지 못했습니다.");
+      alert("Google 인증에 실패했습니다. 다시 시도해주세요.");
       return;
     }
 
@@ -28,25 +28,64 @@ const OAuthGoogle = () => {
         console.log("로그인 성공:", loginRes);
         router.push("/"); // 홈으로 리다이렉트
       }
-    } catch {
-      alert("회원가입이 필요합니다");
-      setIdToken(idToken);
-      router.push("/signup/oauth");
-      // TODO: error 타입이 통일된 이후 타입 적용
-
-      /*
+    } catch (error: any) {
       console.error("로그인 에러:", error);
-      // 404 에러 또는 회원가입이 필요한 경우
-      if (error.response?.status === 404 || error.response?.needsSignup) {
-        console.log("회원가입이 필요합니다");
-        
-        setIdToken(idToken);
-        router.push("/signup/oauth");
-      } else {
-        console.error("로그인 오류:", error.response || error.message);
-      alert("로그인 중 오류가 발생했습니다. 다시 시도해주세요.");
-    }
-    */
+
+      // 백엔드 BusinessException 처리
+      const status = error.response?.status;
+      const message = error.response?.data?.message || error.message;
+
+      switch (status) {
+        case 404:
+          // 사용자를 찾을 수 없음 - 회원가입 필요
+          console.log("회원가입이 필요합니다 (404)");
+          setIdToken(idToken);
+          router.push("/signup/oauth");
+          break;
+
+        case 400:
+          // 잘못된 요청
+          console.error("잘못된 요청:", message);
+          alert("잘못된 요청입니다. 다시 시도해주세요.");
+          break;
+
+        case 401:
+          // 인증 실패
+          console.error("인증 실패:", message);
+          alert("Google 인증에 실패했습니다. 다시 로그인해주세요.");
+          break;
+
+        case 403:
+          // 권한 없음
+          console.error("권한 없음:", message);
+          alert("접근 권한이 없습니다.");
+          break;
+
+        case 409:
+          // 중복 또는 충돌
+          console.error("데이터 충돌:", message);
+          alert("이미 존재하는 계정입니다. 다른 방법으로 로그인해주세요.");
+          break;
+
+        case 500:
+          // 서버 내부 오류
+          console.error("서버 오류:", message);
+          alert("서버에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.");
+          break;
+
+        default:
+          // 네트워크 오류 또는 기타 오류
+          if (!status) {
+            console.error("네트워크 오류:", error);
+            alert("네트워크 연결을 확인하고 다시 시도해주세요.");
+          } else {
+            console.error("알 수 없는 오류:", message);
+            alert(
+              `로그인 중 오류가 발생했습니다. (${status})\n다시 시도해주세요.`
+            );
+          }
+          break;
+      }
     }
   };
 
