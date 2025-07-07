@@ -16,8 +16,14 @@ export type ProductResponse = {
 
 // 추천상품, 랭킹상품, 아바타에 입혀본 상품 정보 (전체 탭)
 export type MainProductResponse = {
-  recommended: ProductResponse[];
-  ranked: ProductResponse[];
+  recommended?: ProductResponse[];
+  ranked?: ProductResponse[];
+  // 비로그인 사용자용 카테고리별 응답
+  categories?: Array<{
+    categoryId: number;
+    categoryName: string;
+    products: ProductResponse[];
+  }>;
 };
 
 // 카테고리 제품 응답
