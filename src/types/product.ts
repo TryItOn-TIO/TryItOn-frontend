@@ -31,3 +31,20 @@ export type CategoryProductResponse = {
     last: boolean; // 페이지 끝을 인식
   };
 };
+
+export const initialProductResponse: ProductResponse[] = [
+  {
+    id: 1,
+    productName: "",
+    img1: "",
+    price: 1,
+    sale: 1,
+    salePrice: 1, // 할인된 가격 (optional로 변경)
+    liked: false,
+    brand: "",
+    wishlistCount: 1,
+    createdAt: "",
+    categoryId: 1,
+    categoryName: "",
+  },
+];
