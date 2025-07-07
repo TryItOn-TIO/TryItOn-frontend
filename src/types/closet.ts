@@ -1,5 +1,10 @@
-import { AvatarProductInfo } from "./avatar";
-import { ProductResponse } from "./product";
+type ClosetAvatarItemRequest = {
+  productId: number;
+};
+
+export type ClosetAvatarSaveRequest = {
+  items: ClosetAvatarItemRequest[];
+};
 
 // 옷장 아바타 응답 타입
 export type ClosetAvatarItemResponse = {
@@ -31,57 +36,4 @@ export const initailavatarResponse: ClosetAvatarResponse = {
       brand: "",
     },
   },
-};
-
-// 옷장 아바타 아이템 요청 타입
-export type ClosetAvatarItemRequest = {
-  productId: number;
-};
-
-// 옷장 아바타 저장 요청 타입 (avatarId 기반)
-export type ClosetAvatarSaveRequest = {
-  avatarId: number;
-  items: ClosetAvatarItemRequest[];
-};
-
-// 현재 착장 아이템
-export type CurrentOutfitItem = {
-  id: number;
-  name: string;
-  image: string;
-  category: string;
-};
-
-// 저장된 착장 (Avatar 기반)
-export type SavedOutfit = {
-  id: number;
-  name?: string;
-  avatarImg: string;
-  productNames: string[];
-  createdAt: string;
-  bookmarked: boolean;
-};
-
-// 옷장 메인 응답 (백엔드 ClosetPageResponse와 매칭)
-export type ClosetResponse = {
-  latestAvatar: AvatarProductInfo | null;
-  bookmarkedAvatars: AvatarProductInfo[];
-  wishlistProducts: ProductResponse[];
-};
-
-// 찜 목록 페이징 응답 (백엔드 WishlistPageResponseDto와 매칭)
-export type WishlistResponse = {
-  products: ProductResponse[];
-  totalPages: number;
-  totalElements: number;
-  currentPage: number;
-  size: number;
-  last: boolean;
-};
-
-// 착장 저장 요청
-export type SaveOutfitRequest = {
-  name?: string;
-  productIds: number[];
-  modelImage?: string;
 };

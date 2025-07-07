@@ -10,16 +10,20 @@ import { getWishlist } from "@/api/wishlist";
 import type { ClosetAvatarResponse } from "@/types/closet";
 import type { ProductResponse } from "@/types/product";
 
-// TODO: 확인! parent category name으로 받아와야 함
+import { closetAvatarsMock, wishlistMock } from "@/mock/closet";
+
 const categories = [
   "전체",
   "상의",
   "아우터",
-  "하의",
-  "원피스/스커트",
-  "신발",
-  "소품/ACC",
+  "바지",
+  "원피스",
+  "스커트",
+  "슈즈",
 ];
+
+// 테스트 모드 설정 (true: mock data 사용, false: 실제 API 사용)
+const USE_MOCK_DATA = false;
 
 const ClosetPage = () => {
   useAuthGuard();
@@ -38,11 +42,21 @@ const ClosetPage = () => {
     const loadClosetData = async () => {
       try {
         setIsLoadingCloset(true);
-        const data = await getClosetAvatars();
-        setClosetAvatars(data);
+
+        if (USE_MOCK_DATA) {
+          // Mock data 사용 (UI 테스트용)
+          setTimeout(() => {
+            setClosetAvatars(closetAvatarsMock);
+            setIsLoadingCloset(false);
+          }, 500); // 로딩 상태 시뮬레이션
+        } else {
+          // 실제 API 호출
+          const data = await getClosetAvatars();
+          setClosetAvatars(data);
+          setIsLoadingCloset(false);
+        }
       } catch (error) {
         console.error("옷장 데이터 로드 실패:", error);
-      } finally {
         setIsLoadingCloset(false);
       }
     };
@@ -55,11 +69,21 @@ const ClosetPage = () => {
     const loadWishlistData = async () => {
       try {
         setIsLoadingWishlist(true);
-        const data = await getWishlist();
-        setWishlistData(data);
+
+        if (USE_MOCK_DATA) {
+          // 🎯 Mock data 사용 (UI 테스트용)
+          setTimeout(() => {
+            setWishlistData(wishlistMock);
+            setIsLoadingWishlist(false);
+          }, 300); // 로딩 상태 시뮬레이션
+        } else {
+          // 실제 API 호출
+          const data = await getWishlist();
+          setWishlistData(data);
+          setIsLoadingWishlist(false);
+        }
       } catch (error) {
         console.error("찜 목록 로드 실패:", error);
-      } finally {
         setIsLoadingWishlist(false);
       }
     };
@@ -75,17 +99,28 @@ const ClosetPage = () => {
 
     try {
       setIsDeleting(true);
-      await deleteClosetAvatar(avatarId);
 
-      // 로컬 상태에서 삭제된 아이템 제거
-      setClosetAvatars((prev) =>
-        prev.filter((avatar) => avatar.avatarId !== avatarId)
-      );
-      alert("착장이 삭제되었습니다!");
+      if (USE_MOCK_DATA) {
+        // 🎯 Mock data에서 삭제 시뮬레이션
+        setTimeout(() => {
+          setClosetAvatars((prev) =>
+            prev.filter((avatar) => avatar.avatarId !== avatarId)
+          );
+          alert("착장이 삭제되었습니다!");
+          setIsDeleting(false);
+        }, 500);
+      } else {
+        // 실제 API 호출
+        await deleteClosetAvatar(avatarId);
+        setClosetAvatars((prev) =>
+          prev.filter((avatar) => avatar.avatarId !== avatarId)
+        );
+        alert("착장이 삭제되었습니다!");
+        setIsDeleting(false);
+      }
     } catch (error) {
       console.error("착장 삭제 실패:", error);
       alert("착장 삭제에 실패했습니다.");
-    } finally {
       setIsDeleting(false);
     }
   };

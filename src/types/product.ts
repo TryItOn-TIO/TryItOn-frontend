@@ -5,6 +5,7 @@ export type ProductResponse = {
   img1: string;
   price: number;
   sale: number;
+  salePrice?: number; // 할인된 가격 (optional로 변경)
   liked: boolean;
   brand: string;
   wishlistCount: number;
