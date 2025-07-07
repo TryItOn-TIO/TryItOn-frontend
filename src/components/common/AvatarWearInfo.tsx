@@ -26,8 +26,8 @@ const AvatarWearInfo = () => {
       setMessage(null);
 
       const response = await saveClosetAvatar({
-        items: [{ productId: 2003 }], // TODO: 아래 코드로 변경
-        // items: selectedProductIds.map(productId => ({ productId }))
+        // items: [{ productId: 2003 }], // TODO: 아래 코드로 변경
+        items: selectedProductIds.map((productId) => ({ productId })),
       });
 
       setAvatar(response);
