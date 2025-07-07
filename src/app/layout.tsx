@@ -2,6 +2,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import type { Metadata } from "next";
 import "@/styles/globals.css";
 import Header from "@/components/layout/Header";
+import ScrollToTop from "@/components/common/ScrollToTop";
 import Providers from "@/app/providers";
 
 export const metadata: Metadata = {
@@ -32,6 +33,9 @@ export default function RootLayout({
             <main className="w-full">
               {children}
             </main>
+
+            {/* Scroll to Top 버튼 - 모든 페이지에서 사용 */}
+            <ScrollToTop />
           </Providers>
         </GoogleOAuthProvider>
       </body>
