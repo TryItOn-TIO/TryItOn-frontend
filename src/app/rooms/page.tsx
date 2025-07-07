@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createRoom, createRoomWithAxios } from '@/api/socketApi';
-import type { CreateRoomRequest } from '@/types/socket';
+import type { CreateRoomRequest, Room } from '@/types/socket';
 
 export default function CreateRoomPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [roomData, setRoomData] = useState(null);
+  const [roomData, setRoomData] = useState<Room | null>(null);
   const [formData, setFormData] = useState<CreateRoomRequest>({
     roomName: '',
     creatorName: '',
@@ -35,10 +35,15 @@ export default function CreateRoomPage() {
     
     try {
       const response = await createRoomWithAxios(formData);
-      setRoomData(response.room);
       
-      // 생성자는 바로 채팅방으로 이동 (대기 상태)
-      router.push(`/rooms/${response.room.inviteCode}/chat?creator=true&userName=${encodeURIComponent(formData.creatorName)}&userId=creator_${Date.now()}`);
+      if (response.success && response.room) {
+        setRoomData(response.room);
+        
+        // 생성자는 바로 채팅방으로 이동 (대기 상태)
+        router.push(`/rooms/${response.room.inviteCode}/chat?creator=true&userName=${encodeURIComponent(formData.creatorName)}&userId=creator_${Date.now()}`);
+      } else {
+        throw new Error('방 생성 응답이 올바르지 않습니다.');
+      }
       
       
     } catch (error) {
@@ -145,26 +150,26 @@ export default function CreateRoomPage() {
                 🎉 방이 생성되었습니다!
               </h2>
               <p className="text-green-700">
-                <strong>{roomData.name}</strong>
+                <strong>{roomData?.name}</strong>
               </p>
             </div>
             
             <div className="bg-gray-50 border border-gray-200 rounded-md p-4">
               <p className="text-sm text-gray-600 mb-2">초대 링크</p>
               <p className="text-sm font-mono bg-white border rounded px-2 py-1 break-all">
-                {roomData.inviteLink}
+                {roomData?.inviteLink}
               </p>
             </div>
             
             <div className="flex space-x-2">
               <button
-                onClick={() => handleCopyLink(roomData.inviteLink)}
+                onClick={() => roomData?.inviteLink && handleCopyLink(roomData.inviteLink)}
                 className="flex-1 bg-gray-600 text-white py-2 px-4 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
               >
                 링크 복사
               </button>
               <button
-                onClick={() => handleShareLink(roomData.inviteLink)}
+                onClick={() => roomData?.inviteLink && handleShareLink(roomData.inviteLink)}
                 className="flex-1 bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
               >
                 공유하기
@@ -172,7 +177,7 @@ export default function CreateRoomPage() {
             </div>
             
             <button
-              onClick={() => router.push(`/rooms/${roomData.inviteCode}`)}
+              onClick={() => roomData?.inviteCode && router.push(`/rooms/${roomData.inviteCode}`)}
               className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               방 입장하기
