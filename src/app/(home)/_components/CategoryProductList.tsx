@@ -8,8 +8,6 @@ import { StoryResponse } from "@/types/story";
 import { getStories } from "@/api/story";
 import { SortType } from "@/constants/SortType";
 import { useRouter } from "next/navigation";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { FreeMode } from "swiper/modules";
 
 type CategoryProductListProps = {
   categories: Array<{
@@ -63,25 +61,16 @@ const CategoryProductList = ({ categories }: CategoryProductListProps) => {
 
       {isLoading && <p>스토리를 불러오는 중...</p>}
       {error && <p className="text-red-600">{error}</p>}
-
       {!isLoading && !error && (
-        <Swiper
-          slidesPerView="auto"
-          spaceBetween={30}
-          freeMode={true}
-          modules={[FreeMode]}
-          className="w-full"
-        >
-          {stories.map((story) => (
-            <SwiperSlide
-              key={story.storyId}
-              style={{ width: "18rem" }}
-              className="flex-shrink-0"
-            >
-              <StoryCard story={story} onClick={handleStoryClick} />
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        <div className="overflow-x-auto">
+          <div className="flex gap-6 px-1">
+            {stories.map((story) => (
+              <div key={story.storyId} className="w-[18rem] flex-shrink-0">
+                <StoryCard story={story} onClick={handleStoryClick} />
+              </div>
+            ))}
+          </div>
+        </div>
       )}
 
       {/* 카테고리별 상품 영역 */}
