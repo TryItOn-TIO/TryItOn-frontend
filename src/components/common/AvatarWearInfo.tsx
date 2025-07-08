@@ -1,19 +1,37 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useAvatarStore } from "@/stores/avatar-store";
 import { saveClosetAvatar } from "@/api/closet";
+import { fetchLatestAvatarInfo } from "@/api/avatar";
 
 const AvatarWearInfo = () => {
   const avatarInfo = useAvatarStore((state) => state.avatarInfo);
+  const setAvatarInfo = useAvatarStore((state) => state.setAvatarInfo);
   const selectedProductIds = useAvatarStore(
     (state) => state.selectedProductIds
   );
+
   const isAvatarLoading = useAvatarStore((state) => state.isLoading);
   const [isClosetLoading, setIsClosetLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
+  // 컴포넌트가 마운트될 때 아바타 정보를 받아옴
+  useEffect(() => {
+    const loadAvatarInfo = async () => {
+      try {
+        const data = await fetchLatestAvatarInfo();
+        setAvatarInfo(data); // 전역 상태 업데이트
+      } catch (error) {
+        console.error("아바타 정보 로드 실패", error);
+      }
+    };
+
+    loadAvatarInfo();
+  }, [setAvatarInfo]);
+
+  // 착장한 아바타를 옷장에 추가함
   const handleAddToCloset = async () => {
     console.log("전역 관리 중인 선택된 상품 id: ", selectedProductIds);
 
