@@ -8,6 +8,7 @@ import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import { useState } from "react";
 import AvatarModal from "@/components/ui/AvatarModal";
+import { getAccessToken } from "@/utils/auth";
 
 type DetailMainImgProps = {
   images: string[];
@@ -15,6 +16,17 @@ type DetailMainImgProps = {
 
 const DetailMainImg = ({ images }: DetailMainImgProps) => {
   const [tryon, setTryon] = useState(false);
+
+  const token = getAccessToken();
+  const isLoggedIn = !!token;
+
+  const handleModalOpen = () => {
+    if (isLoggedIn) {
+      setTryon(true);
+    } else {
+      alert("로그인이 필요한 기능입니다.");
+    }
+  };
 
   const handleModalClose = () => {
     setTryon(false);
@@ -38,7 +50,7 @@ const DetailMainImg = ({ images }: DetailMainImgProps) => {
               width={50}
               height={50}
               alt="입어보기"
-              onClick={() => setTryon(true)}
+              onClick={handleModalOpen}
             />
           </div>
 

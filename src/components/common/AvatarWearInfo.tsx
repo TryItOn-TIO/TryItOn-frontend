@@ -4,10 +4,9 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useAvatarStore } from "@/stores/avatar-store";
 import { saveClosetAvatar } from "@/api/closet";
-import { ClosetAvatarResponse } from "@/types/closet";
 
 const AvatarWearInfo = () => {
-  const avatarImg = useAvatarStore((state) => state.avatarImg);
+  const avatarInfo = useAvatarStore((state) => state.avatarInfo);
   const selectedProductIds = useAvatarStore(
     (state) => state.selectedProductIds
   );
@@ -15,9 +14,9 @@ const AvatarWearInfo = () => {
   const [isClosetLoading, setIsClosetLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
-  const [avatar, setAvatar] = useState<ClosetAvatarResponse | null>(null);
-
   const handleAddToCloset = async () => {
+    console.log("전역 관리 중인 선택된 상품 id: ", selectedProductIds);
+
     try {
       setIsClosetLoading(true);
       setMessage(null);
@@ -37,7 +36,6 @@ const AvatarWearInfo = () => {
       });
 
       console.log("Closet save response:", response);
-      setAvatar(response);
       setMessage("옷장에 성공적으로 추가되었습니다!");
 
       // 3초 후 메시지 제거
@@ -74,7 +72,7 @@ const AvatarWearInfo = () => {
         className={`absolute top-4 right-4 z-10 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
           isClosetLoading || isAvatarLoading
             ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-            : "bg-blue-500 text-white hover:bg-blue-600"
+            : "bg-black text-white hover:bg-neutral-600"
         }`}
         aria-label="옷장에 추가"
       >
@@ -104,10 +102,10 @@ const AvatarWearInfo = () => {
 
       {/* 아바타 이미지 */}
       <div className="w-full flex justify-center mb-6 relative">
-        {avatarImg ? (
+        {avatarInfo.avatarImgUrl ? (
           <div className="relative">
             <Image
-              src={avatarImg}
+              src={avatarInfo.avatarImgUrl}
               alt="착장한 아바타"
               width={180}
               height={180}
@@ -137,15 +135,13 @@ const AvatarWearInfo = () => {
 
       {/* 착장 상품 리스트 */}
       <div>
-        {avatar && Object.keys(avatar.itemsByCategory).length > 0 ? (
+        {avatarInfo && avatarInfo.products.length > 0 ? (
           <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
-            {Object.entries(avatar.itemsByCategory).map(
-              ([categoryName, product]) => (
-                <li key={product.productId}>
-                  {categoryName} / {product.productName} ({product.brand})
-                </li>
-              )
-            )}
+            {avatarInfo.products.map((product, idx) => (
+              <li key={idx}>
+                {product.categoryName} / {product.productName}
+              </li>
+            ))}
           </ul>
         ) : (
           <p className="text-sm text-gray-500">

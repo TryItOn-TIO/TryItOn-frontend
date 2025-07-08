@@ -1,6 +1,5 @@
 import { AvatarRequest, AvatarResponse } from "@/types/avatar";
 import { axiosWithAuth } from "@/api";
-import type { AvatarProductInfo } from "@/types/avatar";
 
 export const createAvatar = async (
   data: AvatarRequest
@@ -9,7 +8,7 @@ export const createAvatar = async (
   return response.data;
 };
 
-export const fetchLatestAvatarInfo = async (): Promise<AvatarProductInfo> => {
+export const fetchLatestAvatarInfo = async (): Promise<AvatarResponse> => {
   const response = await axiosWithAuth().get("/api/avatars/latest-info");
   return response.data;
 };
