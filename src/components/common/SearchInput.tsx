@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import useDebounce from "@/hooks/useDebounce";
 import { fetchSearchSuggestions } from "@/api/search";
@@ -10,9 +10,11 @@ export default function SearchInput() {
   const [inputValue, setInputValue] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(-1); // -1은 아무것도 선택 안함
 
   const debounced = useDebounce(inputValue, 300);
   const router = useRouter();
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!debounced.trim()) {
@@ -28,10 +30,29 @@ export default function SearchInput() {
     fetch();
   }, [debounced]);
 
+  /* 외부 클릭 시 자동완성 창 닫기 */
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target as Node)
+      ) {
+        setShowSuggestions(false);
+        setSelectedIndex(-1);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const handleSearch = (keyword: string) => {
     if (!keyword.trim()) return;
     router.push(`/search?query=${encodeURIComponent(keyword)}`);
     setShowSuggestions(false);
+    setInputValue(""); // (검색 실행 후) 입력창 초기화
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -41,7 +62,7 @@ export default function SearchInput() {
   };
 
   return (
-    <div className="relative w-full h-10">
+    <div className="relative w-full h-10" ref={wrapperRef}>
       <input
         type="text"
         value={inputValue}
@@ -72,7 +93,12 @@ export default function SearchInput() {
               <li
                 key={idx}
                 onClick={() => handleSearch(s)}
-                className="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                onMouseEnter={() => setSelectedIndex(idx)}
+                className={`px-4 py-2 cursor-pointer ${
+                  selectedIndex === idx
+                    ? "bg-gray-100 font-medium"
+                    : "hover:bg-gray-100"
+                }`}
               >
                 {s}
               </li>
