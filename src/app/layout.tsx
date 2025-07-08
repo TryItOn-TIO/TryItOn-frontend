@@ -2,6 +2,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import type { Metadata } from "next";
 import "@/styles/globals.css";
 import Header from "@/components/layout/Header";
+import ScrollToTop from "@/components/common/ScrollToTop";
 import CategoryHeader from "@/components/layout/CategoryHeader";
 import Providers from "@/app/providers";
 
@@ -37,6 +38,7 @@ export default function RootLayout({
                 {children}
               </div>
             </div>
+            <ScrollToTop />
           </Providers>
         </GoogleOAuthProvider>
       </body>
