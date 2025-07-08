@@ -8,9 +8,12 @@ export const fetchSearchSuggestions = async (
   query: string
 ): Promise<string[]> => {
   try {
-    const response = await axiosWithoutAuth().get("/api/products/suggestions", {
-      params: { query },
-    });
+    const response = await axiosWithoutAuth().get(
+      "/api/home/products/suggestions",
+      {
+        params: { query },
+      }
+    );
     return response.data;
   } catch (error) {
     console.warn("자동완성 요청 실패:", error);
@@ -25,7 +28,7 @@ export const fetchSearchResults = async (
   query: string
 ): Promise<SearchProductResponse> => {
   try {
-    const response = await axiosWithoutAuth().get("/api/products/search", {
+    const response = await axiosWithoutAuth().get("/api/home/products/search", {
       params: { query },
     });
     return response.data;
