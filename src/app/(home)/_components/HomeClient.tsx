@@ -6,6 +6,7 @@ import CategoryProductList from "@/app/(home)/_components/CategoryProductList";
 import AvatarLayout from "@/components/layout/AvatarProducts";
 import { getAccessToken } from "@/utils/auth";
 import AvatarWearInfo from "@/components/common/AvatarWearInfo";
+import DefaultAvatarSlot from "@/components/common/DefaultAvatarSlot";
 
 type HomeClientProps = {
   initialData: MainProductResponse;
@@ -15,21 +16,6 @@ const HomeClient = ({ initialData }: HomeClientProps) => {
   // 로그인 상태 확인
   const token = getAccessToken();
   const isLoggedIn = !!token;
-
-  // 기본 아바타 슬롯 (비로그인 사용자용)
-  const defaultAvatarSlot = (
-    <div className="w-full h-screen p-4 bg-gray-50 rounded-xl shadow-sm flex flex-col items-center justify-center">
-      <div className="text-6xl mb-4">👤</div>
-      <p className="text-gray-600 text-center mb-2">
-        나만의 아바타로 옷을 입어보세요!
-      </p>
-      <p className="text-gray-500 text-sm text-center">
-        {isLoggedIn
-          ? "아바타 정보를 불러오는 중..."
-          : "로그인하면 개인화된 아바타를 사용할 수 있습니다."}
-      </p>
-    </div>
-  );
 
   // 로그인된 사용자와 비로그인 사용자 구분 처리
   if (isLoggedIn && initialData.recommended && initialData.ranked) {
@@ -53,7 +39,7 @@ const HomeClient = ({ initialData }: HomeClientProps) => {
 
     return (
       <AvatarLayout
-        avatarSlot={defaultAvatarSlot}
+        avatarSlot={<DefaultAvatarSlot />}
         productSlot={<CategoryProductList categories={categories} />}
       />
     );

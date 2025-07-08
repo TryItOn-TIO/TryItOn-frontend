@@ -3,7 +3,7 @@ import { AvatarResponse } from "@/types/avatar";
 export const dummyAvatar: AvatarResponse[] = [
   {
     avatarId: 1,
-    avatarImgUrl: "/images/dummy/ex10.png",
+    avatarImg: "/images/dummy/ex10.png",
     products: [
       {
         productName: "린넨 블루 셔츠",

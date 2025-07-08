@@ -36,6 +36,7 @@ const useCommentInteraction = () => {
   const handleCancelComment = () => {
     setCommentPosition(null);
     setIsCommentFormActive(false);
+    setPostComment(false);
   };
 
   // 댓글 위치 변경

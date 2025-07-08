@@ -1,10 +1,3 @@
-// 아바타 상품 정보 타입 (API 응답용)
-export type AvatarProductInfo = {
-  avatarImg: string;
-  productNames: string[];
-  avatarId: number;
-};
-
 type AvatarProduct = {
   productName: string;
   categoryName: string;
@@ -16,6 +9,6 @@ export type AvatarRequest = {
 
 export type AvatarResponse = {
   avatarId: number;
-  avatarImgUrl: string;
+  avatarImg: string;
   products: AvatarProduct[];
 };

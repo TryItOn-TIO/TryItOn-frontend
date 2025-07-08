@@ -10,10 +10,10 @@ type CategoryProductListProps = {
 };
 
 const CategoryProductList = ({ categories }: CategoryProductListProps) => {
-  console.log('카테고리별 상품 표시:', categories.length, '개 카테고리');
+  console.log("카테고리별 상품 표시:", categories.length, "개 카테고리");
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-12 py-8 px-4">
       {categories.map((category) => (
         <section key={category.categoryId}>
           <h3 className="text-xl font-semibold mb-4 text-black">

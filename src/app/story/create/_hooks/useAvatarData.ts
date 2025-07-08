@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { ClosetAvatarResponse } from "@/types/closet";
 import { getClosetAvatars } from "@/api/closet";
 
-export const useAvatarData = () => {
+export const useAvatarData = (initialAvatarId?: number) => {
   const [avatars, setAvatars] = useState<ClosetAvatarResponse[]>([]);
   const [avatarLoading, setAvatarLoading] = useState(true);
   const [selectedAvatar, setSelectedAvatar] =
@@ -19,7 +19,14 @@ export const useAvatarData = () => {
       // 응답이 배열이고 비어있지 않은 경우
       if (Array.isArray(response) && response.length > 0) {
         setAvatars(response);
-        setSelectedAvatar(response[0]); // 첫 번째 아바타를 기본 선택
+        
+        // initialAvatarId가 있으면 해당 아바타를 찾아서 선택
+        if (initialAvatarId) {
+          const targetAvatar = response.find(avatar => avatar.avatarId === initialAvatarId);
+          setSelectedAvatar(targetAvatar || response[0]);
+        } else {
+          setSelectedAvatar(response[0]); // 첫 번째 아바타를 기본 선택
+        }
       } else {
         // 빈 배열이거나 데이터가 없는 경우
         setAvatars([]);
@@ -37,7 +44,7 @@ export const useAvatarData = () => {
 
   useEffect(() => {
     fetchAvatars();
-  }, []);
+  }, [initialAvatarId]);
 
   const hasAvatars = avatars.length > 0;
 
