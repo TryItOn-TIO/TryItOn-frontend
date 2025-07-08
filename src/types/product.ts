@@ -54,3 +54,9 @@ export const initialProductResponse: ProductResponse[] = [
     categoryName: "",
   },
 ];
+
+// 검색 결과 응답 타입
+export type SearchProductResponse = {
+  products: ProductResponse[];
+  totalCount: number;
+};
