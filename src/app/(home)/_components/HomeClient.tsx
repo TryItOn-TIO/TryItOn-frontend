@@ -18,6 +18,7 @@ const HomeClient = ({ initialData }: HomeClientProps) => {
   const isLoggedIn = !!token;
 
   // 로그인된 사용자와 비로그인 사용자 구분 처리
+  /*
   if (isLoggedIn && initialData.recommended && initialData.ranked) {
     // 로그인된 사용자 - 기존 추천/인기 상품 방식
     console.log("로그인된 사용자 - 추천/인기 상품 표시");
@@ -33,15 +34,26 @@ const HomeClient = ({ initialData }: HomeClientProps) => {
       />
     );
   } else if (initialData.categories) {
+   */
+  if (initialData.categories) {
     // 비로그인 사용자 - 카테고리별 표시
     console.log("비로그인 사용자 - 카테고리별 상품 표시");
     const categories = initialData.categories;
 
     return (
-      <AvatarLayout
-        avatarSlot={<DefaultAvatarSlot />}
-        productSlot={<CategoryProductList categories={categories} />}
-      />
+      <>
+        {isLoggedIn ? (
+          <AvatarLayout
+            avatarSlot={<AvatarWearInfo />}
+            productSlot={<CategoryProductList categories={categories} />}
+          />
+        ) : (
+          <AvatarLayout
+            avatarSlot={<DefaultAvatarSlot />}
+            productSlot={<CategoryProductList categories={categories} />}
+          />
+        )}
+      </>
     );
   } else {
     // 데이터가 없는 경우

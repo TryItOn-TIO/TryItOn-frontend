@@ -25,10 +25,12 @@ export default function Home() {
         if (token) {
           console.log("🔐 로그인된 사용자 - 개인화된 데이터 로드");
           try {
-            const result = await fetchMainProducts();
+            // 추천 알고리즘 미구현으로 카테고리별 순위 기준으로 제공
+            const result = await fetchMainProductsForGuest();
+            // const result = await fetchMainProducts();
             console.log("✅ 로그인용 API 성공:", result);
-            console.log("recommended 개수:", result.recommended?.length || 0);
-            console.log("ranked 개수:", result.ranked?.length || 0);
+            // console.log("recommended 개수:", result.recommended?.length || 0);
+            // console.log("ranked 개수:", result.ranked?.length || 0);
             setData(result);
           } catch (authError) {
             console.error("❌ 개인화된 데이터 로드 실패:", authError);

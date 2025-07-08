@@ -58,17 +58,6 @@ const DetailRecommand = ({ productId }: DetailRecommandProps) => {
             </Link>
           </SwiperSlide>
         ))}
-        {/* {dummyData.map((data) => (
-          <SwiperSlide
-            key={data.id}
-            style={{ width: "12rem" }}
-            className="flex-shrink-0"
-          >
-            <Link href={`/detail/${data.id}`}>
-              <SimpleProductCard data={data} />
-            </Link>
-          </SwiperSlide>
-        ))} */}
       </Swiper>
     </div>
   );
