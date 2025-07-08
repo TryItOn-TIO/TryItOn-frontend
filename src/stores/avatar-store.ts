@@ -15,11 +15,11 @@ type AvatarState = {
   setLoading: (loading: boolean) => void;
 };
 
-// persist로 유지할 항목만 따로 저장 (avatarImg, selectedProductIds)
+// persist로 유지할 항목만 따로 저장 (avatarImgUrl, selectedProductIds)
 export const useAvatarStore = create<AvatarState>()(
   persist(
     (set) => ({
-      avatarInfo: { avatarId: 1, avatarImg: "", products: [] },
+      avatarInfo: { avatarId: 1, avatarImgUrl: "", products: [] },
       selectedProductIds: [],
       isLoading: false,
 

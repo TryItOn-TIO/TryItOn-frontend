@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useAvatarStore } from "@/stores/avatar-store";
 import { saveClosetAvatar } from "@/api/closet";
 import { fetchLatestAvatarInfo } from "@/api/avatar";
+import Link from "next/link";
 
 const AvatarWearInfo = () => {
   const avatarInfo = useAvatarStore((state) => state.avatarInfo);
@@ -124,13 +125,13 @@ const AvatarWearInfo = () => {
 
       {/* 아바타 이미지 */}
       <div className="w-full flex justify-center mb-6 relative">
-        {avatarInfo.avatarImg ? (
+        {avatarInfo.avatarImgUrl ? (
           <div className="relative">
             <Image
-              src={avatarInfo.avatarImg}
+              src={avatarInfo.avatarImgUrl}
               alt="착장한 아바타"
-              width={180}
-              height={180}
+              width={400}
+              height={400}
               className={`object-contain transition-opacity duration-300 ${
                 isAvatarLoading ? "opacity-50" : "opacity-100"
               }`}
@@ -156,17 +157,27 @@ const AvatarWearInfo = () => {
       </div>
 
       {/* 착장 상품 리스트 */}
-      <div>
-        {avatarInfo && avatarInfo.products && avatarInfo.products.length > 0 ? (
-          <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
+      <div className="mt-3">
+        {avatarInfo?.products && avatarInfo.products.length > 0 ? (
+          <ul className="space-y-2">
             {avatarInfo.products.map((product, idx) => (
               <li key={idx}>
-                {product.categoryName} / {product.productName}
+                <Link
+                  href={`/detail/${product.productId}`}
+                  className="block group transition-all"
+                >
+                  <span className="text-xs text-gray-400 group-hover:text-gray-500">
+                    {product.categoryName}
+                  </span>
+                  <div className="text-base text-black font-semibold group-hover:underline leading-tight">
+                    {product.productName}
+                  </div>
+                </Link>
               </li>
             ))}
           </ul>
         ) : (
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-500 mt-2">
             {isAvatarLoading ? "옷을 입는 중입니다." : "입은 상품이 없습니다."}
           </p>
         )}

@@ -11,16 +11,6 @@ export const useInfiniteCategoryProducts = (
   return useInfiniteQuery({
     queryKey: ["categoryProducts", categoryId],
     queryFn: ({ pageParam = 0 }) => {
-      const token = getAccessToken();
-
-      if (!token) {
-        return new Promise<CategoryProductResponse>((resolve) => {
-          setTimeout(() => {
-            resolve(getCategoryProducts(categoryId, pageParam, 10));
-          }, 300);
-        });
-      }
-
       // 실제 API 호출
       return fetchCategoryProducts({
         categoryId,
