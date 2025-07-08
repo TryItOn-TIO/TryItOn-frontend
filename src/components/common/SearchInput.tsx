@@ -65,17 +65,21 @@ export default function SearchInput() {
         />
       </button>
 
-      {showSuggestions && suggestions.length > 0 && (
-        <ul className="absolute z-10 mt-2 w-full bg-white border rounded shadow">
-          {suggestions.map((s, idx) => (
-            <li
-              key={idx}
-              onClick={() => handleSearch(s)}
-              className="px-4 py-2 cursor-pointer hover:bg-gray-100"
-            >
-              {s}
-            </li>
-          ))}
+      {showSuggestions && (
+        <ul className="absolute z-10 mt-2 w-full bg-white border rounded shadow max-h-60 overflow-y-auto">
+          {suggestions.length > 0 ? (
+            suggestions.map((s, idx) => (
+              <li
+                key={idx}
+                onClick={() => handleSearch(s)}
+                className="px-4 py-2 cursor-pointer hover:bg-gray-100"
+              >
+                {s}
+              </li>
+            ))
+          ) : (
+            <li className="px-4 py-2 text-gray-500">검색 결과가 없습니다.</li>
+          )}
         </ul>
       )}
     </div>
