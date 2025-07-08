@@ -130,8 +130,8 @@ const AvatarWearInfo = () => {
             <Image
               src={avatarInfo.avatarImgUrl}
               alt="착장한 아바타"
-              width={180}
-              height={180}
+              width={400}
+              height={400}
               className={`object-contain transition-opacity duration-300 ${
                 isAvatarLoading ? "opacity-50" : "opacity-100"
               }`}
