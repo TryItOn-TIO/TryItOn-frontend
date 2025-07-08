@@ -1,5 +1,9 @@
 import axios, { type AxiosInstance } from "axios";
-import { getAccessToken, deleteAccessToken } from "@/utils/auth";
+import {
+  getAccessToken,
+  deleteAccessToken,
+  clearSessionStorage,
+} from "@/utils/auth";
 
 // 인증 필요한 인스턴스
 let authInstance: AxiosInstance | null = null;
@@ -53,8 +57,9 @@ function setResponseInterceptor(instance: AxiosInstance): void {
           return Promise.reject(error);
         }
 
-        // 1. 토큰 삭제
+        // 1. 토큰, 기타 세션 정보 삭제
         deleteAccessToken();
+        clearSessionStorage();
 
         // 2. 확인창으로 안내
         const shouldRedirect = confirm(

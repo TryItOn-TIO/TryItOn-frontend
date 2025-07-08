@@ -19,3 +19,10 @@ export const deleteAccessToken = () => {
     localStorage.removeItem("access_token");
   }
 };
+
+export const clearSessionStorage = () => {
+  localStorage.removeItem("@tosspayments/merchant-browser-id");
+  localStorage.removeItem("avatar-storage");
+  localStorage.removeItem("google-token-storage");
+  localStorage.removeItem("orderItems");
+};
