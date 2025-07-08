@@ -19,7 +19,7 @@ type AvatarState = {
 export const useAvatarStore = create<AvatarState>()(
   persist(
     (set) => ({
-      avatarInfo: { avatarId: 1, avatarImgUrl: "", products: [] },
+      avatarInfo: { avatarId: 1, avatarImg: "", products: [] },
       selectedProductIds: [],
       isLoading: false,
 

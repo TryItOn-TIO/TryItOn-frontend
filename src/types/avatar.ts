@@ -9,6 +9,6 @@ export type AvatarRequest = {
 
 export type AvatarResponse = {
   avatarId: number;
-  avatarImgUrl: string;
+  avatarImg: string;
   products: AvatarProduct[];
 };
