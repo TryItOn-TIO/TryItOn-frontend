@@ -8,9 +8,10 @@ import { getAccessToken } from "@/utils/auth";
 
 type ProductCardProps = {
   product: ProductResponse;
+  isShareMode?: boolean;
 };
 
-const ProductCard = ({ product }: ProductCardProps) => {
+const ProductCard = ({ product, isShareMode = false }: ProductCardProps) => {
   const { id, productName, img1, brand, price, sale, liked } = product;
 
   // API 응답에서 다른 필드명으로 올 수 있는 값들 처리
@@ -65,6 +66,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
       await tryOnProduct(id);
       // TODO: 성공 시 알림이나 아바타 모달 표시
       console.log(`상품 ${id}를 아바타에 착용했습니다!`);
+      window.location.reload();
     } catch (error) {
       console.error("아바타 착용 중 오류 발생:", error);
       // TODO: 에러 알림 표시
@@ -93,36 +95,40 @@ const ProductCard = ({ product }: ProductCardProps) => {
           />
         </Link>
 
-        {/* 좋아요 아이콘 - 우측 상단 */}
-        <div
-          className="absolute top-3 right-3"
-          onClick={toggleWishlist}
-          style={{ cursor: "pointer" }}
-        >
-          <Image
-            src={
-              isWished
-                ? "/images/common/red_heart.svg"
-                : "/images/common/heart.svg"
-            }
-            width={26}
-            height={26}
-            alt="찜하기"
-          />
-        </div>
+        {/* 좋아요 아이콘 - 우측 상단 (공유 모드가 아닐 때만 표시) */}
+        {!isShareMode && (
+          <div
+            className="absolute top-3 right-3"
+            onClick={toggleWishlist}
+            style={{ cursor: "pointer" }}
+          >
+            <Image
+              src={
+                isWished
+                  ? "/images/common/red_heart.svg"
+                  : "/images/common/heart.svg"
+              }
+              width={26}
+              height={26}
+              alt="찜하기"
+            />
+          </div>
+        )}
 
-        {/* 아바타 아이콘 - 우측 하단 */}
-        <div
-          className="absolute bottom-3 right-3 cursor-pointer hover:scale-110 transition-transform"
-          onClick={handleAvatarClick}
-        >
-          <Image
-            src="/images/common/avatar.svg"
-            width={32}
-            height={32}
-            alt="아바타 착용"
-          />
-        </div>
+        {/* 아바타 아이콘 - 우측 하단 (공유 모드가 아닐 때만 표시) */}
+        {!isShareMode && (
+          <div
+            className="absolute bottom-3 right-3 cursor-pointer hover:scale-110 transition-transform"
+            onClick={handleAvatarClick}
+          >
+            <Image
+              src="/images/common/avatar.svg"
+              width={32}
+              height={32}
+              alt="아바타 착용"
+            />
+          </div>
+        )}
       </div>
 
       {/* 제품 정보 */}
