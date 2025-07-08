@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useAvatarStore } from "@/stores/avatar-store";
 import { saveClosetAvatar } from "@/api/closet";
-import { AvatarResponse } from "@/types/avatar";
+import { ClosetAvatarResponse } from "@/types/closet";
 
 const AvatarWearInfo = () => {
   const avatarImg = useAvatarStore((state) => state.avatarImg);
@@ -15,22 +15,28 @@ const AvatarWearInfo = () => {
   const [isClosetLoading, setIsClosetLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
-  const [avatar, setAvatar] = useState<AvatarResponse>({
-    avatarId: 1,
-    avatarImgUrl: "",
-    products: [],
-  });
+  const [avatar, setAvatar] = useState<ClosetAvatarResponse | null>(null);
 
   const handleAddToCloset = async () => {
     try {
       setIsClosetLoading(true);
       setMessage(null);
 
-      const response = await saveClosetAvatar({
-        // items: [{ productId: 2003 }], // TODO: 아래 코드로 변경
+      // 선택된 상품이 없는 경우 체크
+      if (!selectedProductIds || selectedProductIds.length === 0) {
+        setMessage("착용할 상품을 먼저 선택해주세요.");
+        return;
+      }
+
+      console.log("Sending to closet:", {
         items: selectedProductIds.map((productId) => ({ productId })),
       });
 
+      const response = await saveClosetAvatar({
+        items: selectedProductIds.map((productId) => ({ productId })),
+      });
+
+      console.log("Closet save response:", response);
       setAvatar(response);
       setMessage("옷장에 성공적으로 추가되었습니다!");
 
@@ -47,7 +53,9 @@ const AvatarWearInfo = () => {
       } else if (error.response?.status === 404) {
         setMessage("아바타 또는 상품 정보를 찾을 수 없습니다.");
       } else {
-        setMessage("옷장 추가에 실패했습니다. 다시 시도해주세요.");
+        setMessage(
+          `옷장 추가에 실패했습니다: ${error.message || "알 수 없는 오류"}`
+        );
       }
 
       // 3초 후 메시지 제거
@@ -90,7 +98,7 @@ const AvatarWearInfo = () => {
       {isAvatarLoading && (
         <div className="absolute top-4 left-4 z-10 px-3 py-2 rounded-lg text-sm bg-blue-100 text-blue-800 border border-blue-200 flex items-center gap-2">
           <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-          옷을 입고 있어요... (최대 2분 소요됩니다)
+          옷을 입고 있어요 👕 (최대 1분 소요됩니다)
         </div>
       )}
 
@@ -129,13 +137,15 @@ const AvatarWearInfo = () => {
 
       {/* 착장 상품 리스트 */}
       <div>
-        {avatar.products.length > 0 ? (
+        {avatar && Object.keys(avatar.itemsByCategory).length > 0 ? (
           <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
-            {avatar.products.map((product, idx) => (
-              <li key={idx}>
-                {product.categoryName} / {product.productName}
-              </li>
-            ))}
+            {Object.entries(avatar.itemsByCategory).map(
+              ([categoryName, product]) => (
+                <li key={product.productId}>
+                  {categoryName} / {product.productName} ({product.brand})
+                </li>
+              )
+            )}
           </ul>
         ) : (
           <p className="text-sm text-gray-500">
