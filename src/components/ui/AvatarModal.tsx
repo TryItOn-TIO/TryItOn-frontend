@@ -19,7 +19,7 @@ const AvatarModal = ({ onClose }: AvatarModalProps) => {
   const [error, setError] = useState(false);
   const [avatar, setAvatar] = useState<AvatarResponse>({
     avatarId: id,
-    avatarImg: "",
+    avatarImgUrl: "",
     products: [],
   });
 
@@ -82,10 +82,10 @@ const AvatarModal = ({ onClose }: AvatarModalProps) => {
                 {avatar.products[0]?.productName}
               </div>
             </div>
-            {avatar.avatarImg && (
+            {avatar.avatarImgUrl && (
               <div className="flex-1 flex items-center justify-center w-full h-full overflow-hidden">
                 <Image
-                  src={avatar.avatarImg}
+                  src={avatar.avatarImgUrl}
                   width={250}
                   height={250}
                   alt="생성된 아바타 이미지"
