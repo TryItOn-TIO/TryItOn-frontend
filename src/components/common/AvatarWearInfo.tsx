@@ -12,8 +12,9 @@ const AvatarWearInfo = () => {
   const selectedProductIds = useAvatarStore(
     (state) => state.selectedProductIds
   );
-
   const isAvatarLoading = useAvatarStore((state) => state.isLoading);
+  const setAvatarLoading = useAvatarStore((state) => state.setLoading);
+
   const [isClosetLoading, setIsClosetLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -23,6 +24,9 @@ const AvatarWearInfo = () => {
       try {
         const data = await fetchLatestAvatarInfo();
         setAvatarInfo(data); // 전역 상태 업데이트
+        console.log(avatarInfo);
+
+        setAvatarLoading(false);
       } catch (error) {
         console.error("아바타 정보 로드 실패", error);
       }
@@ -86,7 +90,7 @@ const AvatarWearInfo = () => {
       {/* 옷장에 추가 버튼 (우측 상단 고정) */}
       <button
         onClick={handleAddToCloset}
-        disabled={isClosetLoading || isAvatarLoading}
+        disabled={isAvatarLoading}
         className={`absolute top-4 right-4 z-10 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
           isClosetLoading || isAvatarLoading
             ? "bg-gray-300 text-gray-500 cursor-not-allowed"
@@ -120,10 +124,10 @@ const AvatarWearInfo = () => {
 
       {/* 아바타 이미지 */}
       <div className="w-full flex justify-center mb-6 relative">
-        {avatarInfo.avatarImgUrl ? (
+        {avatarInfo.avatarImg ? (
           <div className="relative">
             <Image
-              src={avatarInfo.avatarImgUrl}
+              src={avatarInfo.avatarImg}
               alt="착장한 아바타"
               width={180}
               height={180}
@@ -153,7 +157,7 @@ const AvatarWearInfo = () => {
 
       {/* 착장 상품 리스트 */}
       <div>
-        {avatarInfo && avatarInfo.products.length > 0 ? (
+        {avatarInfo && avatarInfo.products && avatarInfo.products.length > 0 ? (
           <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
             {avatarInfo.products.map((product, idx) => (
               <li key={idx}>

@@ -52,8 +52,8 @@ const ProductActionCard = ({ data }: ProductActionCardProps) => {
         </div>
 
         <div className="space-y-2">
-          <WhiteButton text="장바구니" handleClick={handleAddCart} />
-          <BlackButton text="구매하기" handleClick={handleOrder} />
+          <WhiteButton text="찜하기" handleClick={handleAddCart} />
+          <BlackButton text="더보기" handleClick={handleOrder} />
         </div>
       </div>
     </div>
