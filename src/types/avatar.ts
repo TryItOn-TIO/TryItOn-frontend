@@ -1,4 +1,5 @@
 type AvatarProduct = {
+  productId: number;
   productName: string;
   categoryName: string;
 };
@@ -9,6 +10,6 @@ export type AvatarRequest = {
 
 export type AvatarResponse = {
   avatarId: number;
-  avatarImg: string;
+  avatarImgUrl: string;
   products: AvatarProduct[];
 };
