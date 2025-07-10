@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import useDebounce from "@/hooks/useDebounce";
 import { fetchSearchSuggestions } from "@/api/search";
 import Image from "next/image";
@@ -17,6 +18,16 @@ export default function SearchInput() {
   const debounced = useDebounce(inputValue, 300);
   const router = useRouter();
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const searchParams = useSearchParams();
+  const query = searchParams.get("query");
+
+  useEffect(() => {
+    if (query !== null) {
+      setInputValue(query);
+    }
+  }, [query]);
 
   useEffect(() => {
     if (!debounced.trim()) {
@@ -54,6 +65,7 @@ export default function SearchInput() {
     if (!keyword.trim()) return;
     setInputValue(keyword); // 선택한 텍스트를 검색창에 유지
     setShowSuggestions(false);
+    inputRef.current?.blur(); // 검색 후 커서 제거
     router.push(`/search?query=${encodeURIComponent(keyword)}`);
   };
 
@@ -66,6 +78,7 @@ export default function SearchInput() {
   return (
     <div className="relative w-full h-10" ref={wrapperRef}>
       <input
+        ref={inputRef}
         type="text"
         value={inputValue}
         placeholder="검색어를 입력하세요"
