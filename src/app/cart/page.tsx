@@ -18,6 +18,7 @@ type CartItem = {
   quantity: number;
   image: string;
   category: string;
+  variantId: number; // variantId 추가 이거 왜 자꾸 누락됨?
 };
 
 const Cart = () => {
@@ -47,6 +48,7 @@ const Cart = () => {
         quantity: item.quantity,
         image: item.imageUrl || "/placeholder.svg?height=120&width=120",
         category: item.brand,
+        variantId: item.variantId, // variantId 추가
       }));
       setCartItems(transformedItems);
     } else {
