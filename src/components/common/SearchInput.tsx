@@ -52,9 +52,9 @@ export default function SearchInput() {
 
   const handleSearch = (keyword: string) => {
     if (!keyword.trim()) return;
-    router.push(`/search?query=${encodeURIComponent(keyword)}`);
+    setInputValue(keyword); // 선택한 텍스트를 검색창에 유지
     setShowSuggestions(false);
-    setInputValue(""); // (검색 실행 후) 입력창 초기화
+    router.push(`/search?query=${encodeURIComponent(keyword)}`);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
