@@ -11,6 +11,8 @@ export default function SearchInput() {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1); // -1은 아무것도 선택 안함
+  /* 현재 값이 입력이 완료된 상태인지 아닌지를 나타내주는 속성 */
+  const [isComposing, setIsComposing] = useState(false);
 
   const debounced = useDebounce(inputValue, 300);
   const router = useRouter();
@@ -56,8 +58,8 @@ export default function SearchInput() {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      handleSearch(inputValue);
+    if (e.key === "Enter" && !isComposing) {
+      handleSearch(e.currentTarget.value); // 사용자가 입력한 최신 값을 그대로 검색에 넘겨줌
     }
   };
 
@@ -70,6 +72,11 @@ export default function SearchInput() {
         onChange={(e) => {
           setInputValue(e.target.value);
           setShowSuggestions(true);
+        }}
+        onCompositionStart={() => setIsComposing(true)}
+        onCompositionEnd={(e) => {
+          setIsComposing(false);
+          setInputValue(e.currentTarget.value); // 조합 끝난 후 값 다시 세팅
         }}
         onKeyDown={handleKeyDown}
         className="w-full placeholder:text-slate-400 bg-[#f2f2f2] text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
