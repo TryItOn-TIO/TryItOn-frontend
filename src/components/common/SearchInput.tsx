@@ -14,6 +14,7 @@ export default function SearchInput() {
   const [selectedIndex, setSelectedIndex] = useState(-1); // -1은 아무것도 선택 안함
   /* 현재 값이 입력이 완료된 상태인지 아닌지를 나타내주는 속성 */
   const [isComposing, setIsComposing] = useState(false);
+  const [lastCommittedInput, setLastCommittedInput] = useState("");
 
   const debounced = useDebounce(inputValue, 300);
   const router = useRouter();
@@ -26,6 +27,7 @@ export default function SearchInput() {
   useEffect(() => {
     if (query !== null) {
       setInputValue(query);
+      setLastCommittedInput(query);
     }
   }, [query]);
 
@@ -61,8 +63,27 @@ export default function SearchInput() {
     };
   }, []);
 
+  /* 키보드 이벤트 핸들러 추가 (ESC 키를 누르면 검색창 닫기) */
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        inputRef.current?.blur();
+        setInputValue(lastCommittedInput);
+        setShowSuggestions(false);
+        setSelectedIndex(-1);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [lastCommittedInput]); // 최신 검색어 감지
+
   const handleSearch = (keyword: string) => {
     if (!keyword.trim()) return;
+
+    setLastCommittedInput(keyword); // 직전 검색어 저장
     setInputValue(keyword); // 선택한 텍스트를 검색창에 유지
     setShowSuggestions(false);
     inputRef.current?.blur(); // 검색 후 커서 제거
