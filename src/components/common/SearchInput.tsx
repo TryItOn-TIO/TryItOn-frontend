@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import useDebounce from "@/hooks/useDebounce";
 import { fetchSearchSuggestions } from "@/api/search";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 
 export default function SearchInput() {
@@ -20,6 +21,7 @@ export default function SearchInput() {
   const router = useRouter();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const pathname = usePathname();
 
   const searchParams = useSearchParams();
   const query = searchParams.get("query");
@@ -30,6 +32,14 @@ export default function SearchInput() {
       setLastCommittedInput(query);
     }
   }, [query]);
+
+  useEffect(() => {
+    if (pathname !== "/search") {
+      // search 페이지가 아니면 검색어 초기화
+      setInputValue("");
+      setLastCommittedInput("");
+    }
+  }, [pathname]);
 
   useEffect(() => {
     if (!debounced.trim()) {
