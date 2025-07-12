@@ -30,7 +30,7 @@ type OrderItem = {
   category?: string;
   color?: string;
   brand?: string;
-  variantId?: number;
+  variantId: number; // variantId를 필수 필드로 변경
 };
 
 export default function OrderPage() {
