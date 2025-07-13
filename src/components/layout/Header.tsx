@@ -1,7 +1,14 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import SearchInput from "@/components/common/SearchInput";
+import dynamic from "next/dynamic";
+
+// 클라이언트 전용으로 SearchInput 불러오기
+const SearchInput = dynamic(() => import("@/components/common/SearchInput"), {
+  ssr: false,
+});
 
 const Header = () => {
   return (
