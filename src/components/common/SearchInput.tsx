@@ -112,7 +112,7 @@ export default function SearchInput() {
         ref={inputRef}
         type="text"
         value={inputValue}
-        placeholder="검색어를 입력하세요"
+        placeholder="상품을 검색하세요"
         onChange={(e) => {
           setInputValue(e.target.value);
           setShowSuggestions(true);
