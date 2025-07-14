@@ -10,9 +10,29 @@ import { FreeMode } from "swiper/modules";
 import SimpleProductCard from "@/components/ui/SimpleProductCard";
 import Link from "next/link";
 import { dummyProductDetails } from "@/mock/story";
+import { useEffect, useState } from "react";
+import { getSimilarProducts } from "@/api/productDetail";
+import { initialProductResponse, ProductResponse } from "@/types/product";
 
-const DetailRecommand = ({}: {}) => {
+type DetailRecommandProps = {
+  productId: number;
+};
+
+const DetailRecommand = ({ productId }: DetailRecommandProps) => {
   const dummyData = dummyProductDetails;
+  const [data, setDate] = useState<ProductResponse[]>(initialProductResponse);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getSimilarProducts(productId);
+        setDate(response);
+      } catch {
+        console.log("유사 상품을 불러오는 중 에러가 발생했습니다.");
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <div className="bg-gray-50 py-6 px-4 rounded-xl mt-8">
@@ -27,14 +47,14 @@ const DetailRecommand = ({}: {}) => {
         modules={[FreeMode]}
         className="w-full"
       >
-        {dummyData.map((data) => (
+        {data.map((product) => (
           <SwiperSlide
-            key={data.id}
+            key={product.id}
             style={{ width: "12rem" }}
             className="flex-shrink-0"
           >
-            <Link href={`/detail/${data.id}`}>
-              <SimpleProductCard data={data} />
+            <Link href={`/detail/${product.id}`}>
+              <SimpleProductCard data={product} />
             </Link>
           </SwiperSlide>
         ))}

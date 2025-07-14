@@ -1,11 +1,5 @@
-export type AvatarProductInfo = {
-  avatarImg: string;
-  productNames: string[];
-  avatarId: number;
-};
-
 type AvatarProduct = {
-  // productId: number;
+  productId: number;
   productName: string;
   categoryName: string;
 };

@@ -8,8 +8,8 @@ export default function ScrollToTop() {
   // 스크롤 위치 감지
   useEffect(() => {
     const toggleVisibility = () => {
-      // 300px 이상 스크롤했을 때 버튼 표시
-      if (window.pageYOffset > 300) {
+      // 400px 이상 스크롤했을 때 버튼 표시
+      if (window.pageYOffset > 400) {
         setIsVisible(true);
       } else {
         setIsVisible(false);

@@ -1,25 +1,40 @@
+"use client";
+
 import { ProductResponse } from "@/types/product";
 import Image from "next/image";
 import React from "react";
 import WhiteButton from "../common/WhiteButton";
 import BlackButton from "../common/BlackButton";
+import { useRouter } from "next/navigation";
+import { useWishlist } from "@/hooks/useWishlist";
 
 type ProductActionCardProps = {
   data: ProductResponse;
 };
 
 const ProductActionCard = ({ data }: ProductActionCardProps) => {
-  const isDiscounted = data.price != data.sale;
+  const router = useRouter();
+  const { toggleWishlist } = useWishlist(data.liked, data.id);
 
-  const handleOrder = () => {
+  const handletoggleWishlist = () => {
     // TODO: 주문 구현 후 수정
-    console.log("주문 정보:", data);
+    console.log("상품 정보:", data);
+    toggleWishlist();
   };
 
-  const handleAddCart = () => {
+  const handleMoveDetail = () => {
     // TODO: 주문 구현 후 수정
-    console.log("장바구니 정보:", data);
+    console.log("상품 정보:", data);
+    router.push(`/detail/${data.id}`);
   };
+
+  const isDiscounted = data.sale > 0; // 할인율이 0보다 크면 할인 중
+  const discountedPrice = isDiscounted
+    ? Math.round(data.price * (1 - data.sale / 100))
+    : data.price;
+
+  const formattedPrice = data.price.toLocaleString();
+  const formattedDiscountedPrice = discountedPrice.toLocaleString();
 
   return (
     <div className="flex h-60 items-stretch gap-4 text-sm text-black hover:opacity-90">
@@ -42,18 +57,25 @@ const ProductActionCard = ({ data }: ProductActionCardProps) => {
           <div className="my-2">
             {isDiscounted && (
               <div className="text-gray-400 line-through text-base">
-                {data.price.toLocaleString()}원
+                {formattedPrice}원
               </div>
             )}
             <div className="font-semibold text-xl">
-              {data.sale.toLocaleString()}원
+              {formattedDiscountedPrice}원
             </div>
           </div>
         </div>
 
         <div className="space-y-2">
-          <WhiteButton text="장바구니" handleClick={handleAddCart} />
-          <BlackButton text="구매하기" handleClick={handleOrder} />
+          {data.liked ? (
+            <WhiteButton
+              text="찜 해제하기"
+              handleClick={handletoggleWishlist}
+            />
+          ) : (
+            <WhiteButton text="찜하기" handleClick={handletoggleWishlist} />
+          )}
+          <BlackButton text="더보기" handleClick={handleMoveDetail} />
         </div>
       </div>
     </div>

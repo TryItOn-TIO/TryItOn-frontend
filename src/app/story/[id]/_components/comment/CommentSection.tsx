@@ -1,7 +1,7 @@
 "use client";
 
 import { StoryResponse } from "@/types/story";
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import Comment from "@/app/story/[id]/_components/comment/Comment";
 import PositionCommentForm from "@/app/story/[id]/_components/comment/PositionCommentForm";
 import { createComment } from "@/api/comment";
@@ -53,6 +53,7 @@ const CommentSection = ({
       });
       setComment(""); // 성공 시 입력창 초기화
       onCancelComment(); // 댓글 입력 모드 종료
+      window.location.reload();
     } catch (error) {
       console.error("댓글 전송 실패", error);
       alert("댓글 등록 중 문제가 발생했어요.");

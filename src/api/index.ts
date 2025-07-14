@@ -1,5 +1,9 @@
 import axios, { type AxiosInstance } from "axios";
-import { getAccessToken, deleteAccessToken } from "@/utils/auth";
+import {
+  getAccessToken,
+  deleteAccessToken,
+  clearSessionStorage,
+} from "@/utils/auth";
 
 // 인증 필요한 인스턴스
 let authInstance: AxiosInstance | null = null;
@@ -30,19 +34,38 @@ function setResponseInterceptor(instance: AxiosInstance): void {
       console.log("API Error:", error);
       console.log("Current URL:", window.location.pathname);
 
-      if (error.status === 401 || error.status === 403) {
+      if (error.response.status === 401 || error.response.status === 403) {
         // 결제 성공 페이지에서는 자동 리다이렉트 하지 않음
-        if (window.location.pathname === '/success') {
-          console.warn("결제 성공 페이지에서 인증 오류 발생 - 자동 리다이렉트 방지");
+        if (window.location.pathname === "/success") {
+          console.warn(
+            "결제 성공 페이지에서 인증 오류 발생 - 자동 리다이렉트 방지"
+          );
           return Promise.reject(error);
         }
-        
-        // 1. 토큰 삭제
+
+        // 메인 페이지에서는 팝업 방지 (비로그인 사용자도 접근 가능)
+        if (window.location.pathname === "/") {
+          console.warn("메인 페이지에서 인증 오류 발생 - 팝업 방지");
+          deleteAccessToken();
+          return Promise.reject(error);
+        }
+
+        // 상세페이지에서는 팝업 방지 (비로그인 사용자도 접근 가능)
+        if (window.location.pathname.startsWith("/detail/")) {
+          console.warn("상세페이지에서 인증 오류 발생 - 팝업 방지");
+          deleteAccessToken();
+          return Promise.reject(error);
+        }
+
+        // 1. 토큰, 기타 세션 정보 삭제
         deleteAccessToken();
+        clearSessionStorage();
 
         // 2. 확인창으로 안내
-        const shouldRedirect = confirm("로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?");
-        
+        const shouldRedirect = confirm(
+          "로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?"
+        );
+
         if (shouldRedirect) {
           // 3. 리다이렉트 (SPA 라우팅용)
           window.location.href = "/signin";

@@ -1,5 +1,6 @@
 // Oauth google 인증 절차의 id token 저장소
 import { createStore } from "zustand/vanilla";
+import { persist } from "zustand/middleware";
 
 export type IdTokenState = {
   idToken: string;
@@ -18,10 +19,17 @@ export const defaultInitState: IdTokenState = {
 export const createIdTokenStore = (
   initState: IdTokenState = defaultInitState
 ) => {
-  return createStore<IdTokenStore>()((set) => ({
-    ...initState,
-    setIdToken: (idToken: string) => set(() => ({ idToken })),
-  }));
+  return createStore<IdTokenStore>()(
+    persist(
+      (set) => ({
+        ...initState,
+        setIdToken: (idToken: string) => set(() => ({ idToken })),
+      }),
+      {
+        name: "google-token-storage",
+      }
+    )
+  );
 };
 
 export const idTokenStore = createIdTokenStore();

@@ -2,19 +2,8 @@ import { axiosWithAuth } from "@/api";
 import type {
   ClosetAvatarResponse,
   ClosetAvatarSaveRequest,
-  ClosetResponse,
-  WishlistResponse,
-  SaveOutfitRequest,
-  SavedOutfit,
 } from "@/types/closet";
-
-// 옷장에 아바타 착장 저장
-export const saveClosetAvatar = async (
-  requestData: ClosetAvatarSaveRequest
-) => {
-  const response = await axiosWithAuth().post("/api/closet", requestData);
-  return response.data;
-};
+import { ProductResponse } from "@/types/product";
 
 // 옷장 목록 조회
 export const getClosetAvatars = async (): Promise<ClosetAvatarResponse[]> => {
@@ -30,12 +19,13 @@ export const deleteClosetAvatar = async (closetAvatarId: number) => {
   return response.data;
 };
 
-// 옷장 메인 데이터 가져오기 (현재 착장 + 저장된 착장 + 찜 목록)
-export const fetchClosetData = async (): Promise<ClosetResponse> => {
-  const response = await axiosWithAuth().get("/api/closet");
+// 옷장에 아바타 추가
+export const saveClosetAvatar = async (data: ClosetAvatarSaveRequest) => {
+  const response = await axiosWithAuth().post("/api/closet", data);
   return response.data;
 };
 
+/*
 // 찜 목록 가져오기 (페이징)
 export const fetchWishlist = async ({
   pageParam = 0,
@@ -45,7 +35,7 @@ export const fetchWishlist = async ({
   pageParam?: number;
   categoryId?: number;
   size?: number;
-}): Promise<WishlistResponse> => {
+}): Promise<ProductResponse[]> => {
   const response = await axiosWithAuth().get("/api/closet/wishlist", {
     params: {
       page: pageParam,
@@ -88,3 +78,4 @@ export const saveOutfit = async (
 export const deleteOutfit = async (avatarId: number): Promise<void> => {
   await axiosWithAuth().delete(`/api/avatar/${avatarId}`);
 };
+*/

@@ -7,15 +7,15 @@ import Image from "next/image";
 import { generatePresignedUrl, uploadFileToS3 } from "@/api/files";
 
 type TryonImgUploaderProps<T extends SignupRequest> = {
-  setStep: React.Dispatch<React.SetStateAction<number>>;
   data: T;
   setData: Dispatch<SetStateAction<T>>;
+  onSubmit: (fileUrl?: string) => void; // fileUrl 파라미터 추가
 };
 
 const TryonImgUploader = <T extends SignupRequest>({
-  setStep,
-  data,
+  onSubmit,
   setData,
+  data,
 }: TryonImgUploaderProps<T>) => {
   const [preview, setPreview] = useState<string | null>();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -25,6 +25,20 @@ const TryonImgUploader = <T extends SignupRequest>({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    // 파일 크기 검증 (10MB 제한)
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    if (file.size > maxSize) {
+      alert("파일 크기는 10MB 이하여야 합니다.");
+      return;
+    }
+
+    // 파일 타입 검증
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+    if (!allowedTypes.includes(file.type)) {
+      alert("JPG, PNG, WEBP 형식의 이미지만 업로드 가능합니다.");
+      return;
+    }
 
     setSelectedFile(file);
 
@@ -36,7 +50,7 @@ const TryonImgUploader = <T extends SignupRequest>({
     reader.readAsDataURL(file);
   };
 
-  const handleClickNext = async () => {
+  const handleSubmit = async () => {
     if (!selectedFile) {
       alert("전신 사진을 선택해주세요.");
       return;
@@ -47,22 +61,53 @@ const TryonImgUploader = <T extends SignupRequest>({
     try {
       // S3 업로드 실행
       console.log("S3 업로드 시작...");
-      const presignedUrl = await generatePresignedUrl(
-        `temp/${selectedFile.name}`
-      );
+
+      // 고유한 파일명 생성 (타임스탬프 + 원본 파일명)
+      const timestamp = Date.now();
+      const fileName = `temp/${timestamp}_${selectedFile.name}`;
+
+      const presignedUrl = await generatePresignedUrl(fileName);
+
+      if (!presignedUrl) {
+        throw new Error("Presigned URL 생성에 실패했습니다.");
+      }
+
       await uploadFileToS3(presignedUrl, selectedFile);
       const fileUrl = presignedUrl.split("?")[0];
 
+      console.log("업로드 성공:", fileUrl);
+
+      // 먼저 데이터 업데이트
       setData((prev) => ({
         ...prev,
         userBaseImageUrl: fileUrl,
       }));
 
-      console.log("업로드 성공:", fileUrl);
-      setStep((prev) => prev + 1);
-    } catch (error) {
+      console.log("TryonImgUploader -> ", data);
+
+      // fileUrl을 직접 onSubmit에 전달
+      console.log("onSubmit 호출 시작 - fileUrl:", fileUrl);
+      onSubmit(fileUrl);
+    } catch (error: any) {
       console.error("업로드 실패:", error);
-      alert("업로드에 실패했습니다. 다시 시도해주세요.");
+
+      let errorMessage = "업로드에 실패했습니다. 다시 시도해주세요.";
+
+      if (
+        error.message?.includes("network") ||
+        error.code === "NETWORK_ERROR"
+      ) {
+        errorMessage = "네트워크 연결을 확인하고 다시 시도해주세요.";
+      } else if (error.message?.includes("timeout")) {
+        errorMessage =
+          "업로드 시간이 초과되었습니다. 파일 크기를 확인하고 다시 시도해주세요.";
+      } else if (error.status === 403) {
+        errorMessage = "파일 업로드 권한이 없습니다. 관리자에게 문의해주세요.";
+      } else if (error.status === 413) {
+        errorMessage = "파일 크기가 너무 큽니다. 더 작은 파일을 선택해주세요.";
+      }
+
+      alert(errorMessage);
     } finally {
       setIsUploading(false);
     }
@@ -72,6 +117,9 @@ const TryonImgUploader = <T extends SignupRequest>({
     <div className="flex flex-col items-center gap-18">
       <div className="w-full text-start">
         전신이 잘 보이도록 정면에서 찍은 사진을 업로드해주세요.
+        <div className="text-sm text-gray-500 mt-2">
+          • 지원 형식: JPG, PNG, WEBP • 최대 크기: 10MB
+        </div>
       </div>
 
       {/* 미리보기 사진 및 사진 선택 버튼 */}
@@ -91,7 +139,7 @@ const TryonImgUploader = <T extends SignupRequest>({
         )}
         <input
           type="file"
-          accept="image/*"
+          accept="image/jpeg,image/jpg,image/png,image/webp"
           onChange={handleFileChange}
           className="hidden"
           ref={fileInputRef}
@@ -102,20 +150,24 @@ const TryonImgUploader = <T extends SignupRequest>({
           disabled={isUploading}
           className="text-sm bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow disabled:opacity-50"
         >
-          사진 선택
+          {isUploading ? "업로드 중..." : "사진 선택"}
         </button>
 
         {selectedFile && (
           <div className="text-sm text-gray-600">
             선택된 파일: {selectedFile.name}
+            <div className="text-xs text-gray-400">
+              크기: {(selectedFile.size / 1024 / 1024).toFixed(2)}MB
+            </div>
           </div>
         )}
       </div>
 
       {/* submit 버튼 */}
       <BlackButton
-        text={isUploading ? "업로드 중..." : "다음"}
-        handleClick={handleClickNext}
+        text={isUploading ? "진행 중..." : "회원가입"}
+        handleClick={handleSubmit}
+        disabled={isUploading || !selectedFile}
       />
     </div>
   );

@@ -18,19 +18,20 @@ type CartItem = {
   quantity: number;
   image: string;
   category: string;
+  variantId: number; // variantId 추가 이거 왜 자꾸 누락됨?
 };
 
 const Cart = () => {
   useAuthGuard(); // 인증 확인 - 로그인하지 않은 사용자는 signin 페이지로 리다이렉트
-  
+
   const router = useRouter();
-  const { 
-    items: backendCartItems, 
-    isLoading, 
-    error, 
-    updateCartItemQuantity, 
+  const {
+    items: backendCartItems,
+    isLoading,
+    error,
+    updateCartItemQuantity,
     deleteCartItem,
-    clearError 
+    clearError,
   } = useCartItems();
 
   // 백엔드 데이터를 UI 형태로 변환
@@ -38,7 +39,7 @@ const Cart = () => {
 
   useEffect(() => {
     if (backendCartItems && backendCartItems.length > 0) {
-      const transformedItems = backendCartItems.map(item => ({
+      const transformedItems = backendCartItems.map((item) => ({
         id: item.cartItemId.toString(),
         name: item.productName,
         size: item.size,
@@ -47,6 +48,7 @@ const Cart = () => {
         quantity: item.quantity,
         image: item.imageUrl || "/placeholder.svg?height=120&width=120",
         category: item.brand,
+        variantId: item.variantId, // variantId 추가
       }));
       setCartItems(transformedItems);
     } else {
@@ -89,16 +91,16 @@ const Cart = () => {
   };
 
   const handleQuantityChange = async (itemId: string, change: number) => {
-    const currentItem = cartItems.find(item => item.id === itemId);
+    const currentItem = cartItems.find((item) => item.id === itemId);
     if (!currentItem) return;
 
     const newQuantity = Math.max(1, currentItem.quantity + change);
-    
+
     try {
       await updateCartItemQuantity(parseInt(itemId), newQuantity);
       // useCart 훅에서 자동으로 데이터를 다시 가져오므로 별도 상태 업데이트 불필요
     } catch (error) {
-      console.error('수량 변경 실패:', error);
+      console.error("수량 변경 실패:", error);
     }
   };
 
@@ -108,7 +110,7 @@ const Cart = () => {
       // useCart 훅에서 자동으로 데이터를 다시 가져오므로 별도 상태 업데이트 불필요
       setSelectedItems(selectedItems.filter((id) => id !== itemId));
     } catch (error) {
-      console.error('상품 삭제 실패:', error);
+      console.error("상품 삭제 실패:", error);
     }
   };
 
@@ -121,7 +123,7 @@ const Cart = () => {
       setSelectedItems([]);
       setAllSelected(false);
     } catch (error) {
-      console.error('선택 상품 삭제 실패:', error);
+      console.error("선택 상품 삭제 실패:", error);
     }
   };
 
@@ -160,6 +162,19 @@ const Cart = () => {
     return acc;
   }, {} as Record<string, CartItem[]>);
 
+  const getDeliveryDateText = () => {
+    const today = new Date();
+    today.setDate(today.getDate() + 2); // 2일 후
+
+    const month = String(today.getMonth() + 1).padStart(2, "0"); // 월: 0-based
+    const date = String(today.getDate()).padStart(2, "0");
+
+    const days = ["일", "월", "화", "수", "목", "금", "토"];
+    const day = days[today.getDay()]; // 요일
+
+    return `${month}/${date}(${day})`;
+  };
+
   return (
     <div className="w-full px-4 py-8 overflow-x-hidden">
       {/* 로딩 상태 */}
@@ -193,7 +208,7 @@ const Cart = () => {
             장바구니가 비어있습니다
           </div>
           <Button
-            onClick={() => router.push('/')}
+            onClick={() => router.push("/")}
             className="bg-black text-white hover:bg-gray-800"
           >
             쇼핑 계속하기
@@ -273,15 +288,17 @@ const Cart = () => {
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={async () => await handleRemoveItem(item.id)}
+                                onClick={async () =>
+                                  await handleRemoveItem(item.id)
+                                }
                               >
                                 <X className="h-4 w-4" />
                               </Button>
                             </div>
 
                             <div className="mt-4 text-xs text-black mb-3">
-                              택배 배송 07/1(화) 밤 12시 이전 주문 시 내일 도착
-                              예정
+                              택배 배송 {getDeliveryDateText()} 밤 12시 이전
+                              주문 시 내일 도착 예정
                             </div>
 
                             <div className="flex items-center justify-between">
@@ -304,18 +321,13 @@ const Cart = () => {
                                   variant="outline"
                                   size="sm"
                                   className="border-black text-black hover:bg-black hover:text-white"
-                                  onClick={async () => await handleQuantityChange(item.id, 1)}
+                                  onClick={async () =>
+                                    await handleQuantityChange(item.id, 1)
+                                  }
                                 >
                                   <Plus className="h-3 w-3" />
                                 </Button>
                               </div>
-                              <Button
-                                variant="outline"
-                                className="border-black text-black hover:bg-black hover:text-white"
-                                size="sm"
-                              >
-                                구매 서용
-                              </Button>
                             </div>
                           </div>
                         </div>

@@ -1,28 +1,29 @@
+import { AvatarResponse } from "@/types/avatar";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 // 타입 정의
 type AvatarState = {
-  avatarImg: string;
+  avatarInfo: AvatarResponse;
   selectedProductIds: number[];
   isLoading: boolean;
 
-  setAvatarImg: (img: string) => void;
+  setAvatarInfo: (info: AvatarResponse) => void;
   setSelectedProductIds: (ids: number[]) => void;
   addSelectedProductId: (id: number) => void;
   removeSelectedProductId: (id: number) => void;
   setLoading: (loading: boolean) => void;
 };
 
-// persist로 유지할 항목만 따로 저장 (avatarImg, selectedProductIds)
+// persist로 유지할 항목만 따로 저장 (avatarImgUrl, selectedProductIds)
 export const useAvatarStore = create<AvatarState>()(
   persist(
     (set) => ({
-      avatarImg: "",
+      avatarInfo: { avatarId: 1, avatarImgUrl: "", products: [] },
       selectedProductIds: [],
       isLoading: false,
 
-      setAvatarImg: (img) => set({ avatarImg: img }),
+      setAvatarInfo: (info) => set({ avatarInfo: info }),
       setSelectedProductIds: (ids) => set({ selectedProductIds: ids }),
       addSelectedProductId: (id) =>
         set((state) => ({
@@ -39,7 +40,7 @@ export const useAvatarStore = create<AvatarState>()(
     {
       name: "avatar-storage", // localStorage 키 이름
       partialize: (state) => ({
-        avatarImg: state.avatarImg,
+        avatarInfo: state.avatarInfo,
         selectedProductIds: state.selectedProductIds,
       }),
     }

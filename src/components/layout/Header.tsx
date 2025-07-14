@@ -3,6 +3,12 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+
+// 클라이언트 전용으로 SearchInput 불러오기
+const SearchInput = dynamic(() => import("@/components/common/SearchInput"), {
+  ssr: false,
+});
 import { usePathname } from "next/navigation";
 import { CATEGORY, CATEGORY_LABELS } from "@/constants/category";
 import { useAuth } from "@/hooks/useAuth";

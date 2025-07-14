@@ -1,14 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useAvatarStore } from "@/stores/avatar-store";
 import { saveClosetAvatar } from "@/api/closet";
-
-type AvatarWearInfoProps = {
-  avatarId: number;
-  productNames: string[];
-};
+import { fetchLatestAvatarInfo } from "@/api/avatar";
+import Link from "next/link";
 
 const AvatarWearInfo = ({ avatarId, productNames }: AvatarWearInfoProps) => {
   const avatarImg = useAvatarStore((state) => state.avatarImg);
@@ -18,9 +15,29 @@ const AvatarWearInfo = ({ avatarId, productNames }: AvatarWearInfoProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
+  // 컴포넌트가 마운트될 때 아바타 정보를 받아옴
+  useEffect(() => {
+    const loadAvatarInfo = async () => {
+      try {
+        const data = await fetchLatestAvatarInfo();
+        setAvatarInfo(data); // 전역 상태 업데이트
+        console.log(avatarInfo);
+
+        setAvatarLoading(false);
+      } catch (error) {
+        console.error("아바타 정보 로드 실패", error);
+      }
+    };
+
+    loadAvatarInfo();
+  }, [setAvatarInfo]);
+
+  // 착장한 아바타를 옷장에 추가함
   const handleAddToCloset = async () => {
+    console.log("전역 관리 중인 선택된 상품 id: ", selectedProductIds);
+
     try {
-      setIsLoading(true);
+      setIsClosetLoading(true);
       setMessage(null);
 
       await saveClosetAvatar({
@@ -28,12 +45,15 @@ const AvatarWearInfo = ({ avatarId, productNames }: AvatarWearInfoProps) => {
         items: selectedProductIds.map((productId) => ({ productId })),
       });
 
+      console.log("Closet save response:", response);
       setMessage("옷장에 성공적으로 추가되었습니다!");
+
 
       // 3초 후 메시지 제거
       setTimeout(() => setMessage(null), 3000);
     } catch (error: any) {
       console.error("옷장 추가 실패:", error);
+
 
       // 백엔드 에러 상태에 따른 메시지 처리
       if (error.response?.status === 409) {
@@ -43,13 +63,16 @@ const AvatarWearInfo = ({ avatarId, productNames }: AvatarWearInfoProps) => {
       } else if (error.response?.status === 404) {
         setMessage("아바타 또는 상품 정보를 찾을 수 없습니다.");
       } else {
-        setMessage("옷장 추가에 실패했습니다. 다시 시도해주세요.");
+        setMessage(
+          `옷장 추가에 실패했습니다: ${error.message || "알 수 없는 오류"}`
+        );
       }
+
 
       // 3초 후 메시지 제거
       setTimeout(() => setMessage(null), 3000);
     } finally {
-      setIsLoading(false);
+      setIsClosetLoading(false);
     }
   };
 
@@ -156,6 +179,14 @@ const AvatarWearInfo = ({ avatarId, productNames }: AvatarWearInfoProps) => {
               {message}
             </div>
           </div>
+        </div>
+      )}
+
+      {/* 아바타 착용 중 안내 메시지 */}
+      {isAvatarLoading && (
+        <div className="absolute top-4 left-4 z-10 px-3 py-2 rounded-lg text-sm bg-blue-100 text-blue-800 border border-blue-200 flex items-center gap-2">
+          <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+          옷을 입고 있어요 👕 (최대 1분 소요됩니다)
         </div>
       )}
 

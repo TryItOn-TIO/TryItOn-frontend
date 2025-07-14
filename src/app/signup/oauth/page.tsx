@@ -1,6 +1,7 @@
 "use client";
 
 import { signupWithGoogle } from "@/api/auth";
+import { setAccessToken } from "@/utils/auth";
 import SignupForm from "@/app/signup/_components/SignupForm";
 import { Gender } from "@/constants/Gender";
 import { Style } from "@/constants/Style";
@@ -9,7 +10,6 @@ import { GoogleSignupRequest } from "@/types/auth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import TryonImgUploader from "@/app/signup/_components/TryonImgUploader";
-import AvatarImageSelector from "@/app/signup/_components/AvatarImageSelector";
 
 const Oauth = () => {
   const { idToken } = useIdToken();
@@ -25,23 +25,36 @@ const Oauth = () => {
     gender: Gender.F,
     phoneNum: "",
     shoeSize: 0,
-    avatarBaseImageUrl: "",
+    avatarBaseImageUrl: "temp",
     userBaseImageUrl: "",
     idToken: "",
   });
 
-  const handleSubmit = async () => {
-    if (!idToken) return;
+  const handleSubmit = async (fileUrl?: string) => {
+    if (!idToken) {
+      alert("인증 정보가 없습니다. 다시 로그인해주세요.");
+      router.push("/signin");
+      return;
+    }
 
     try {
-      const submitData = {
-        ...data,
-        idToken,
-      };
+      // fileUrl이 전달되면 data 상태 업데이트
+      const finalData = fileUrl
+        ? {
+            ...data,
+            userBaseImageUrl: fileUrl,
+            idToken,
+          }
+        : {
+            ...data,
+            idToken,
+          };
 
-      const response = await signupWithGoogle(submitData);
+      console.log("구글 회원가입 데이터:", finalData);
+      const response = await signupWithGoogle(finalData);
 
       if (response.accessToken) {
+        setAccessToken(response.accessToken);
         console.log("회원가입 및 로그인 완료:", response);
         router.push("/"); // 홈으로 리다이렉트
       }
@@ -59,13 +72,10 @@ const Oauth = () => {
           <SignupForm setStep={setStep} data={data} setData={setData} />
         )}
         {step == 2 && (
-          <TryonImgUploader setStep={setStep} data={data} setData={setData} />
-        )}
-        {step == 3 && (
-          <AvatarImageSelector
+          <TryonImgUploader
+            onSubmit={handleSubmit}
             data={data}
             setData={setData}
-            onSubmit={handleSubmit}
           />
         )}
       </div>

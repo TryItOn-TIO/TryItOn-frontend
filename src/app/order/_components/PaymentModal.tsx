@@ -18,6 +18,7 @@ type OrderItem = {
   salePrice: number
   image: string
   category?: string
+  variantId: number  // variantId를 필수 필드로 변경
 }
 
 type PaymentModalProps = {
@@ -155,7 +156,7 @@ export default function PaymentModal({ isOpen, onClose, amount, orderName, order
         addressId: addressId,
         amount: calculatedAmount, // 백엔드 검증을 위해 추가
         orderItems: orderItems.map(item => ({ 
-          variantId: Number(item.id),
+          variantId: item.variantId, // variantId 직접 사용 (필수 필드이므로 fallback 불필요)
           quantity: item.quantity 
         }))
       };
@@ -174,7 +175,7 @@ export default function PaymentModal({ isOpen, onClose, amount, orderName, order
           originalPrice: item.originalPrice,
           salePrice: item.salePrice,
           itemTotal: item.salePrice * item.quantity,
-          variantId: Number(item.id)
+          variantId: item.variantId // 직접 사용
         });
       });
       

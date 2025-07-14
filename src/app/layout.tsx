@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import "@/styles/globals.css";
 import Header from "@/components/layout/Header";
 import ScrollToTop from "@/components/common/ScrollToTop";
+import CategoryHeader from "@/components/layout/CategoryHeader";
 import Providers from "@/app/providers";
 
 export const metadata: Metadata = {
@@ -26,6 +27,18 @@ export default function RootLayout({
           clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
         >
           <Providers>
+            {/* header 상단에 고정 */}
+            <div className="fixed top-0 left-0 z-10">
+              <Header />
+              <CategoryHeader />
+            </div>
+            {/* layout을 제외한 컨텐츠 - header size: 15vh */}
+            <div className="flex justify-center mt-[15vh]">
+              <div className="flex justify-start w-full max-w-[1280px]">
+                {children}
+              </div>
+            </div>
+            <ScrollToTop />
             {/* 새로운 통합 헤더 */}
             <Header />
 

@@ -16,7 +16,7 @@ const StoryPage = () => {
   const [stories, setStories] = useState<StoryResponse[]>(dummyStoryList);
   const [isLoading, setIsLoading] = useState<boolean>(true); // TODO: API 테스트 후 true로 변경
   const [error, setError] = useState<string | null>(null);
-  const [sortType, setSortType] = useState<SortType>(SortType.LATEST);
+  const [sortType, setSortType] = useState<SortType>(SortType.POPULAR);
 
   const fetchStories = async () => {
     try {

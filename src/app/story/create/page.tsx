@@ -1,5 +1,6 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import AvatarSelector from "@/app/story/create/_components/AvatarSelector";
 import BackgroundColorPicker from "@/app/story/create/_components/BackgroundColorPicker";
 import StoryContentInput from "@/app/story/create/_components/StoryContentInput";
@@ -8,7 +9,10 @@ import { useAvatarData } from "@/app/story/create/_hooks/useAvatarData";
 import { useStoryCreation } from "@/app/story/create/_hooks/useStoryCreation";
 
 const CreateStoryPage = () => {
-  // 아바타 데이터 관리
+  const searchParams = useSearchParams();
+  const closetAvatarId = searchParams.get('closet_avatar_id');
+  
+  // 아바타 데이터 관리 - closet_avatar_id가 있으면 해당 아바타를 초기 선택
   const {
     avatars,
     avatarLoading,
@@ -16,7 +20,7 @@ const CreateStoryPage = () => {
     setSelectedAvatar,
     hasAvatars,
     error,
-  } = useAvatarData();
+  } = useAvatarData(closetAvatarId ? parseInt(closetAvatarId) : undefined);
 
   // 스토리 생성 로직
   const {
