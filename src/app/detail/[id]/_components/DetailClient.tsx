@@ -43,7 +43,14 @@ const DetailClient = ({ productId }: DetailClientProps) => {
         <div className="w-[65%]">
           <DetailMainImg images={data.images} />
           <DetailRecommand productId={Number(productId)} />
-          {data.images[4] && <DetailInfo image={data.images[4]} />}
+
+          {/* img5 배열의 모든 상세 이미지 표시 */}
+          {data.images.slice(4)
+              .filter((img) => img && img.trim() !== '')
+              .map((img, idx) => (
+                  <DetailInfo key={idx} image={img} index={idx} />
+              ))
+          }
         </div>
 
         {/* 우측 상품 장바구니/구매하기 창 */}
