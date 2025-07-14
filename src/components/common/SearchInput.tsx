@@ -126,7 +126,7 @@ export default function SearchInput() {
         className="w-full placeholder:text-slate-400 bg-[#f2f2f2] text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
       />
       <button
-        className="absolute right-3 top-1.5"
+        className="absolute right-3 top-1.5 cursor-pointer"
         onClick={() => handleSearch(inputValue)}
       >
         <Image
