@@ -56,10 +56,8 @@ export default function Header() {
           </div>
 
           {/* 중앙: 검색창 */}
-          <div className="flex items-center flex-1 max-w-md mx-8">
-            <div className="w-full max-w-[600px]">
-              <SearchInput />
-            </div>
+          <div className="flex-grow mx-8">
+            <SearchInput />
           </div>
 
           {/* 우측: 로그인 or 유저 메뉴(옷장, 장바구니, 마이페이지) */}
