@@ -25,11 +25,13 @@ export const fetchSearchSuggestions = async (
  * 검색 결과 요청
  */
 export const fetchSearchResults = async (
-  query: string
+  query: string,
+  page: number = 0,
+  size: number = 10
 ): Promise<SearchProductResponse> => {
   try {
     const response = await axiosWithoutAuth().get("/api/home/products/search", {
-      params: { query },
+      params: { query, page, size },
     });
     return response.data;
   } catch (error) {
