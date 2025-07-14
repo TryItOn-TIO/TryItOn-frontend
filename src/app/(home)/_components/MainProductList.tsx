@@ -11,7 +11,7 @@ type MainProductListProps = {
 
 const MainProductList = ({ recommended, ranked }: MainProductListProps) => {
   return (
-    <div className="flex flex-col gap-12 pt-3 pb-8">
+    <div className="flex flex-col gap-12 pt-3">
       {/* 추천 상품 섹션 */}
       <section>
         <h3 className="text-xl font-semibold mb-4 text-black">추천 상품</h3>

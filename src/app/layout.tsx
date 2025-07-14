@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="min-h-screen">
+      <body>
         <GoogleOAuthProvider
           clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
         >
@@ -34,20 +34,11 @@ export default function RootLayout({
             </div>
             {/* layout을 제외한 컨텐츠 - header size: 15vh */}
             <div className="flex justify-center mt-[15vh]">
-              <div className="flex justify-start w-full max-w-[1280px]">
+              <div className="flex justify-start w-screen">
+                {/* <div className="flex justify-start w-full max-w-[1280px]"> */}
                 {children}
               </div>
             </div>
-            <ScrollToTop />
-            {/* 새로운 통합 헤더 */}
-            <Header />
-
-            {/* 고정된 헤더 높이만큼 상단 여백 추가 */}
-            <main className="w-full pt-20 px-4 pb-8 max-w-screen-2xl mx-auto">
-              {children}
-            </main>
-
-            {/* Scroll to Top 버튼 - 모든 페이지에서 사용 */}
             <ScrollToTop />
           </Providers>
         </GoogleOAuthProvider>

@@ -52,7 +52,7 @@ export default function AvatarPreview() {
   const [selectedBottom, setSelectedBottom] = useState(clothingItems[3]);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  const handleClothingChange = (item: typeof clothingItems[0]) => {
+  const handleClothingChange = (item: (typeof clothingItems)[0]) => {
     setIsAnimating(true);
     setTimeout(() => {
       if (item.type === "top") {
@@ -79,13 +79,20 @@ export default function AvatarPreview() {
             </div>
 
             {/* Body with clothing */}
-            <div className={`transition-all duration-300 ${isAnimating ? "scale-105 opacity-80" : "scale-100 opacity-100"}`}>
+            <div
+              className={`transition-all duration-300 ${
+                isAnimating ? "scale-105 opacity-80" : "scale-100 opacity-100"
+              }`}
+            >
               {/* Top */}
               <div
                 className="w-24 h-32 rounded-lg mb-2 mx-auto relative"
                 style={{
                   backgroundColor: selectedTop.color,
-                  border: selectedTop.color === "#FFFFFF" ? "2px solid #E5E7EB" : "none",
+                  border:
+                    selectedTop.color === "#FFFFFF"
+                      ? "2px solid #E5E7EB"
+                      : "none",
                 }}
               >
                 <div
@@ -95,8 +102,8 @@ export default function AvatarPreview() {
               </div>
 
               {/* Bottom */}
-              <div 
-                className="w-20 h-24 rounded-lg mx-auto" 
+              <div
+                className="w-20 h-24 rounded-lg mx-auto"
                 style={{ backgroundColor: selectedBottom.color }}
               ></div>
             </div>
@@ -105,14 +112,44 @@ export default function AvatarPreview() {
           {/* Sparkle Effects */}
           {isAnimating && (
             <>
-              <svg className="absolute top-4 right-4 w-6 h-6 text-yellow-400 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+              <svg
+                className="absolute top-4 right-4 w-6 h-6 text-yellow-400 animate-pulse"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                />
               </svg>
-              <svg className="absolute bottom-8 left-4 w-4 h-4 text-blue-400 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+              <svg
+                className="absolute bottom-8 left-4 w-4 h-4 text-blue-400 animate-pulse"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                />
               </svg>
-              <svg className="absolute top-1/2 right-2 w-5 h-5 text-purple-400 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              <svg
+                className="absolute top-1/2 right-2 w-5 h-5 text-purple-400 animate-bounce"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
               </svg>
             </>
           )}
@@ -127,8 +164,10 @@ export default function AvatarPreview() {
           </div>
           <p className="text-lg font-bold text-blue-600">
             총{" "}
-            {(parseInt(selectedTop.price.replace(/[^0-9]/g, "")) +
-              parseInt(selectedBottom.price.replace(/[^0-9]/g, ""))).toLocaleString()}
+            {(
+              parseInt(selectedTop.price.replace(/[^0-9]/g, "")) +
+              parseInt(selectedBottom.price.replace(/[^0-9]/g, ""))
+            ).toLocaleString()}
             원
           </p>
         </div>
@@ -140,8 +179,18 @@ export default function AvatarPreview() {
         <div>
           <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
             {/* 티셔츠 아이콘 */}
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 4h2v2h8V4h2l2 4v14H4V8l2-4z M10 6v2h4V6 M4 8h2v4H4 M18 8h2v4h-2" />
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 4h2v2h8V4h2l2 4v14H4V8l2-4z M10 6v2h4V6 M4 8h2v4H4 M18 8h2v4h-2"
+              />
             </svg>
             상의 선택
           </h3>
@@ -162,10 +211,13 @@ export default function AvatarPreview() {
                     className="w-12 h-12 rounded-lg mx-auto mb-2"
                     style={{
                       backgroundColor: item.color,
-                      border: item.color === "#FFFFFF" ? "2px solid #E5E7EB" : "none",
+                      border:
+                        item.color === "#FFFFFF" ? "2px solid #E5E7EB" : "none",
                     }}
                   ></div>
-                  <p className="text-xs font-medium text-gray-700">{item.name}</p>
+                  <p className="text-xs font-medium text-gray-700">
+                    {item.name}
+                  </p>
                   <p className="text-xs text-gray-500">{item.price}</p>
                 </button>
               ))}
@@ -176,8 +228,18 @@ export default function AvatarPreview() {
         <div>
           <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
             {/* 바지 아이콘 */}
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 2v4l-2 14h4l2-10 2 10h4l-2-14V2H8z" />
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M8 2v4l-2 14h4l2-10 2 10h4l-2-14V2H8z"
+              />
             </svg>
             하의 선택
           </h3>
@@ -194,11 +256,13 @@ export default function AvatarPreview() {
                       : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm"
                   }`}
                 >
-                  <div 
-                    className="w-12 h-12 rounded-lg mx-auto mb-2" 
+                  <div
+                    className="w-12 h-12 rounded-lg mx-auto mb-2"
                     style={{ backgroundColor: item.color }}
                   ></div>
-                  <p className="text-xs font-medium text-gray-700">{item.name}</p>
+                  <p className="text-xs font-medium text-gray-700">
+                    {item.name}
+                  </p>
                   <p className="text-xs text-gray-500">{item.price}</p>
                 </button>
               ))}
