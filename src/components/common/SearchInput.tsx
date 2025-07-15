@@ -8,7 +8,11 @@ import { fetchSearchSuggestions } from "@/api/search";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 
-export default function SearchInput() {
+type Props = {
+  onSearch?: () => void; // 추가: 검색 시 실행할 콜백
+};
+
+export default function SearchInput({ onSearch }: Props) {
   const [inputValue, setInputValue] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -92,6 +96,8 @@ export default function SearchInput() {
 
   const handleSearch = (keyword: string) => {
     if (!keyword.trim()) return;
+
+    onSearch?.(); // 검색 직전에 콜백 호출
 
     setLastCommittedInput(keyword); // 직전 검색어 저장
     setInputValue(keyword); // 선택한 텍스트를 검색창에 유지

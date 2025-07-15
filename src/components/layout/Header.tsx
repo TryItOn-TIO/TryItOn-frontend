@@ -22,6 +22,18 @@ export default function Header() {
     setIsLoggedIn(!!token); // 토큰 존재 여부로 로그인 판별
   }, []);
 
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
+
   const toggleMenu = () => {
     setMenuOpen((prev) => !prev);
   };
@@ -109,54 +121,68 @@ export default function Header() {
               <Menu className="w-5 h-5" />
             )}
           </button>
-        </div>
 
-        {/* 모바일 메뉴 드롭다운 */}
-        {menuOpen && (
-          <div className="md:hidden flex flex-col gap-4 py-4 border-t border-gray-200">
-            {/* 카테고리 메뉴 */}
-            <nav className="flex flex-wrap gap-3 px-4">
-              {Object.values(CATEGORY)
-                .filter((v) => typeof v === "number")
-                .map((id) => (
+          {menuOpen && (
+            <div className="fixed top-0 left-0 w-full h-screen bg-white z-[9999] overflow-y-auto">
+              {/* 상단 헤더 (로고 + 검색창 + X) */}
+              <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-200">
+                <Link href="/">
+                  <h1 className="text-xl font-bold text-gray-900">TIO</h1>
+                </Link>
+
+                <div className="flex-grow min-w-0">
+                  <SearchInput onSearch={() => setMenuOpen(false)} />
+                </div>
+
+                <button onClick={toggleMenu}>
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* 카테고리 메뉴 */}
+              <nav className="flex flex-wrap gap-3 px-4 py-4">
+                {Object.values(CATEGORY)
+                  .filter((v) => typeof v === "number")
+                  .map((id) => (
+                    <Link
+                      key={id}
+                      href={id === 0 ? "/" : `/category/${id}`}
+                      className="text-base text-gray-800 hover:text-blue-600"
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      {CATEGORY_LABELS[id as CATEGORY]}
+                    </Link>
+                  ))}
+              </nav>
+
+              {/* 로그인 or 유저 메뉴 */}
+              <div className="flex flex-col px-4 gap-4 mt-2 border-t border-gray-200 pt-4 pb-6">
+                {isLoggedIn ? (
+                  <>
+                    <Link href="/closet" onClick={() => setMenuOpen(false)}>
+                      옷장
+                    </Link>
+                    <Link href="/cart" onClick={() => setMenuOpen(false)}>
+                      장바구니
+                    </Link>
+                    <Link href="/mypage" onClick={() => setMenuOpen(false)}>
+                      마이페이지
+                    </Link>
+                  </>
+                ) : (
                   <Link
-                    key={id}
-                    href={id === 0 ? "/" : `/category/${id}`}
-                    className="text-sm text-gray-700 hover:text-blue-600"
+                    href="/signin"
+                    className="flex items-center gap-2 text-base text-gray-800 hover:text-blue-600"
                     onClick={() => setMenuOpen(false)}
                   >
-                    {CATEGORY_LABELS[id as CATEGORY]}
+                    <User className="w-5 h-5" />
+                    로그인
                   </Link>
-                ))}
-            </nav>
-
-            {/* 로그인 or 유저 메뉴(옷장, 장바구니, 마이페이지) */}
-            <div className="flex flex-col px-4 gap-2 mt-4">
-              {isLoggedIn ? (
-                <>
-                  <Link href="/closet" onClick={() => setMenuOpen(false)}>
-                    옷장
-                  </Link>
-                  <Link href="/cart" onClick={() => setMenuOpen(false)}>
-                    장바구니
-                  </Link>
-                  <Link href="/mypage" onClick={() => setMenuOpen(false)}>
-                    마이페이지
-                  </Link>
-                </>
-              ) : (
-                <Link
-                  href="/signin"
-                  className="flex items-center gap-2 text-sm text-gray-700 hover:text-blue-600"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  <User className="w-4 h-4" />
-                  로그인
-                </Link>
-              )}
+                )}
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </header>
   );
