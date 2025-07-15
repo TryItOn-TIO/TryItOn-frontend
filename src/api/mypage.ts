@@ -12,15 +12,23 @@ export const mypageApi = {
   // 내 프로필 조회
   getProfile: async (): Promise<UserProfile> => {
     try {
-      console.log('프로필 조회 API 호출 시작');
+      console.log('=== 프로필 조회 API 호출 시작 ===');
       const response = await axiosWithAuth().get('/api/mypage/profile');
-      console.log('프로필 조회 성공:', response.data);
+      console.log('=== 프로필 조회 성공 ===');
+      console.log('전체 응답 데이터:', response.data);
+      console.log('아바타 관련 필드들:');
+      console.log('- avatarImageUrl:', response.data.avatarImageUrl);
+      console.log('- avatarBaseImageUrl:', response.data.avatarBaseImageUrl);
+      console.log('- userBaseImageUrl:', response.data.userBaseImageUrl);
+      console.log('========================');
       return response.data;
     } catch (error: any) {
-      console.error('프로필 조회 실패:', error);
+      console.error('=== 프로필 조회 실패 ===');
       console.error('에러 상태:', error.response?.status);
       console.error('에러 메시지:', error.response?.data);
       console.error('요청 URL:', error.config?.url);
+      console.error('전체 에러:', error);
+      console.error('========================');
       
       // 인증 오류인 경우 더 구체적인 에러 메시지
       if (error.response?.status === 401) {
