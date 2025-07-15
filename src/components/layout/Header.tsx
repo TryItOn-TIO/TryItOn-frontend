@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import { Search, User, Menu, X } from "lucide-react";
+import { Search, User, Menu, X, Sparkles } from "lucide-react";
 import { getAccessToken } from "@/utils/auth";
 import { CATEGORY, CATEGORY_LABELS } from "@/constants/category";
+import { useAvatarStore } from "@/stores/avatar-store";
 
 // 클라이언트 전용으로 SearchInput 불러오기
 const SearchInput = dynamic(() => import("@/components/common/SearchInput"), {
@@ -16,6 +17,12 @@ const SearchInput = dynamic(() => import("@/components/common/SearchInput"), {
 export default function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const avatarInfo = useAvatarStore((state) => state.avatarInfo);
+  const hasAvatarUpdate = useAvatarStore((state) => state.hasAvatarUpdate);
+  const setHasAvatarUpdate = useAvatarStore(
+    (state) => state.setHasAvatarUpdate
+  );
 
   useEffect(() => {
     const token = getAccessToken();
@@ -29,10 +36,14 @@ export default function Header() {
       document.body.style.overflow = "";
     }
 
+    if (menuOpen && hasAvatarUpdate) {
+      setHasAvatarUpdate(false); // 메뉴 열리면 알림 제거
+    }
+
     return () => {
       document.body.style.overflow = "";
     };
-  }, [menuOpen]);
+  }, [menuOpen, hasAvatarUpdate, setHasAvatarUpdate]);
 
   const toggleMenu = () => {
     setMenuOpen((prev) => !prev);
@@ -114,32 +125,79 @@ export default function Header() {
           </div>
 
           {/* 햄버거 버튼 */}
-          <button onClick={toggleMenu}>
+          <button onClick={toggleMenu} className="relative">
             {menuOpen ? (
               <X className="w-5 h-5" />
             ) : (
               <Menu className="w-5 h-5" />
             )}
+            {hasAvatarUpdate && !menuOpen && (
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white animate-pulse">
+                <div className="absolute inset-0 w-3 h-3 bg-red-500 rounded-full animate-ping opacity-75" />
+              </div>
+            )}
           </button>
 
+          {/* 모바일 메뉴 */}
           {menuOpen && (
             <div className="fixed top-0 left-0 w-full h-screen bg-white z-[9999] overflow-y-auto">
-              {/* 상단 헤더 (로고 + 검색창 + X) */}
+              {/* 상단: 검색 + X */}
               <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-200">
                 <Link href="/">
                   <h1 className="text-xl font-bold text-gray-900">TIO</h1>
                 </Link>
-
                 <div className="flex-grow min-w-0">
                   <SearchInput onSearch={() => setMenuOpen(false)} />
                 </div>
-
                 <button onClick={toggleMenu}>
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
-              {/* 카테고리 메뉴 */}
+              {/* 아바타 프리뷰 */}
+              <div className="px-4 py-4 border-b border-gray-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <Sparkles className="w-5 h-5 text-blue-500" />
+                  <span className="text-sm font-semibold text-gray-900">
+                    내 아바타
+                  </span>
+                </div>
+
+                <div className="bg-gray-50 rounded-lg p-3">
+                  {!isLoggedIn ? (
+                    // 로그인하지 않은 경우
+                    <p className="text-sm text-gray-500">
+                      아바타를 만들어보세요
+                    </p>
+                  ) : avatarInfo.products && avatarInfo.products.length > 0 ? (
+                    // 로그인했고, 아이템 착용 중인 경우
+                    <div className="flex gap-3 items-center">
+                      <div className="w-14 h-14 rounded-xl overflow-hidden bg-white">
+                        <img
+                          src={avatarInfo.avatarImgUrl}
+                          alt="아바타"
+                          className="object-contain w-full h-full"
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <p className="text-sm text-gray-800 font-medium">
+                          현재 착용 중
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {avatarInfo.products.length}개 아이템
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    // 로그인했지만 착용 아이템 없음
+                    <p className="text-sm text-gray-500">
+                      아바타를 착용해보세요
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* 카테고리 */}
               <nav className="flex flex-wrap gap-3 px-4 py-4">
                 {Object.values(CATEGORY)
                   .filter((v) => typeof v === "number")
