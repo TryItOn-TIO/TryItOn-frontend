@@ -35,9 +35,9 @@ const HeroSection = () => {
             </span>
           </h1>
 
-          <p className="text-base md:text-lg text-gray-600 leading-relaxed max-w-2xl mx-auto mb-8">
+          <p className="text-sm md:text-base text-gray-600 leading-relaxed max-w-2xl mx-auto mb-8">
             회원가입하면 나만의 2D 아바타가 생성됩니다.
-            <br className="hidden sm:block" />
+            <br />
             아래에서 미리 체험해보고 마음에 드시면 가입해보세요!
           </p>
         </div>
@@ -50,16 +50,17 @@ const HeroSection = () => {
             </h2>
             <p className="text-gray-600">옷을 클릭하면 아바타가 입어봅니다</p>
           </div>
-
-          {/* Avatar Preview Component */}
-          <AvatarPreview />
+          <div className="flex justify-center">
+            {/* Avatar Preview Component */}
+            <AvatarPreview />
+          </div>
         </div>
 
         {/* CTA Section */}
         <div className="text-center space-y-4">
           <Link
             href="/signin"
-            className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all duration-200 hover:shadow-xl hover:scale-105 group"
+            className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-full text-sm md:text-lg font-semibold transition-all duration-200 hover:shadow-xl hover:scale-105 group"
           >
             무료 회원가입하고 내 아바타 만들기
             <svg

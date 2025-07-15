@@ -65,7 +65,7 @@ export default function AvatarPreview() {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row items-start justify-center gap-12 max-w-6xl mx-auto">
+    <div className="flex flex-col sm:flex-row items-start justify-center gap-10 max-w-6xl mx-auto">
       {/* Avatar Display */}
       <div className="relative">
         <div className="w-80 h-96 bg-gradient-to-b from-gray-100 to-gray-200 rounded-3xl flex flex-col items-center justify-center relative overflow-hidden">
