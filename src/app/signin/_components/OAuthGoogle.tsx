@@ -97,7 +97,7 @@ const OAuthGoogle = () => {
   return (
     <div className="w-full flex justify-center my-8">
       <GoogleLogin
-        width={"500px"}
+        width="100%"
         onSuccess={handleSuccess}
         onError={handleError}
         useOneTap={false}

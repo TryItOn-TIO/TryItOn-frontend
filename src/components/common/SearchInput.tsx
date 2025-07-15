@@ -8,7 +8,11 @@ import { fetchSearchSuggestions } from "@/api/search";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 
-export default function SearchInput() {
+type Props = {
+  onSearch?: () => void; // 추가: 검색 시 실행할 콜백
+};
+
+export default function SearchInput({ onSearch }: Props) {
   const [inputValue, setInputValue] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -93,6 +97,8 @@ export default function SearchInput() {
   const handleSearch = (keyword: string) => {
     if (!keyword.trim()) return;
 
+    onSearch?.(); // 검색 직전에 콜백 호출
+
     setLastCommittedInput(keyword); // 직전 검색어 저장
     setInputValue(keyword); // 선택한 텍스트를 검색창에 유지
     setShowSuggestions(false);
@@ -112,7 +118,7 @@ export default function SearchInput() {
         ref={inputRef}
         type="text"
         value={inputValue}
-        placeholder="검색어를 입력하세요"
+        placeholder="상품을 검색하세요"
         onChange={(e) => {
           setInputValue(e.target.value);
           setShowSuggestions(true);
@@ -126,7 +132,7 @@ export default function SearchInput() {
         className="w-full placeholder:text-slate-400 bg-[#f2f2f2] text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
       />
       <button
-        className="absolute right-3 top-1.5"
+        className="absolute right-3 top-1.5 cursor-pointer"
         onClick={() => handleSearch(inputValue)}
       >
         <Image

@@ -65,27 +65,28 @@ const SignupClient = () => {
   };
 
   return (
-    <div className="w-screen mb-10">
-      <div className="w-[40rem] mx-auto p-6">
-        <h2 className="text-2xl font-bold my-8">회원가입</h2>
-        {step == 1 && (
+    <div className="w-full min-h-screen flex justify-center px-4 sm:px-6 md:px-8 lg:px-0 mb-10">
+      <div className="w-full max-w-[640px] p-4 sm:p-6 md:p-8">
+        <h2 className="text-2xl font-bold my-6 md:my-8">회원가입</h2>
+
+        {step === 1 && (
           <SendVerification setStep={setStep} data={data} setData={setData} />
         )}
-        {step == 2 && <VerifyCode setStep={setStep} email={data.email} />}
-        {step == 3 && (
+        {step === 2 && <VerifyCode setStep={setStep} email={data.email} />}
+        {step === 3 && (
           <PasswordForm setStep={setStep} data={data} setData={setData} />
         )}
-        {step == 4 && (
+        {step === 4 && (
           <SignupForm setStep={setStep} data={data} setData={setData} />
         )}
-        {step == 5 && (
+        {step === 5 && (
           <TryonImgUploader
             onSubmit={handleSubmit}
             data={data}
             setData={setData}
           />
         )}
-        {step == 6 && <Success />}
+        {step === 6 && <Success />}
       </div>
     </div>
   );
