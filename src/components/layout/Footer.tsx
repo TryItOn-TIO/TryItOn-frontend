@@ -1,6 +1,7 @@
 "use client";
 
-import { CATEGORY_LABELS } from "@/constants/category";
+import { CATEGORY, CATEGORY_LABELS } from "@/constants/category";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -18,16 +19,22 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-semibold mb-4">쇼핑</h4>
             <ul className="space-y-2">
-              {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
-                <li key={key}>
-                  <a
-                    href={`/category/${key}`}
-                    className="hover:text-white transition-colors"
-                  >
-                    {label}
-                  </a>
-                </li>
-              ))}
+              {Object.entries(CATEGORY_LABELS).map(([key, label]) => {
+                const categoryId = Number(key);
+                const href =
+                  categoryId === CATEGORY.ALL ? "/" : `/category/${categoryId}`;
+
+                return (
+                  <li key={key}>
+                    <Link
+                      href={href}
+                      className="hover:text-white transition-colors"
+                    >
+                      {label}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
