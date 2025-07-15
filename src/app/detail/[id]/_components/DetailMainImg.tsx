@@ -34,18 +34,22 @@ const DetailMainImg = ({ images }: DetailMainImgProps) => {
 
   // 유효한 이미지만 필터링 (메인 이미지용 - img1~img4만)
   const validImages = images
-    .filter((img) => img && img.trim() !== '')
+    .filter((img) => img && img.trim() !== "")
     .slice(0, 4); // 메인 이미지는 처음 4개만 (img1~img4)
 
   if (validImages.length === 0) {
-    return <div className="w-full h-[85vh] bg-gray-200 flex items-center justify-center">
-      <p>이미지를 불러올 수 없습니다.</p>
-    </div>;
+    return (
+      <div className="w-full h-[85vh] bg-gray-200 flex items-center justify-center">
+        <p>이미지를 불러올 수 없습니다.</p>
+      </div>
+    );
   }
 
   return (
     <>
-      {tryon && <AvatarModal onClose={handleModalClose} />}
+      {tryon && (
+        <AvatarModal onClose={handleModalClose} isLoggedIn={isLoggedIn} />
+      )}
       <div className="w-full">
         <Swiper
           modules={[Navigation]}
@@ -67,27 +71,27 @@ const DetailMainImg = ({ images }: DetailMainImgProps) => {
 
           {/* 제품 사진 */}
           {images
-              .filter((img) => img && img.trim() !== '')
-              .slice(0, 10) // 최대 10개로 제한
-              .map((img, idx) => (
-            <SwiperSlide key={idx}>
-              {/* 헤더 15vh 제외, 전체 화면 (height) */}
-              <div className="relative w-full h-[85vh]">
-                <Image
-                  src={img}
-                  alt={`제품 이미지 ${idx + 1}`}
-                  fill
-                  sizes="100vw"
-                  className="object-contain"
-                  priority={idx === 0} // 첫 번째 이미지는 우선 로드
-                  onError={(e) => {
-                    console.error(`이미지 로드 실패: ${img}`);
-                    e.currentTarget.style.display = 'none';
-                  }}
-                />
-              </div>
-            </SwiperSlide>
-          ))}
+            .filter((img) => img && img.trim() !== "")
+            .slice(0, 10) // 최대 10개로 제한
+            .map((img, idx) => (
+              <SwiperSlide key={idx}>
+                {/* 헤더 15vh 제외, 전체 화면 (height) */}
+                <div className="relative w-full h-[85vh]">
+                  <Image
+                    src={img}
+                    alt={`제품 이미지 ${idx + 1}`}
+                    fill
+                    sizes="100vw"
+                    className="object-contain"
+                    priority={idx === 0} // 첫 번째 이미지는 우선 로드
+                    onError={(e) => {
+                      console.error(`이미지 로드 실패: ${img}`);
+                      e.currentTarget.style.display = "none";
+                    }}
+                  />
+                </div>
+              </SwiperSlide>
+            ))}
         </Swiper>
       </div>
     </>
