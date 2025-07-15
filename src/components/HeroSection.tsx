@@ -6,10 +6,10 @@ import AvatarPreview from "@/components/AvatarPreview";
 
 const HeroSection = () => {
   return (
-    <section className="relative bg-gradient-to-br from-blue-50 via-white to-purple-50 py-16 md:py-24">
+    <section className="relative bg-gradient-to-br from-blue-50 via-white to-purple-50 py-8 md:py-12">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Header Section */}
-        <div className="text-center mb-12 md:mb-16">
+        <div className="text-center mb-8 md:mb-12">
           <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium mb-6 hover:bg-blue-200 transition-colors duration-200">
             <svg
               className="w-4 h-4 animate-pulse"

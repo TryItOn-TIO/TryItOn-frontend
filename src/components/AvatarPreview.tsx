@@ -65,7 +65,7 @@ export default function AvatarPreview() {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row items-center justify-center gap-12 max-w-6xl mx-auto">
+    <div className="flex flex-col lg:flex-row items-start justify-center gap-12 max-w-6xl mx-auto">
       {/* Avatar Display */}
       <div className="relative">
         <div className="w-80 h-96 bg-gradient-to-b from-gray-100 to-gray-200 rounded-3xl flex flex-col items-center justify-center relative overflow-hidden">
@@ -177,7 +177,7 @@ export default function AvatarPreview() {
       <div className="space-y-8">
         {/* 상의 선택 */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
             {/* 티셔츠 아이콘 */}
             <svg
               className="w-5 h-5"
@@ -226,7 +226,7 @@ export default function AvatarPreview() {
 
         {/* 하의 선택 */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
             {/* 바지 아이콘 */}
             <svg
               className="w-5 h-5"
