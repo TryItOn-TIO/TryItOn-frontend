@@ -6,6 +6,10 @@ export interface UserProfile {
   height: number;
   weight: number;
   shoeSize: number;
+  avatarBaseImageUrl?: string; // 아바타 베이스 이미지 URL
+  avatarImageUrl?: string; // 현재 아바타 이미지 URL
+  userBaseImageUrl?: string; // 사용자 베이스 이미지 URL (회원가입 시 설정)
+  loginType?: 'GOOGLE' | 'EMAIL'; // 로그인 타입 추가
 }
 
 export interface ProfileUpdateRequest {
