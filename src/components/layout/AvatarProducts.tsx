@@ -8,13 +8,13 @@ type AvatarProductsProps = {
 const AvatarProducts = ({ avatarSlot, productSlot }: AvatarProductsProps) => {
   return (
     <div className="relative flex justify-between w-full px-6">
-      {/* 좌측 아바타 영역 (20%) */}
-      <aside className="w-[20%] pr-4 fixed left-0 top-[15vh] bottom-0 min-h-screen">
+      {/* 좌측 아바타 영역 (PC: 20%, 모바일: 숨김) */}
+      <aside className="hidden md:block w-[20%] pr-4 fixed left-0 top-[15vh] bottom-0 min-h-screen">
         {avatarSlot}
       </aside>
 
-      {/* 우측 상품 목록 영역 (80%) */}
-      <main className="absolute right-0 w-[80%]">{productSlot}</main>
+      {/* 우측 상품 목록 영역 (PC: 80%, 모바일: 100%) */}
+      <main className="absolute right-0 w-full md:w-[80%]">{productSlot}</main>
     </div>
   );
 };
