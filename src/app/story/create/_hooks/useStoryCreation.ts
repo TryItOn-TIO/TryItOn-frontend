@@ -12,6 +12,10 @@ export const useStoryCreation = () => {
   const [selectedColor, setSelectedColor] = useState<string>("#ffffff");
   const [contents, setContents] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  
+  // 배경 제거 관련 상태
+  const [isBackgroundRemovalEnabled, setIsBackgroundRemovalEnabled] = useState<boolean>(false);
+  const [processedImageUrl, setProcessedImageUrl] = useState<string | null>(null);
 
   const generateStoryImage = async (
     selectedAvatar: ClosetAvatarResponse
@@ -33,6 +37,13 @@ export const useStoryCreation = () => {
     // 배경색 설정
     ctx.fillStyle = selectedColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // 사용할 이미지 URL 결정 (배경 제거된 이미지 또는 원본)
+    const imageUrl = isBackgroundRemovalEnabled && processedImageUrl 
+      ? processedImageUrl 
+      : selectedAvatar.avatarImage;
+
+    console.log('사용할 이미지:', isBackgroundRemovalEnabled ? '배경 제거됨' : '원본', imageUrl);
 
     // 아바타 이미지 로드 및 그리기
     return new Promise((resolve, reject) => {
@@ -160,7 +171,7 @@ export const useStoryCreation = () => {
         );
       };
 
-      img.src = selectedAvatar.avatarImage;
+      img.src = imageUrl;
     });
   };
 
@@ -174,6 +185,7 @@ export const useStoryCreation = () => {
 
     try {
       console.log("스토리 이미지 생성 시작...");
+      console.log("배경 제거 사용:", isBackgroundRemovalEnabled);
 
       // 이미지 생성 및 S3 업로드
       const storyImageUrl = await generateStoryImage(selectedAvatar);
@@ -232,5 +244,10 @@ export const useStoryCreation = () => {
     isSubmitting,
     handleSubmit,
     handleCancel,
+    // 배경 제거 관련
+    isBackgroundRemovalEnabled,
+    setIsBackgroundRemovalEnabled,
+    processedImageUrl,
+    setProcessedImageUrl,
   };
 };

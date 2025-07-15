@@ -4,6 +4,7 @@ type BackgroundColorPickerProps = {
   selectedAvatar: ClosetAvatarResponse;
   selectedColor: string;
   onColorChange: (color: string) => void;
+  processedImageUrl?: string | null; // 처리된 이미지 URL 추가
 };
 
 const backgroundColors = [
@@ -33,7 +34,11 @@ const BackgroundColorPicker = ({
   selectedAvatar,
   selectedColor,
   onColorChange,
+  processedImageUrl, // 처리된 이미지 URL
 }: BackgroundColorPickerProps) => {
+  // 표시할 이미지 URL 결정 (처리된 이미지가 있으면 그것을, 없으면 원본을)
+  const displayImageUrl = processedImageUrl || selectedAvatar.avatarImage;
+
   return (
     <div>
       <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
@@ -101,18 +106,25 @@ const BackgroundColorPicker = ({
 
       {/* 미리보기 */}
       <div className="bg-white border border-gray-200 rounded-lg p-6">
-        <h3 className="text-sm font-medium text-gray-700 mb-4 text-center">
-          미리보기
-        </h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-sm font-medium text-gray-700">
+            미리보기
+          </h3>
+          {processedImageUrl && (
+            <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded-full">
+              ✨ 배경 제거됨
+            </span>
+          )}
+        </div>
         <div className="flex justify-center">
           <div
             className="w-40 h-60 rounded-xl border-2 border-gray-200 flex items-center justify-center shadow-lg transition-all duration-300 overflow-hidden"
             style={{ backgroundColor: selectedColor }}
           >
             <img
-              src={selectedAvatar.avatarImage}
+              src={displayImageUrl}
               alt="Preview"
-              className="max-w-full max-h-full object-contain rounded-lg"
+              className="max-w-full max-h-full object-contain rounded-lg transition-all duration-500"
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
                 target.style.display = "none";
@@ -120,6 +132,17 @@ const BackgroundColorPicker = ({
             />
           </div>
         </div>
+        
+        {/* 배경 제거 상태 안내 */}
+        {processedImageUrl && (
+          <div className="mt-3 text-center">
+            <p className="text-xs text-gray-600">
+              배경이 제거된 이미지로 스토리가 생성됩니다
+            </p>
+          </div>
+        )}
+        
+        {/* 선택된 색상 표시 */}
         <div className="text-center mt-4">
           <div className="text-xs text-gray-500 bg-gray-100 rounded-full px-3 py-1 inline-block">
             선택된 색상: {selectedColor}
