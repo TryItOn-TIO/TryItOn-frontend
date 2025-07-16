@@ -41,7 +41,7 @@ const DetailClient = ({ productId }: DetailClientProps) => {
       <div className="w-full flex justify-between">
         {/* 좌측 상품 이미지 등 상세정보 */}
         <div className="w-[65%]">
-          <DetailMainImg images={data.images} />
+          <DetailMainImg images={data.images} productId={productId} />
           <DetailRecommand productId={Number(productId)} />
 
           {/* img5 배열의 모든 상세 이미지 표시 */}

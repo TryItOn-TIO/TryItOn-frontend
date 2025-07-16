@@ -4,38 +4,44 @@ import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
-
 import { Navigation } from "swiper/modules";
-import { useState } from "react";
-import AvatarModal from "@/components/ui/AvatarModal";
+import React, { useState } from "react";
+import { useAvatarTryon } from "@/hooks/useAvatarTryon";
 import { getAccessToken } from "@/utils/auth";
+import TryOnResultModal from "@/components/ui/TryOnResultModal";
 
 type DetailMainImgProps = {
   images: string[];
+  productId: number;
 };
 
-const DetailMainImg = ({ images }: DetailMainImgProps) => {
-  const [tryon, setTryon] = useState(false);
+const DetailMainImg = ({ images, productId }: DetailMainImgProps) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { tryOnProduct } = useAvatarTryon();
 
-  const token = getAccessToken();
-  const isLoggedIn = !!token;
+  const handleAvatarClick = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-  const handleModalOpen = () => {
-    if (isLoggedIn) {
-      setTryon(true);
-    } else {
+    const token = getAccessToken();
+    if (!token) {
       alert("로그인이 필요한 기능입니다.");
+      return;
+    }
+
+    setIsModalOpen(true); // 상세 페이지에서는 항상 모달을 연다
+
+    try {
+      await tryOnProduct(productId);
+      console.log(`상품 ${productId} 착용 요청됨`);
+    } catch (error) {
+      console.error("아바타 착용 중 오류 발생:", error);
     }
   };
 
-  const handleModalClose = () => {
-    setTryon(false);
-  };
-
-  // 유효한 이미지만 필터링 (메인 이미지용 - img1~img4만)
   const validImages = images
     .filter((img) => img && img.trim() !== "")
-    .slice(0, 4); // 메인 이미지는 처음 4개만 (img1~img4)
+    .slice(0, 10);
 
   if (validImages.length === 0) {
     return (
@@ -47,10 +53,9 @@ const DetailMainImg = ({ images }: DetailMainImgProps) => {
 
   return (
     <>
-      {tryon && (
-        <AvatarModal onClose={handleModalClose} isLoggedIn={isLoggedIn} />
-      )}
-      <div className="w-full">
+      <div className="w-full relative">
+        {" "}
+        {/* 부모 컨테이너 추가 및 relative 설정 */}
         <Swiper
           modules={[Navigation]}
           navigation
@@ -58,42 +63,43 @@ const DetailMainImg = ({ images }: DetailMainImgProps) => {
           slidesPerView={1}
           className="rounded-lg overflow-hidden"
         >
-          {/* 입어보기 버튼 */}
-          <div className="absolute top-4 right-4 z-10 cursor-pointer">
-            <Image
-              src="/images/common/avatar.svg"
-              width={50}
-              height={50}
-              alt="입어보기"
-              onClick={handleModalOpen}
-            />
-          </div>
-
-          {/* 제품 사진 */}
-          {images
-            .filter((img) => img && img.trim() !== "")
-            .slice(0, 10) // 최대 10개로 제한
-            .map((img, idx) => (
-              <SwiperSlide key={idx}>
-                {/* 헤더 15vh 제외, 전체 화면 (height) */}
-                <div className="relative w-full h-[85vh]">
-                  <Image
-                    src={img}
-                    alt={`제품 이미지 ${idx + 1}`}
-                    fill
-                    sizes="100vw"
-                    className="object-contain"
-                    priority={idx === 0} // 첫 번째 이미지는 우선 로드
-                    onError={(e) => {
-                      console.error(`이미지 로드 실패: ${img}`);
-                      e.currentTarget.style.display = "none";
-                    }}
-                  />
-                </div>
-              </SwiperSlide>
-            ))}
+          {validImages.map((img, idx) => (
+            <SwiperSlide key={idx}>
+              <div className="relative w-full h-[85vh]">
+                <Image
+                  src={img}
+                  alt={`제품 이미지 ${idx + 1}`}
+                  fill
+                  sizes="100vw"
+                  className="object-contain"
+                  priority={idx === 0}
+                  onError={(e) => {
+                    console.error(`이미지 로드 실패: ${img}`);
+                    e.currentTarget.style.display = "none";
+                  }}
+                />
+              </div>
+            </SwiperSlide>
+          ))}
         </Swiper>
+        {/* 아바타 버튼을 Swiper 외부로 이동 */}
+        <div
+          className="absolute top-4 right-4 z-10 cursor-pointer"
+          onClick={handleAvatarClick}
+        >
+          <Image
+            src="/images/common/avatar.svg"
+            width={50}
+            height={50}
+            alt="입어보기"
+          />
+        </div>
       </div>
+
+      {/* 모달 렌더링 */}
+      {isModalOpen && (
+        <TryOnResultModal onClose={() => setIsModalOpen(false)} />
+      )}
     </>
   );
 };
