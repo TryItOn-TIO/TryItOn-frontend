@@ -35,8 +35,8 @@ const DetailRecommand = ({ productId }: DetailRecommandProps) => {
   }, []);
 
   return (
-    <div className="bg-gray-50 py-6 px-4 rounded-xl mt-8">
-      <div className="text-base text-neutral-600 mb-4 p-2">
+    <div className="bg-gray-50 py-4 px-3 rounded-lg mt-6 md:py-6 md:px-4 md:rounded-xl md:mt-8">
+      <div className="text-sm text-neutral-600 mb-3 md:text-base md:mb-4 md:p-2">
         같이 볼만한 상품
       </div>
 

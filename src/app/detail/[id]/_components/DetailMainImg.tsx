@@ -89,8 +89,8 @@ const DetailMainImg = ({ images, productId }: DetailMainImgProps) => {
         >
           <Image
             src="/images/common/avatar.svg"
-            width={50}
-            height={50}
+            width={35}
+            height={35}
             alt="입어보기"
           />
         </div>

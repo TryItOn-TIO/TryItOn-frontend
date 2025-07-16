@@ -173,33 +173,35 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
   };
 
   return (
-    <div className="text-black p-6 pb-[8rem] space-y-4">
+    <div className="text-black p-4 space-y-3 md:p-6 md:pb-[8rem] md:space-y-4">
       {/* 브랜드 및 제품명 */}
       <div className="flex justify-between items-center">
         <div className="space-y-1">
-          <div className="text-sm text-gray-500">{data.brand}</div>
-          <div className="text-xl font-semibold">{data.productName}</div>
+          <div className="text-xs text-gray-500 md:text-sm">{data.brand}</div>
+          <div className="text-lg font-semibold md:text-xl">
+            {data.productName}
+          </div>
         </div>
       </div>
 
       {/* 가격 정보 */}
       {data.sale && data.sale > 0 ? (
-        <div className="space-y-1 mb-6">
-          <div className="flex items-center gap-2 mb-2">
+        <div className="space-y-1 mb-4 md:mb-6">
+          <div className="flex items-center gap-2 mb-1 md:mb-2">
             <span className="bg-red-500 text-white px-2 py-1 text-xs font-bold rounded">
               {data.sale}% OFF
             </span>
           </div>
-          <div className="text-2xl font-bold text-red-600">
+          <div className="text-xl font-bold text-red-600 md:text-2xl">
             {(data.salePrice || data.price).toLocaleString()}원
           </div>
-          <div className="text-sm text-gray-400 line-through">
+          <div className="text-xs text-gray-400 line-through md:text-sm">
             {data.price.toLocaleString()}원
           </div>
         </div>
       ) : (
         <div className="space-y-1">
-          <div className="text-2xl font-bold text-black">
+          <div className="text-xl font-bold text-black md:text-2xl">
             {data.price.toLocaleString()}원
           </div>
         </div>
@@ -211,7 +213,7 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
         <select
           value={orderData.color}
           onChange={handleColorChange}
-          className="w-full border border-gray-300 px-3 py-2 rounded-md text-sm"
+          className="w-full border border-gray-300 px-2 py-1.5 rounded-md text-sm md:px-3 md:py-2"
         >
           {[...new Set(data.variant.map((v) => v.color))].map((color) => (
             <option key={color} value={color}>
@@ -227,7 +229,7 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
         <select
           value={orderData.size}
           onChange={handleSizeChange}
-          className="w-full border border-gray-300 px-3 py-2 rounded-md text-sm"
+          className="w-full border border-gray-300 px-2 py-1.5 rounded-md text-sm md:px-3 md:py-2"
         >
           <option value="" disabled>
             사이즈를 선택해주세요
@@ -252,7 +254,7 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
           <div className="flex items-center gap-1">
             <button
               onClick={decreaseQuantity}
-              className="w-8 h-8 border border-stone-300 bg-gray-100 rounded"
+              className="w-7 h-7 border border-stone-300 bg-gray-100 rounded md:w-8 md:h-8"
             >
               -
             </button>
@@ -261,11 +263,11 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
               min={1}
               value={orderData.quantity}
               onChange={handleQuantityChange}
-              className="w-12 h-8 border border-stone-300 text-center text-sm rounded"
+              className="w-10 h-7 border border-stone-300 text-center text-sm rounded md:w-12 md:h-8"
             />
             <button
               onClick={increaseQuantity}
-              className="w-8 h-8 border border-stone-300 bg-gray-100 rounded"
+              className="w-7 h-7 border border-stone-300 bg-gray-100 rounded md:w-8 md:h-8"
             >
               +
             </button>
@@ -278,7 +280,7 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
       </div>
 
       {/* 연관 태그 */}
-      <div className="mt-10">
+      <div className="mt-6 md:mt-10">
         <label className="block text-sm font-medium mb-1">연관 태그</label>
         <div className="flex flex-wrap gap-2">
           <Tag text="기본슬랙스" />
@@ -295,50 +297,52 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
       </div>
 
       {/* 사이즈 추천 등 */}
-      <div className="mt-10">
+      <div className="mt-6 md:mt-10">
         <label className="block text-sm font-medium mb-1 text-neutral-00">
           {data.contents}
         </label>
       </div>
 
       {/* 버튼 영역 */}
-      <div className="flex gap-6 mt-10">
-        <div className="flex flex-col justify-center gap-1">
-          {isWished ? (
-            <Image
-              src={"/images/common/red_heart.svg"}
-              width={30}
-              height={30}
-              alt="heart"
-              onClick={toggleWishlist}
-            />
-          ) : (
-            <Image
-              src={"/images/common/heart.svg"}
-              width={30}
-              height={30}
-              alt="heart"
-              onClick={toggleWishlist}
-            />
-          )}
-          <p className="text-xs">{data.wishlistCount.toLocaleString()}</p>
+      <div className="fixed bottom-0 left-0 right-0 bg-white p-4 border-t border-gray-200 z-40 md:static md:p-0 md:border-none">
+        <div className="flex gap-4 md:gap-6">
+          <div className="flex flex-col items-center gap-1">
+            {isWished ? (
+              <Image
+                src={"/images/common/red_heart.svg"}
+                width={24}
+                height={24}
+                alt="heart"
+                onClick={toggleWishlist}
+              />
+            ) : (
+              <Image
+                src={"/images/common/heart.svg"}
+                width={24}
+                height={24}
+                alt="heart"
+                onClick={toggleWishlist}
+              />
+            )}
+            <p className="text-xs">{data.wishlistCount.toLocaleString()}</p>
+          </div>
+          <WhiteButton
+            text={
+              isCurrentVariantOutOfStock()
+                ? "품절"
+                : isLoading
+                ? "추가 중..."
+                : "장바구니"
+            }
+            handleClick={handleAddCart}
+            disabled={isLoading || isCurrentVariantOutOfStock()}
+          />
+          <BlackButton
+            text={isCurrentVariantOutOfStock() ? "품절" : "구매하기"}
+            handleClick={handleOrder}
+            disabled={isCurrentVariantOutOfStock()}
+          />
         </div>
-        <WhiteButton
-          text={
-            isCurrentVariantOutOfStock()
-              ? "품절"
-              : isLoading
-              ? "추가 중..."
-              : "장바구니"
-          }
-          handleClick={handleAddCart}
-          disabled={isLoading || isCurrentVariantOutOfStock()}
-        />
-        <BlackButton
-          text={isCurrentVariantOutOfStock() ? "품절" : "구매하기"}
-          handleClick={handleOrder}
-          disabled={isCurrentVariantOutOfStock()}
-        />
       </div>
     </div>
   );
