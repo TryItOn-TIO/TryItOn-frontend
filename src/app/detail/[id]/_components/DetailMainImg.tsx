@@ -84,7 +84,7 @@ const DetailMainImg = ({ images, productId }: DetailMainImgProps) => {
         </Swiper>
         {/* 아바타 버튼을 Swiper 외부로 이동 */}
         <div
-          className="absolute top-4 right-4 z-10 cursor-pointer"
+          className="absolute top-4 right-4 z-5 cursor-pointer"
           onClick={handleAvatarClick}
         >
           <Image
