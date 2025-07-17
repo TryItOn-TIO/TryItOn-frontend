@@ -31,7 +31,7 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <section className="relative bg-gradient-to-br from-gray-100 via-white to-gray-50 py-8 md:py-4">
+    <section className="relative bg-gradient-to-br from-gray-100 via-white to-gray-50 py-8 md:py-12">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Interactive Try-On Experience */}
         <div className="bg-white rounded-3xl shadow-2xl p-6 md:p-8 mb-12 hover:shadow-3xl transition-shadow duration-300">
