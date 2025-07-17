@@ -1,4 +1,4 @@
-import { axiosWithoutAuth } from "@/api";
+import { axiosWithAuth } from "@/api";
 import type { SearchProductResponse } from "@/types/product";
 
 /**
@@ -8,7 +8,7 @@ export const fetchSearchSuggestions = async (
   query: string
 ): Promise<string[]> => {
   try {
-    const response = await axiosWithoutAuth().get(
+    const response = await axiosWithAuth().get(
       "/api/home/products/suggestions",
       {
         params: { query },
@@ -30,7 +30,7 @@ export const fetchSearchResults = async (
   size: number = 10
 ): Promise<SearchProductResponse> => {
   try {
-    const response = await axiosWithoutAuth().get("/api/home/products/search", {
+    const response = await axiosWithAuth().get("/api/home/products/search", {
       params: { query, page, size },
     });
     return response.data;

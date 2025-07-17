@@ -156,11 +156,12 @@ export default function AvatarPreview() {
         </div>
 
         {/* Current Outfit Info */}
-        <div className="mt-4 text-center space-y-2">
+        {/* <div className="mt-4 text-center space-y-2">
           <p className="text-sm text-gray-600">현재 착용중</p>
           <div className="space-y-1">
-            <p className="font-semibold text-gray-900">{selectedTop.name}</p>
-            <p className="font-semibold text-gray-900">{selectedBottom.name}</p>
+            <p className="font-semibold text-gray-900">
+              {selectedTop.name}, {selectedBottom.name}
+            </p>
           </div>
           <p className="text-lg font-bold text-blue-600">
             총{" "}
@@ -170,7 +171,7 @@ export default function AvatarPreview() {
             ).toLocaleString()}
             원
           </p>
-        </div>
+        </div>*/}
       </div>
 
       {/* Clothing Options */}

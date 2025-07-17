@@ -3,6 +3,7 @@
 import Image from "next/image";
 import WhiteButton from "@/components/common/WhiteButton";
 import BlackButton from "@/components/common/BlackButton";
+import { useEffect, useState } from "react";
 
 type Props = {
   isWished: boolean;
@@ -25,18 +26,27 @@ export default function BottomActionButtons({
   onOrder,
   isMobile,
 }: Props) {
+  const [liked, setLiked] = useState(isWished);
+
+  useEffect(() => {
+    setLiked(isWished);
+  }, [isWished]);
+
+  const handleWishlistClick = () => {
+    setLiked(!liked);
+    toggleWishlist();
+  };
+
   return (
     <div className={`flex ${isMobile ? "gap-4" : "gap-6"}`}>
       {/* 위시리스트 하트 */}
       <div
         className="flex flex-col items-center gap-1 cursor-pointer"
-        onClick={toggleWishlist}
+        onClick={handleWishlistClick}
       >
         <Image
           src={
-            isWished
-              ? "/images/common/red_heart.svg"
-              : "/images/common/heart.svg"
+            liked ? "/images/common/red_heart.svg" : "/images/common/heart.svg"
           }
           width={24}
           height={24}
