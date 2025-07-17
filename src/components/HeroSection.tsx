@@ -58,7 +58,7 @@ const HeroSection = () => {
         <div className="text-center space-y-4">
           <Link
             href="/signin"
-            className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-full text-sm md:text-lg font-semibold transition-all duration-200 hover:shadow-xl hover:scale-105 group"
+            className="inline-flex items-center gap-3 bg-gradient-to-r from-gray-900 to-gray-500 hover:from-gray-900 hover:to-gray-500 text-white px-8 py-4 rounded-full text-sm md:text-lg font-semibold transition-all duration-200 hover:shadow-xl hover:scale-105 group"
           >
             무료 회원가입하고 내 아바타 만들기
             <svg
