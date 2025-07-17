@@ -125,14 +125,12 @@ export default function Header() {
                     onClick={handleMypageClick}
                     className="relative"
                   >
-                    <Image
-                      src="/images/common/mypage.svg"
-                      width={24}
-                      height={24}
-                      alt="mypage"
-                    />
+                    <User className="w-4 h-4" />
                     {showDesktopNotification && (
-                      <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white" />
+                      <>
+                        <div className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-red-500 rounded-full border-2 border-white animate-pulse" />
+                        <div className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-red-500 rounded-full animate-ping opacity-75" />
+                      </>
                     )}
                   </Link>
                 </div>

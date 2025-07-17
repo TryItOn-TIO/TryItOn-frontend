@@ -31,9 +31,7 @@ const TryOnResultModal = ({ onClose }: TryOnResultModalProps) => {
             <p className="mt-4 text-lg font-semibold text-gray-800">
               옷을 입어보는 중입니다...
             </p>
-            <p className="text-sm text-gray-500">
-              잠시만 기다려주세요.
-            </p>
+            <p className="text-sm text-gray-500">잠시만 기다려주세요.</p>
           </div>
         );
       case "success":
@@ -42,7 +40,7 @@ const TryOnResultModal = ({ onClose }: TryOnResultModalProps) => {
             <h3 className="text-xl font-bold text-center mb-4 text-gray-900">
               아바타 착용 완료!
             </h3>
-            <div className="relative w-full aspect-square rounded-lg overflow-hidden bg-gray-100">
+            <div className="relative w-full aspect-[4/5] sm:aspect-square rounded-lg overflow-hidden bg-gray-100">
               {resultImageUrl ? (
                 <Image
                   src={resultImageUrl}
@@ -62,9 +60,7 @@ const TryOnResultModal = ({ onClose }: TryOnResultModalProps) => {
             <p className="text-lg font-semibold text-red-500">
               오류가 발생했습니다.
             </p>
-            <p className="mt-2 text-sm text-gray-600">
-              다시 시도해주세요.
-            </p>
+            <p className="mt-2 text-sm text-gray-600">다시 시도해주세요.</p>
           </div>
         );
       default:
@@ -74,7 +70,7 @@ const TryOnResultModal = ({ onClose }: TryOnResultModalProps) => {
 
   return (
     <Modal onClose={handleClose} title="아바타 착용 결과">
-      <div className="w-[340px]">{getModalContent()}</div>
+      <div className="w-full max-w-[340px] mx-auto">{getModalContent()}</div>
     </Modal>
   );
 };
