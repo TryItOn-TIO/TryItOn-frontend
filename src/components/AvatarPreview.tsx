@@ -1,49 +1,50 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 
 const clothingItems = [
   {
     id: 1,
-    name: "블루 셔츠",
+    name: "블랙 후디",
     type: "top",
-    color: "#4A90E2",
-    price: "79,000원",
+    code: "c",
+    image: "/images/home/top-c.webp",
   },
   {
     id: 2,
-    name: "화이트 티셔츠",
+    name: "반팔 셔츠",
     type: "top",
-    color: "#FFFFFF",
-    price: "29,000원",
+    code: "a",
+    image: "/images/home/top-a.webp",
   },
   {
     id: 3,
-    name: "그레이 후디",
+    name: "블루 티셔츠",
     type: "top",
-    color: "#6B7280",
-    price: "89,000원",
+    code: "b",
+    image: "/images/home/top-b.webp",
   },
   {
     id: 4,
-    name: "블랙 팬츠",
+    name: "데님 진",
     type: "bottom",
-    color: "#1F2937",
-    price: "65,000원",
+    code: "a",
+    image: "/images/home/bottom-a.jpg",
   },
   {
     id: 5,
-    name: "데님 진",
+    name: "브라운 코튼 팬츠",
     type: "bottom",
-    color: "#3B82F6",
-    price: "95,000원",
+    code: "b",
+    image: "/images/home/bottom-b.jpg",
   },
   {
     id: 6,
-    name: "베이지 슬랙스",
+    name: "화이트 진",
     type: "bottom",
-    color: "#D2B48C",
-    price: "85,000원",
+    code: "c",
+    image: "/images/home/bottom-c.webp",
   },
 ];
 
@@ -51,6 +52,13 @@ export default function AvatarPreview() {
   const [selectedTop, setSelectedTop] = useState(clothingItems[0]);
   const [selectedBottom, setSelectedBottom] = useState(clothingItems[3]);
   const [isAnimating, setIsAnimating] = useState(false);
+
+  // 상의와 하의 코드를 조합하여 착장 이미지 경로 생성
+  const getCombinedImagePath = () => {
+    const topCode = selectedTop.code;
+    const bottomCode = selectedBottom.code;
+    return `/images/home/${topCode}${bottomCode}.webp`;
+  };
 
   const handleClothingChange = (item: (typeof clothingItems)[0]) => {
     setIsAnimating(true);
@@ -69,43 +77,20 @@ export default function AvatarPreview() {
       {/* Avatar Display */}
       <div className="relative">
         <div className="w-80 h-96 bg-gradient-to-b from-gray-100 to-gray-200 rounded-3xl flex flex-col items-center justify-center relative overflow-hidden">
-          {/* Avatar Body */}
-          <div className="relative">
-            {/* Head */}
-            <div className="w-16 h-16 bg-amber-200 rounded-full mb-2 mx-auto relative">
-              <div className="absolute top-3 left-4 w-2 h-2 bg-gray-800 rounded-full"></div>
-              <div className="absolute top-3 right-4 w-2 h-2 bg-gray-800 rounded-full"></div>
-              <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 w-4 h-1 bg-gray-600 rounded-full"></div>
-            </div>
-
-            {/* Body with clothing */}
-            <div
-              className={`transition-all duration-300 ${
-                isAnimating ? "scale-105 opacity-80" : "scale-100 opacity-100"
-              }`}
-            >
-              {/* Top */}
-              <div
-                className="w-24 h-32 rounded-lg mb-2 mx-auto relative"
-                style={{
-                  backgroundColor: selectedTop.color,
-                  border:
-                    selectedTop.color === "#FFFFFF"
-                      ? "2px solid #E5E7EB"
-                      : "none",
-                }}
-              >
-                <div
-                  className="absolute top-2 left-1/2 transform -translate-x-1/2 w-16 h-6 rounded-t-lg"
-                  style={{ backgroundColor: selectedTop.color, opacity: 0.8 }}
-                ></div>
-              </div>
-
-              {/* Bottom */}
-              <div
-                className="w-20 h-24 rounded-lg mx-auto"
-                style={{ backgroundColor: selectedBottom.color }}
-              ></div>
+          {/* Combined Outfit Image */}
+          <div
+            className={`transition-all duration-300 ${
+              isAnimating ? "scale-105 opacity-80" : "scale-100 opacity-100"
+            }`}
+          >
+            <div className="relative w-64 h-80">
+              <Image
+                src={getCombinedImagePath()}
+                alt={`${selectedTop.name}와 ${selectedBottom.name} 착장`}
+                fill
+                style={{ objectFit: "contain" }}
+                priority
+              />
             </div>
           </div>
 
@@ -208,18 +193,17 @@ export default function AvatarPreview() {
                       : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm"
                   }`}
                 >
-                  <div
-                    className="w-12 h-12 rounded-lg mx-auto mb-2"
-                    style={{
-                      backgroundColor: item.color,
-                      border:
-                        item.color === "#FFFFFF" ? "2px solid #E5E7EB" : "none",
-                    }}
-                  ></div>
+                  <div className="w-16 h-16 mx-auto mb-2 relative">
+                    <Image
+                      src={item.image}
+                      alt={item.name}
+                      fill
+                      style={{ objectFit: "contain" }}
+                    />
+                  </div>
                   <p className="text-xs font-medium text-gray-700">
                     {item.name}
                   </p>
-                  <p className="text-xs text-gray-500">{item.price}</p>
                 </button>
               ))}
           </div>
@@ -257,14 +241,17 @@ export default function AvatarPreview() {
                       : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm"
                   }`}
                 >
-                  <div
-                    className="w-12 h-12 rounded-lg mx-auto mb-2"
-                    style={{ backgroundColor: item.color }}
-                  ></div>
+                  <div className="w-16 h-16 mx-auto mb-2 relative">
+                    <Image
+                      src={item.image}
+                      alt={item.name}
+                      fill
+                      style={{ objectFit: "contain" }}
+                    />
+                  </div>
                   <p className="text-xs font-medium text-gray-700">
                     {item.name}
                   </p>
-                  <p className="text-xs text-gray-500">{item.price}</p>
                 </button>
               ))}
           </div>
