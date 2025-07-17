@@ -6,7 +6,7 @@ import AvatarWearInfo from "@/components/common/AvatarWearInfo";
 import ClosetProductSection from "./_components/ClosetProductSection";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { getClosetAvatars, deleteClosetAvatar } from "@/api/closet";
-import { getWishlist } from "@/api/wishlist";
+import { getWishlist, getWishlistByCategory } from "@/api/wishlist";
 import type { ClosetAvatarResponse } from "@/types/closet";
 import type { ProductResponse } from "@/types/product";
 
@@ -21,6 +21,16 @@ const categories = [
   "소품/ACC",
 ];
 
+const CATEGORY_ID_MAP: Record<string, number> = {
+  전체: 0,
+  상의: 1,
+  아우터: 2,
+  하의: 3,
+  "원피스/스커트": 4,
+  신발: 5,
+  "소품/ACC": 6,
+};
+
 const ClosetPage = () => {
   useAuthGuard();
 
@@ -32,6 +42,26 @@ const ClosetPage = () => {
   const [isLoadingCloset, setIsLoadingCloset] = useState(true);
   const [isLoadingWishlist, setIsLoadingWishlist] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  const loadWishlistByCategory = async (category: string) => {
+    try {
+      setIsLoadingWishlist(true);
+
+      const categoryId = CATEGORY_ID_MAP[category];
+
+      if (categoryId === 0) {
+        const data = await getWishlist(); // 전체
+        setWishlistData(data);
+      } else {
+        const data = await getWishlistByCategory(categoryId); // number 넘김
+        setWishlistData(data);
+      }
+    } catch (error) {
+      console.error("찜 목록 로딩 실패:", error);
+    } finally {
+      setIsLoadingWishlist(false);
+    }
+  };
 
   // 옷장 데이터 로드
   useEffect(() => {
@@ -48,23 +78,6 @@ const ClosetPage = () => {
     };
 
     loadClosetData();
-  }, []);
-
-  // 찜 목록 데이터 로드
-  useEffect(() => {
-    const loadWishlistData = async () => {
-      try {
-        setIsLoadingWishlist(true);
-        const data = await getWishlist();
-        setWishlistData(data);
-      } catch (error) {
-        console.error("찜 목록 로드 실패:", error);
-      } finally {
-        setIsLoadingWishlist(false);
-      }
-    };
-
-    loadWishlistData();
   }, []);
 
   // 착장 삭제 핸들러
@@ -93,7 +106,13 @@ const ClosetPage = () => {
   // 카테고리 변경 핸들러
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
+    loadWishlistByCategory(category); // 카테고리별 API 호출
   };
+
+  // 초기 렌더 시 전체 찜 목록을 불러오기 위해 필요함
+  useEffect(() => {
+    loadWishlistByCategory("전체");
+  }, []);
 
   return (
     <AvatarLayout

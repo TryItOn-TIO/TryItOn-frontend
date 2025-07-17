@@ -29,8 +29,18 @@ export const removeWishlist = async (data: DeleteWishlist) => {
   return response.data;
 };
 
-// 옷장에서 사용
+// 전체 찜 목록 조회
 export const getWishlist = async (): Promise<ProductResponse[]> => {
   const response = await axiosWithAuth().get("/api/wishlist");
+  return response.data;
+};
+
+// 카테고리별 찜 목록 조회
+export const getWishlistByCategory = async (
+  parentCategoryId: number
+): Promise<ProductResponse[]> => {
+  const response = await axiosWithAuth().get(
+    `/api/wishlist/category/${parentCategoryId}`
+  );
   return response.data;
 };
