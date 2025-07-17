@@ -59,7 +59,7 @@ export default function AvatarImageUpdater({
       setUploadProgress(30);
 
       const timestamp = Date.now();
-      const fileName = `users/avatar_${timestamp}_${file.name}`;
+      const fileName = `temp/${timestamp}_${file.name}`;
       const presignedUrl = await generatePresignedUrl(fileName);
 
       if (!presignedUrl) {

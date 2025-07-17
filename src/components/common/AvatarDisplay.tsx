@@ -54,14 +54,21 @@ export default function AvatarDisplay({
   };
 
   const handleImageError = () => {
-    console.log('이미지 로드 실패:', imageUrls[currentImageIndex]);
+    console.error('이미지 로드 실패:', {
+      url: imageUrls[currentImageIndex],
+      index: currentImageIndex,
+      totalUrls: imageUrls.length,
+      timestamp: new Date().toISOString()
+    });
     
     // 다음 이미지 URL로 시도
     if (currentImageIndex < imageUrls.length - 1) {
+      console.log('다음 이미지 URL로 시도:', imageUrls[currentImageIndex + 1]);
       setCurrentImageIndex(currentImageIndex + 1);
       setImageError(false);
     } else {
       // 모든 이미지 URL 실패 시
+      console.error('모든 이미지 URL 로드 실패');
       setImageError(true);
     }
   };
