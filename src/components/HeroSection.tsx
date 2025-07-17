@@ -115,7 +115,7 @@ const HeroSection = () => {
         </div>
         {/* 추천 상품 섹션 */}
         {trendingProducts.length > 0 && (
-          <section>
+          <section className="mt-10">
             <h3 className="text-xl font-semibold mb-4 text-black">
               TIO의 인기 상품
             </h3>
@@ -131,7 +131,7 @@ const HeroSection = () => {
         {categoryProducts &&
           categoryProducts.categories &&
           categoryProducts.categories.map((category) => (
-            <section key={category.categoryId}>
+            <section key={category.categoryId} className="mt-10">
               <h3 className="text-xl font-semibold mb-4 text-black">
                 {category.categoryName}
               </h3>
