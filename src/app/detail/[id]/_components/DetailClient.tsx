@@ -8,6 +8,7 @@ import { getProductDetail } from "@/api/productDetail";
 import { useEffect, useState } from "react";
 import Spinner from "@/components/common/Spinner";
 import { initialProductDetail } from "@/types/productDetail";
+import { useIsMobile } from "@/hooks/useMediaQuery";
 
 type DetailClientProps = {
   productId: number;
@@ -16,6 +17,7 @@ type DetailClientProps = {
 const DetailClient = ({ productId }: DetailClientProps) => {
   const [data, setData] = useState(initialProductDetail);
   const [loading, setLoading] = useState(true);
+  const isMobile = useIsMobile();
 
   const fetchData = async () => {
     try {
@@ -38,26 +40,41 @@ const DetailClient = ({ productId }: DetailClientProps) => {
   return (
     <>
       {loading && <Spinner />}
-      <div className="w-full flex justify-between">
-        {/* 좌측 상품 이미지 등 상세정보 */}
-        <div className="w-[65%]">
-          <DetailMainImg images={data.images} />
-          <DetailRecommand productId={Number(productId)} />
-
-          {/* img5 배열의 모든 상세 이미지 표시 */}
-          {data.images.slice(4)
-              .filter((img) => img && img.trim() !== '')
-              .map((img, idx) => (
-                  <DetailInfo key={idx} image={img} index={idx} />
-              ))
-          }
-        </div>
-
-        {/* 우측 상품 장바구니/구매하기 창 */}
-        <div className="bg-white w-[35%] min-h-screen h-screen fixed right-0 top-[15vh] bottom-0 overflow-y-auto shadow-md">
+      {/* 모바일 전용 : ProductDetailInfo를 MainImg 바로 아래에 위치 */}
+      {isMobile ? (
+        <>
+          <DetailMainImg images={data.images} productId={productId} />
           <ProductDetailInfo data={data} />
+          <DetailRecommand productId={productId} />
+          {data.images
+            .slice(4)
+            .filter((img) => img && img.trim() !== "")
+            .map((img, idx) => (
+              <DetailInfo key={idx} image={img} index={idx} />
+            ))}
+        </>
+      ) : (
+        <div className="w-full flex flex-col md:flex-row justify-between">
+          {/* 좌측: 메인 이미지 + 추천 + 상세 이미지 */}
+          <div className="w-full md:w-[65%] md:pr-6">
+            <DetailMainImg images={data.images} productId={productId} />
+            <DetailRecommand productId={Number(productId)} />
+
+            {/* img5 배열의 모든 상세 이미지 표시 */}
+            {data.images
+              .slice(4)
+              .filter((img) => img && img.trim() !== "")
+              .map((img, idx) => (
+                <DetailInfo key={idx} image={img} index={idx} />
+              ))}
+          </div>
+
+          {/* 우측 상품 장바구니/구매하기 창 */}
+          <div className="w-full md:w-[35%] md:min-h-screen md:h-screen md:fixed md:right-0 md:top-[15vh] md:bottom-0 md:overflow-y-auto md:shadow-md md:bg-white">
+            <ProductDetailInfo data={data} />
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 };

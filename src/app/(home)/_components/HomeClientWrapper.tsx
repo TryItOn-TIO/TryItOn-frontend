@@ -2,13 +2,22 @@
 
 import { useEffect, useState } from "react";
 import { mainProductsDummy } from "@/mock/mainProducts";
-import { fetchMainProducts, fetchMainProductsForGuest } from "@/api/product";
+import { fetchMainProductsForGuest } from "@/api/product";
 import HomeClient from "@/app/(home)/_components/HomeClient";
-import type { MainProductResponse } from "@/types/product";
+import type { MainProductResponse, ProductResponse } from "@/types/product";
 import { getAccessToken } from "@/utils/auth";
+import {
+  getAgeGroupProducts,
+  getRecommendProducts,
+  getTrendingProducts,
+} from "@/api/recommend";
 
 export default function HomeClientWrapper() {
   const [data, setData] = useState<MainProductResponse | null>(null);
+  const [recommend, setRecommend] = useState<ProductResponse[]>([]);
+  const [trending, setTrending] = useState<ProductResponse[]>([]);
+  const [ageGroup, setAgeGroup] = useState<ProductResponse[]>([]);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -23,31 +32,33 @@ export default function HomeClientWrapper() {
         console.log("토큰 상태:", token ? "있음" : "없음");
 
         if (token) {
-          console.log("🔐 로그인된 사용자 - 개인화된 데이터 로드");
-          try {
-            // 추천 알고리즘 미구현으로 카테고리별 순위 기준으로 제공
-            const result = await fetchMainProductsForGuest();
-            // const result = await fetchMainProducts();
-            console.log("✅ 로그인용 API 성공:", result);
-            // console.log("recommended 개수:", result.recommended?.length || 0);
-            // console.log("ranked 개수:", result.ranked?.length || 0);
-            setData(result);
-          } catch (authError) {
-            console.error("❌ 개인화된 데이터 로드 실패:", authError);
-            console.log("비로그인 데이터로 대체");
-            const result = await fetchMainProductsForGuest();
-            setData(result);
-          }
-        } else {
-          console.log("👤 비로그인 사용자 - 카테고리별 인기 상품 로드");
-          const result = await fetchMainProductsForGuest();
+          console.log("로그인된 사용자 - 개인화된 데이터 로드");
+          const [result, recommendResult, trendingResult, ageGroupResult] =
+            await Promise.all([
+              fetchMainProductsForGuest(), // 카테고리별 상품
+              getRecommendProducts(), // 개인화 추천 상품
+              getTrendingProducts(), // 인기 상품
+              getAgeGroupProducts(), // 연령대별 인기 상품
+            ]);
+
           setData(result);
+          setRecommend(recommendResult);
+          setTrending(trendingResult);
+          setAgeGroup(ageGroupResult);
+        } else {
+          console.log("비로그인 사용자 - 카테고리별 인기 상품 로드");
+          // 카테고리별 상품
+          const result = await fetchMainProductsForGuest();
+          // 인기 상품
+          const trendingResult = await getTrendingProducts();
+
+          setData(result);
+          setTrending(trendingResult);
         }
       } catch (error) {
         console.error("메인 상품 데이터를 불러오는 데 실패했습니다", error);
         setError("상품 정보를 불러올 수 없습니다.");
         // 에러 발생 시 Mock 데이터 사용
-        console.log("❌ 에러 발생 - Mock 데이터 사용");
         setData(mainProductsDummy);
       } finally {
         setLoading(false);
@@ -86,7 +97,12 @@ export default function HomeClientWrapper() {
 
   return (
     <div className="w-full">
-      <HomeClient initialData={data!} />
+      <HomeClient
+        initialData={data!}
+        recommend={recommend}
+        trending={trending}
+        ageGroup={ageGroup}
+      />
     </div>
   );
 }

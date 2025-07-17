@@ -1,4 +1,5 @@
 import { useAvatarStore } from "@/stores/avatar-store";
+import { useTryOnStore } from "@/stores/try-on-store";
 import { createAvatar } from "@/api/avatar";
 
 export const useAvatarTryon = () => {
@@ -11,10 +12,14 @@ export const useAvatarTryon = () => {
     (state) => state.removeSelectedProductId
   );
 
-  const tryOnProduct = async (productId: number) => {
-    try {
-      setLoading(true);
+  // try-on-store의 상태 업데이트 함수들을 가져옴
+  const { start, setSuccess, setError } = useTryOnStore.getState();
 
+  const tryOnProduct = async (productId: number) => {
+    start(); // 프로세스 시작을 알림
+    setLoading(true);
+
+    try {
       // API 호출로 아바타에 상품 착용
       const response = await createAvatar({ productId });
       
@@ -27,10 +32,12 @@ export const useAvatarTryon = () => {
       // 성공 시 전역 상태 업데이트
       setAvatarInfo(response);
       addSelectedProductId(productId);
+      setSuccess(response.avatarImgUrl); // 성공 상태와 결과 이미지 URL을 스토어에 저장
 
       return response;
     } catch (error) {
       console.error("착용 중 오류 발생:", error);
+      setError(); // 실패 상태를 스토어에 저장
       throw error;
     } finally {
       setLoading(false);
