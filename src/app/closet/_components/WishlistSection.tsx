@@ -1,10 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import ProductCard from "@/components/common/ProductCard";
 import CategoryFilter from "./CategoryFilter";
-import { Checkbox } from "@/components/common/checkbox";
 import type { ProductResponse } from "@/types/product";
 
 type WishlistSectionProps = {
