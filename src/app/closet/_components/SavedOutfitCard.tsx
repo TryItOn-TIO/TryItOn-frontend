@@ -18,7 +18,7 @@ const SavedOutfitCard = ({
   isShareMode = false,
 }: SavedOutfitCardProps) => {
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow w-full max-w-[220px]">
+    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow w-full">
       {/* 이미지 영역 */}
       <div className="relative w-full h-[260px] bg-gray-100 overflow-hidden">
         <Image

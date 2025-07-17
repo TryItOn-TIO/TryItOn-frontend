@@ -4,6 +4,7 @@ import { useState } from "react";
 import ProductCard from "@/components/common/ProductCard";
 import CategoryFilter from "./CategoryFilter";
 import type { ProductResponse } from "@/types/product";
+import { useIsMobile } from "@/hooks/useMediaQuery";
 
 type WishlistSectionProps = {
   wishlistData: ProductResponse[];
@@ -21,7 +22,7 @@ const WishlistSection = ({
   onCategoryChange,
 }: WishlistSectionProps) => {
   const [isShareMode, setIsShareMode] = useState(false);
-  const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
+  const isMobile = useIsMobile(); // 모바일 여부 판단
 
   // 카테고리 필터링된 찜 목록
   const filteredProducts =
@@ -31,14 +32,6 @@ const WishlistSection = ({
           (product: ProductResponse) =>
             product.categoryName === selectedCategory
         );
-
-  const handleProductSelect = (productId: number) => {
-    setSelectedProducts((prev) =>
-      prev.includes(productId)
-        ? prev.filter((id) => id !== productId)
-        : [...prev, productId]
-    );
-  };
 
   return (
     <div>
@@ -57,8 +50,14 @@ const WishlistSection = ({
         <div className="text-center py-8 text-gray-500">로딩 중...</div>
       ) : (
         <>
-          {/* 상품 그리드 */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {/* 반응형 상품 그리드 */}
+          <div
+            className={
+              isMobile
+                ? "grid grid-cols-2 gap-4"
+                : "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+            }
+          >
             {filteredProducts.map((product: ProductResponse) => (
               <div key={product.id} className="relative">
                 <ProductCard product={product} isShareMode={isShareMode} />

@@ -1,7 +1,7 @@
 "use client";
 
-import SavedOutfitsSection from "./SavedOutfitsSection";
-import WishlistSection from "./WishlistSection";
+import SavedOutfitsSection from "@/app/closet/_components/SavedOutfitsSection";
+import WishlistSection from "@/app/closet/_components/WishlistSection";
 import type { ClosetAvatarResponse } from "@/types/closet";
 import type { ProductResponse } from "@/types/product";
 
@@ -26,10 +26,10 @@ const ClosetProductSection = ({
   categories,
   onCategoryChange,
   onDeleteOutfit,
-  isDeleting
+  isDeleting,
 }: ClosetProductSectionProps) => {
   return (
-    <div className="w-full space-y-8 px-4 py-8">
+    <div className="w-full space-y-8 px-4 sm:px-6 md:px-10 py-8">
       {/* 저장된 착장 섹션 (상단) */}
       <SavedOutfitsSection
         closetAvatars={closetAvatars}
