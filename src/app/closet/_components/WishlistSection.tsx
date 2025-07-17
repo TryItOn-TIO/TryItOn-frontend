@@ -24,14 +24,7 @@ const WishlistSection = ({
   const [isShareMode, setIsShareMode] = useState(false);
   const isMobile = useIsMobile(); // 모바일 여부 판단
 
-  // 카테고리 필터링된 찜 목록
-  const filteredProducts =
-    selectedCategory === "전체"
-      ? wishlistData
-      : wishlistData.filter(
-          (product: ProductResponse) =>
-            product.categoryName === selectedCategory
-        );
+  const filteredProducts = wishlistData;
 
   return (
     <div>
