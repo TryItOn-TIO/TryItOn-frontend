@@ -9,7 +9,7 @@ import {
 
 // 프로필 관리 API
 export const mypageApi = {
-  // 내 프로필 조회
+  // 내 프로필조회
   getProfile: async (): Promise<UserProfile> => {
     try {
       console.log('=== 프로필 조회 API 호출 시작 ===');
