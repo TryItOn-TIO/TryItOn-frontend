@@ -9,18 +9,16 @@ import { FreeMode } from "swiper/modules";
 
 import SimpleProductCard from "@/components/ui/SimpleProductCard";
 import Link from "next/link";
-import { dummyProductDetails } from "@/mock/story";
 import { useEffect, useState } from "react";
-import { getSimilarProducts } from "@/api/productDetail";
-import { initialProductResponse, ProductResponse } from "@/types/product";
+import { getSimilarProducts } from "@/api/recommend";
+import { ProductResponse } from "@/types/product";
 
 type DetailRecommandProps = {
   productId: number;
 };
 
 const DetailRecommand = ({ productId }: DetailRecommandProps) => {
-  const dummyData = dummyProductDetails;
-  const [data, setDate] = useState<ProductResponse[]>(initialProductResponse);
+  const [data, setDate] = useState<ProductResponse[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,7 +32,7 @@ const DetailRecommand = ({ productId }: DetailRecommandProps) => {
     fetchData();
   }, []);
 
-  return (
+  return data.length > 0 ? (
     <div className="bg-gray-50 py-4 px-3 rounded-lg mt-6 md:py-6 md:px-4 md:rounded-xl md:mt-8">
       <div className="text-sm text-neutral-600 mb-3 md:text-base md:mb-4 md:p-2">
         같이 볼만한 상품
@@ -60,6 +58,8 @@ const DetailRecommand = ({ productId }: DetailRecommandProps) => {
         ))}
       </Swiper>
     </div>
+  ) : (
+    <div className="w-full h-1 bg-gray-50 mt-10" />
   );
 };
 
