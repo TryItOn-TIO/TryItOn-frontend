@@ -5,19 +5,29 @@ import Link from "next/link";
 import AvatarPreview from "@/components/AvatarPreview";
 import ProductCard from "./common/ProductCard";
 import { getTrendingProducts } from "@/api/recommend";
-import { ProductResponse } from "@/types/product";
+import { MainProductResponse, ProductResponse } from "@/types/product";
+import { fetchMainProductsForGuest } from "@/api/product";
 
 const HeroSection = () => {
   const [trendingProducts, setTrendingProducts] = useState<ProductResponse[]>(
     []
   );
+  const [categoryProducts, setCategoryProducts] =
+    useState<MainProductResponse>();
 
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await getTrendingProducts();
-      setTrendingProducts(response);
+    const fetchTrendingData = async () => {
+      const trendingResponse = await getTrendingProducts();
+      setTrendingProducts(trendingResponse);
     };
-    fetchData();
+
+    const fetchCategoryData = async () => {
+      const categoryResponse = await fetchMainProductsForGuest();
+      setCategoryProducts(categoryResponse);
+    };
+
+    fetchTrendingData();
+    fetchCategoryData();
   }, []);
 
   return (
@@ -116,6 +126,22 @@ const HeroSection = () => {
             </div>
           </section>
         )}
+
+        {/* 카테고리별 상품 섹션 */}
+        {categoryProducts &&
+          categoryProducts.categories &&
+          categoryProducts.categories.map((category) => (
+            <section key={category.categoryId}>
+              <h3 className="text-xl font-semibold mb-4 text-black">
+                {category.categoryName}
+              </h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-4 gap-6">
+                {(category.products || []).slice(0, 4).map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            </section>
+          ))}
       </div>
     </section>
   );
