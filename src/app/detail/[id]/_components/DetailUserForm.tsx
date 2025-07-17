@@ -42,6 +42,16 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
   const { isWished, toggleWishlist } = useWishlist(data.liked, data.id);
   const { addToCart, isLoading } = useCart();
 
+  // 태그를 위한 product name 전처리
+  const cleanedProductName = data.productName
+    .replace(/[^\w\s가-힣]/g, "") // 알파벳, 숫자, 공백, 한글을 제외한 모든 문자 제거
+    .replace(/\s+/g, " ") // 여러 개의 공백을 하나의 공백으로 축소
+    .trim();
+
+  const productTags = cleanedProductName
+    .split(" ")
+    .filter((tag) => tag.length > 0);
+
   // 현재 선택된 색상과 사이즈에 해당하는 variantId 찾기
   const getCurrentVariantId = () => {
     const currentVariant = data.variant.find(
@@ -237,16 +247,11 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
         <div className="mt-6 md:mt-10">
           <label className="block text-sm font-medium mb-1">연관 태그</label>
           <div className="flex flex-wrap gap-2">
-            <Tag text="기본슬랙스" />
-            <Tag text="슬랙스" />
-            <Tag text="팬츠" />
-            <Tag text="디키즈" />
-            <Tag text="바지" />
-            <Tag text="기본템" />
-            <Tag text="하의" />
-            <Tag text="루즈핏" />
-            <Tag text="더블니" />
-            <Tag text="남성바지" />
+            <Tag text={data.brand} />
+            {/* productName을 분리하여 여러 태그로 표시 */}
+            {productTags.map((tagText, index) => (
+              <Tag key={index} text={tagText} />
+            ))}
           </div>
         </div>
 
