@@ -9,6 +9,7 @@ import { ProductDetailResponse } from "@/types/productDetail";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useIsMobile } from "@/hooks/useMediaQuery";
 
 type ProductDetailInfoProps = {
   data: ProductDetailResponse;
@@ -24,6 +25,9 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
     size: "", // 초기값을 빈 문자열로 설정
     quantity: 1,
   });
+
+  const isMobile = useIsMobile();
+  const [showOptions, setShowOptions] = useState(false); // 구매 옵션 UI 표시 여부
 
   // 컴포넌트 마운트 시 색상이 없으면 첫 번째 색상으로 설정
   useEffect(() => {
@@ -83,6 +87,12 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
   };
 
   const handleOrder = () => {
+    // 모바일에서만 바텀 시트 열기
+    if (isMobile && !showOptions) {
+      setShowOptions(true); // 옵션 선택 UI 펼침
+      return;
+    }
+
     // 필수 옵션 선택 확인
     if (!orderData.color || !orderData.size) {
       alert("색상과 사이즈를 선택해주세요.");
@@ -172,38 +182,20 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
     return currentVariant?.quantity === 0;
   };
 
-  return (
-    <div className="text-black p-4 space-y-3 md:p-6 md:pb-[8rem] md:space-y-4">
-      {/* 브랜드 및 제품명 */}
-      <div className="flex justify-between items-center">
-        <div className="space-y-1">
-          <div className="text-xs text-gray-500 md:text-sm">{data.brand}</div>
-          <div className="text-lg font-semibold md:text-xl">
-            {data.productName}
-          </div>
-        </div>
-      </div>
-
-      {/* 가격 정보 */}
-      {data.sale && data.sale > 0 ? (
-        <div className="space-y-1 mb-4 md:mb-6">
-          <div className="flex items-center gap-2 mb-1 md:mb-2">
-            <span className="bg-red-500 text-white px-2 py-1 text-xs font-bold rounded">
-              {data.sale}% OFF
-            </span>
-          </div>
-          <div className="text-xl font-bold text-red-600 md:text-2xl">
-            {(data.salePrice || data.price).toLocaleString()}원
-          </div>
-          <div className="text-xs text-gray-400 line-through md:text-sm">
-            {data.price.toLocaleString()}원
-          </div>
-        </div>
-      ) : (
-        <div className="space-y-1">
-          <div className="text-xl font-bold text-black md:text-2xl">
-            {data.price.toLocaleString()}원
-          </div>
+  // 옵션 선택 및 수량 조절 UI를 별도의 함수로 분리
+  const renderOptionsAndQuantity = () => (
+    <>
+      {/* 모바일에서만 핸들 영역 표시 */}
+      {isMobile && (
+        <div
+          className="flex items-center justify-center py-2 cursor-pointer"
+          onClick={() => setShowOptions(false)} // 닫기
+          data-mds="BottomSheetHandleArea"
+        >
+          <div
+            className="h-1 w-9 rounded-[10px] bg-gray-300"
+            data-mds="BottomSheetHandle"
+          ></div>
         </div>
       )}
 
@@ -273,78 +265,163 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
             </button>
           </div>
         </div>
-
         <div className="text-right text-lg font-semibold">
           {calculateTotal().toLocaleString()}원
         </div>
       </div>
+    </>
+  );
 
-      {/* 연관 태그 */}
-      <div className="mt-6 md:mt-10">
-        <label className="block text-sm font-medium mb-1">연관 태그</label>
-        <div className="flex flex-wrap gap-2">
-          <Tag text="기본슬랙스" />
-          <Tag text="슬랙스" />
-          <Tag text="팬츠" />
-          <Tag text="디키즈" />
-          <Tag text="바지" />
-          <Tag text="기본템" />
-          <Tag text="하의" />
-          <Tag text="루즈핏" />
-          <Tag text="더블니" />
-          <Tag text="남성바지" />
-        </div>
-      </div>
-
-      {/* 사이즈 추천 등 */}
-      <div className="mt-6 md:mt-10">
-        <label className="block text-sm font-medium mb-1 text-neutral-00">
-          {data.contents}
-        </label>
-      </div>
-
-      {/* 버튼 영역 */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white p-4 border-t border-gray-200 z-40 md:static md:p-0 md:border-none">
-        <div className="flex gap-4 md:gap-6">
-          <div className="flex flex-col items-center gap-1">
-            {isWished ? (
-              <Image
-                src={"/images/common/red_heart.svg"}
-                width={24}
-                height={24}
-                alt="heart"
-                onClick={toggleWishlist}
-              />
-            ) : (
-              <Image
-                src={"/images/common/heart.svg"}
-                width={24}
-                height={24}
-                alt="heart"
-                onClick={toggleWishlist}
-              />
-            )}
-            <p className="text-xs">{data.wishlistCount.toLocaleString()}</p>
+  return (
+    <>
+      {/* 데스크톱 및 모바일 상단에 표시될 정보 */}
+      <div className="text-black p-4 space-y-3 md:p-6 md:space-y-4">
+        {/* 브랜드 및 제품명 */}
+        <div className="flex justify-between items-center">
+          <div className="space-y-1">
+            <div className="text-xs text-gray-500 md:text-sm">{data.brand}</div>
+            <div className="text-lg font-semibold md:text-xl">
+              {data.productName}
+            </div>
           </div>
-          <WhiteButton
-            text={
-              isCurrentVariantOutOfStock()
-                ? "품절"
-                : isLoading
-                ? "추가 중..."
-                : "장바구니"
-            }
-            handleClick={handleAddCart}
-            disabled={isLoading || isCurrentVariantOutOfStock()}
-          />
-          <BlackButton
-            text={isCurrentVariantOutOfStock() ? "품절" : "구매하기"}
-            handleClick={handleOrder}
-            disabled={isCurrentVariantOutOfStock()}
-          />
         </div>
+        {/* 가격 정보 */}
+        {data.sale && data.sale > 0 ? (
+          <div className="space-y-1 mb-4 md:mb-6">
+            <div className="flex items-center gap-2 mb-1 md:mb-2">
+              <span className="bg-red-500 text-white px-2 py-1 text-xs font-bold rounded">
+                {data.sale}% OFF
+              </span>
+            </div>
+            <div className="text-xl font-bold text-red-600 md:text-2xl">
+              {(data.salePrice || data.price).toLocaleString()}원
+            </div>
+            <div className="text-xs text-gray-400 line-through md:text-sm">
+              {data.price.toLocaleString()}원
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-1">
+            <div className="text-xl font-bold text-black md:text-2xl">
+              {data.price.toLocaleString()}원
+            </div>
+          </div>
+        )}
+        {!isMobile && (
+          <div className="space-y-3 mb-4">{renderOptionsAndQuantity()}</div>
+        )}
+
+        {/* 연관 태그 */}
+        <div className="mt-6 md:mt-10">
+          <label className="block text-sm font-medium mb-1">연관 태그</label>
+          <div className="flex flex-wrap gap-2">
+            <Tag text="기본슬랙스" />
+            <Tag text="슬랙스" />
+            <Tag text="팬츠" />
+            <Tag text="디키즈" />
+            <Tag text="바지" />
+            <Tag text="기본템" />
+            <Tag text="하의" />
+            <Tag text="루즈핏" />
+            <Tag text="더블니" />
+            <Tag text="남성바지" />
+          </div>
+        </div>
+
+        {/* 사이즈 추천 등 */}
+        <div className="mt-6 md:mt-10">
+          <label className="block text-sm font-medium mb-1 text-neutral-00">
+            {data.contents}
+          </label>
+        </div>
+
+        {/* 버튼 영역 */}
+        {isMobile ? (
+          <div className="fixed bottom-0 left-0 right-0 bg-white p-4 border-t border-gray-200 z-40">
+            {showOptions && (
+              <div className="space-y-3 mb-4">{renderOptionsAndQuantity()}</div>
+            )}
+            <div className="flex gap-4">
+              <div className="flex flex-col items-center gap-1">
+                {isWished ? (
+                  <Image
+                    src={"/images/common/red_heart.svg"}
+                    width={24}
+                    height={24}
+                    alt="heart"
+                    onClick={toggleWishlist}
+                  />
+                ) : (
+                  <Image
+                    src={"/images/common/heart.svg"}
+                    width={24}
+                    height={24}
+                    alt="heart"
+                    onClick={toggleWishlist}
+                  />
+                )}
+                <p className="text-xs">{data.wishlistCount.toLocaleString()}</p>
+              </div>
+              <WhiteButton
+                text={
+                  isCurrentVariantOutOfStock()
+                    ? "품절"
+                    : isLoading
+                    ? "추가 중..."
+                    : "장바구니"
+                }
+                handleClick={handleAddCart}
+                disabled={isLoading || isCurrentVariantOutOfStock()}
+              />
+              <BlackButton
+                text={isCurrentVariantOutOfStock() ? "품절" : "구매하기"}
+                handleClick={handleOrder}
+                disabled={isCurrentVariantOutOfStock()}
+              />
+            </div>
+          </div>
+        ) : (
+          <div className="flex gap-6">
+            <div className="flex flex-col items-center gap-1">
+              {isWished ? (
+                <Image
+                  src={"/images/common/red_heart.svg"}
+                  width={24}
+                  height={24}
+                  alt="heart"
+                  onClick={toggleWishlist}
+                />
+              ) : (
+                <Image
+                  src={"/images/common/heart.svg"}
+                  width={24}
+                  height={24}
+                  alt="heart"
+                  onClick={toggleWishlist}
+                />
+              )}
+              <p className="text-xs">{data.wishlistCount.toLocaleString()}</p>
+            </div>
+            <WhiteButton
+              text={
+                isCurrentVariantOutOfStock()
+                  ? "품절"
+                  : isLoading
+                  ? "추가 중..."
+                  : "장바구니"
+              }
+              handleClick={handleAddCart}
+              disabled={isLoading || isCurrentVariantOutOfStock()}
+            />
+            <BlackButton
+              text={isCurrentVariantOutOfStock() ? "품절" : "구매하기"}
+              handleClick={handleOrder}
+              disabled={isCurrentVariantOutOfStock()}
+            />
+          </div>
+        )}
       </div>
-    </div>
+    </>
   );
 };
 
