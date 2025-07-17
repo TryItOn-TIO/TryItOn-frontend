@@ -38,23 +38,6 @@ export type CategoryProductResponse = {
   };
 };
 
-export const initialProductResponse: ProductResponse[] = [
-  {
-    id: 1,
-    productName: "",
-    img1: "",
-    price: 1,
-    sale: 1,
-    salePrice: 1, // 할인된 가격 (optional로 변경)
-    liked: false,
-    brand: "",
-    wishlistCount: 1,
-    createdAt: "",
-    categoryId: 1,
-    categoryName: "",
-  },
-];
-
 // 검색 결과 응답 타입
 export type SearchProductResponse = {
   products: ProductResponse[];
