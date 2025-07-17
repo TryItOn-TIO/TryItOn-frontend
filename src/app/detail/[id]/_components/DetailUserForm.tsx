@@ -16,6 +16,7 @@ type ProductDetailInfoProps = {
 
 const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
   const router = useRouter();
+  console.log(data.liked);
 
   // TODO: 주문 구현 후 DTO 수정
   const [orderData, setOrderData] = useState({
@@ -276,7 +277,7 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
               </div>
             )}
             <BottomActionButtons
-              isWished={isWished}
+              isWished={data.liked}
               toggleWishlist={toggleWishlist}
               wishlistCount={data.wishlistCount}
               isOutOfStock={isCurrentVariantOutOfStock()}
@@ -288,7 +289,7 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
           </div>
         ) : (
           <BottomActionButtons
-            isWished={isWished}
+            isWished={data.liked}
             toggleWishlist={toggleWishlist}
             wishlistCount={data.wishlistCount}
             isOutOfStock={isCurrentVariantOutOfStock()}
