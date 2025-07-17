@@ -17,6 +17,12 @@ export const useAvatarTryon = () => {
 
       // API 호출로 아바타에 상품 착용
       const response = await createAvatar({ productId });
+      
+      // 이미지 URL에 타임스탬프 추가하여 캐시 문제 해결
+      if (response.avatarImgUrl) {
+        response.avatarImgUrl = `${response.avatarImgUrl}${response.avatarImgUrl.includes('?') ? '&' : '?'}t=${Date.now()}`;
+        console.log('API 응답 후 타임스탬프 추가된 URL:', response.avatarImgUrl);
+      }
 
       // 성공 시 전역 상태 업데이트
       setAvatarInfo(response);

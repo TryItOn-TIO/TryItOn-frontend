@@ -34,15 +34,31 @@ export const useAvatarStore = create<AvatarState>()(
 
       setAvatarInfo: (info) =>
         set((state) => {
+          console.log('아바타 정보 업데이트:', info);
+          
+          // 이미지 URL에 타임스탬프 추가하여 캐시 문제 해결
+          if (info.avatarImgUrl) {
+            info.avatarImgUrl = `${info.avatarImgUrl}${info.avatarImgUrl.includes('?') ? '&' : '?'}t=${Date.now()}`;
+            console.log('타임스탬프 추가된 URL:', info.avatarImgUrl);
+          }
+          
           const newIds = [...info.products.map((p) => p.productId)].sort();
           const prevIds = [...state.previousProductIds].sort();
           const changed =
             newIds.length !== prevIds.length ||
             newIds.some((id, i) => id !== prevIds[i]);
 
+          // 이전 아바타 이미지와 새 이미지가 다른 경우에도 업데이트 표시
+          const imageChanged = 
+            info.avatarImgUrl && 
+            state.avatarInfo.avatarImgUrl && 
+            info.avatarImgUrl.split('?')[0] !== state.avatarInfo.avatarImgUrl.split('?')[0];
+          
+          console.log('아바타 변경 감지:', changed || imageChanged);
+
           return {
             avatarInfo: info,
-            hasAvatarUpdate: changed,
+            hasAvatarUpdate: changed || imageChanged,
             previousProductIds: newIds,
           };
         }),
