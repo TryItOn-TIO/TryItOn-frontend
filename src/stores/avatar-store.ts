@@ -49,10 +49,11 @@ export const useAvatarStore = create<AvatarState>()(
             newIds.some((id, i) => id !== prevIds[i]);
 
           // 이전 아바타 이미지와 새 이미지가 다른 경우에도 업데이트 표시
-          const imageChanged = 
+          const imageChanged = !!(
             info.avatarImgUrl && 
             state.avatarInfo.avatarImgUrl && 
-            info.avatarImgUrl.split('?')[0] !== state.avatarInfo.avatarImgUrl.split('?')[0];
+            info.avatarImgUrl.split('?')[0] !== state.avatarInfo.avatarImgUrl.split('?')[0]
+          );
           
           console.log('아바타 변경 감지:', changed || imageChanged);
 
