@@ -1,10 +1,25 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import AvatarPreview from "@/components/AvatarPreview";
+import ProductCard from "./common/ProductCard";
+import { getTrendingProducts } from "@/api/recommend";
+import { ProductResponse } from "@/types/product";
 
 const HeroSection = () => {
+  const [trendingProducts, setTrendingProducts] = useState<ProductResponse[]>(
+    []
+  );
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await getTrendingProducts();
+      setTrendingProducts(response);
+    };
+    fetchData();
+  }, []);
+
   return (
     <section className="relative bg-gradient-to-br from-blue-50 via-white to-purple-50 py-8 md:py-12">
       <div className="container mx-auto px-4 max-w-7xl">
@@ -88,6 +103,19 @@ const HeroSection = () => {
             </Link>
           </p>
         </div>
+        {/* 추천 상품 섹션 */}
+        {trendingProducts.length > 0 && (
+          <section>
+            <h3 className="text-xl font-semibold mb-4 text-black">
+              TIO의 인기 상품
+            </h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-4 gap-6">
+              {(trendingProducts || []).slice(0, 8).map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </section>
   );
