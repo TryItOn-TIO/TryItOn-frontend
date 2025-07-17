@@ -16,12 +16,12 @@ export const useWishlist = (initial: boolean, productId: number) => {
 
       if (isWished) {
         await removeWishlist({ productId });
-        alert("찜 목록에서 삭제되었습니다.");
-        window.location.reload();
+        // alert("찜 목록에서 삭제되었습니다.");
+        // window.location.reload();
       } else {
         await addWishlist({ productId });
-        alert("찜 목록에 추가되었습니다.");
-        window.location.reload();
+        // alert("찜 목록에 추가되었습니다.");
+        // window.location.reload();
       }
 
       setIsWished(!isWished);
