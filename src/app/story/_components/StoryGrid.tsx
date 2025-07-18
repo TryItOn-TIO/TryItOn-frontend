@@ -9,7 +9,11 @@ type StoryGridProps = {
 
 const StoryGrid = ({ stories, onStoryClick }: StoryGridProps) => {
   if (stories.length === 0) {
-    return <StoryEmptyState />;
+    return (
+      <div className="w-full">
+        <StoryEmptyState />
+      </div>
+    );
   }
 
   return (

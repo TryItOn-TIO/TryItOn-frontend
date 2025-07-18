@@ -18,16 +18,18 @@ const StoryCard = ({ story, onClick }: StoryCardProps) => {
 
   return (
     <div
-      className="min-w-[18rem] bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer my-1"
+      className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer my-1"
+      // className="min-w-[18rem] bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer my-1"
       onClick={() => onClick(story.storyId)}
     >
       {/* 스토리 이미지 */}
-      <div className="aspect-square bg-gray-100 flex items-center justify-center">
+      <div className="bg-gray-100 flex items-center justify-center">
+        {/* <div className="aspect-square bg-gray-100 flex items-center justify-center"> */}
         {story.storyImageUrl ? (
           <img
             src={story.storyImageUrl}
             alt={`Story ${story.storyId}`}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-contain"
           />
         ) : (
           <div className="text-gray-400">
@@ -45,7 +47,9 @@ const StoryCard = ({ story, onClick }: StoryCardProps) => {
       {/* 스토리 정보 */}
       <div className="p-4">
         <p className="text-gray-800 mb-3 line-clamp-3">
-          {story.contents.slice(0, 17)} ...
+          {story.contents.length > 17
+            ? story.contents.slice(0, 17) + "..."
+            : story.contents}
         </p>
 
         {/* 작성자 정보 */}

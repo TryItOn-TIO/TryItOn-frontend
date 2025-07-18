@@ -10,6 +10,7 @@ import StoryErrorState from "./_components/StoryErrorState";
 import StoryHeader from "./_components/StoryHeader";
 import StoryGrid from "./_components/StoryGrid";
 import { dummyStoryList } from "@/mock/story";
+import Spinner from "@/components/common/Spinner";
 
 const StoryPage = () => {
   const router = useRouter();
@@ -43,21 +44,23 @@ const StoryPage = () => {
     setSortType(newSortType);
   };
 
-  if (isLoading) {
-    return <StoryLoadingState />;
-  }
-
   if (error) {
     return <StoryErrorState error={error} />;
   }
 
   return (
-    <div className="flex flex-col items-center w-screen min-h-screen">
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <StoryHeader sortType={sortType} onSortChange={handleSortChange} />
-        <StoryGrid stories={stories} onStoryClick={handleStoryClick} />
-      </div>
-    </div>
+    <>
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <div className="flex flex-col items-center w-screen min-h-screen">
+          <div className="max-w-6xl mx-auto px-4 py-8">
+            <StoryHeader sortType={sortType} onSortChange={handleSortChange} />
+            <StoryGrid stories={stories} onStoryClick={handleStoryClick} />
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

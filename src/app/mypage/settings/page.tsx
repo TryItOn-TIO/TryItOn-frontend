@@ -9,12 +9,13 @@ import AvatarImageUpdater from "@/components/avatar/AvatarImageUpdater";
 import { useAvatarStore } from "@/stores/avatar-store";
 import { fetchLatestAvatarInfo } from "@/api/avatar";
 import AvatarFace from "@/components/common/AvatarFace";
+import Spinner from "@/components/common/Spinner";
 
 export default function SettingsPage() {
   useAuthGuard();
   const router = useRouter();
   const { profile, isLoading, error, refetch } = useProfile();
-  
+
   const avatarInfo = useAvatarStore((state) => state.avatarInfo);
   const setAvatarInfo = useAvatarStore((state) => state.setAvatarInfo);
 
@@ -23,7 +24,7 @@ export default function SettingsPage() {
       try {
         const data = await fetchLatestAvatarInfo();
         setAvatarInfo(data);
-        console.log('설정 페이지 - 아바타 정보 로드:', data);
+        console.log("설정 페이지 - 아바타 정보 로드:", data);
       } catch (error) {
         console.error("아바타 정보 로드 실패", error);
       }
@@ -47,9 +48,10 @@ export default function SettingsPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center w-screen">
-        <div className="text-lg text-gray-600">설정을 불러오는 중...</div>
-      </div>
+      // <div className="min-h-screen bg-gray-50 flex items-center justify-center w-screen">
+      //   <div className="text-lg text-gray-600">설정을 불러오는 중...</div>
+      // </div>
+      <Spinner />
     );
   }
 
@@ -98,13 +100,15 @@ export default function SettingsPage() {
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
           <div className="flex items-center mb-4">
             <Camera className="w-5 h-5 mr-2 text-gray-700" />
-            <h2 className="text-lg font-semibold text-gray-900">아바타 이미지 변경</h2>
+            <h2 className="text-lg font-semibold text-gray-900">
+              아바타 이미지 변경
+            </h2>
           </div>
           <div className="border-t pt-4">
             <p className="text-sm text-gray-600 mb-4">
               가상 피팅에 사용될 아바타 이미지를 변경할 수 있습니다.
             </p>
-            
+
             {/* 현재 아바타 미리보기 */}
             <div className="flex justify-center mb-6">
               <div className="relative">
@@ -121,7 +125,7 @@ export default function SettingsPage() {
                 )}
               </div>
             </div>
-            
+
             <AvatarImageUpdater
               currentAvatarUrl={avatarInfo?.avatarImgUrl}
               onUpdateSuccess={handleAvatarUpdateSuccess}
@@ -133,8 +137,16 @@ export default function SettingsPage() {
         <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
           <div className="flex items-start">
             <div className="flex-shrink-0">
-              <svg className="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+              <svg
+                className="w-5 h-5 text-blue-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                  clipRule="evenodd"
+                />
               </svg>
             </div>
             <div className="ml-3">
@@ -143,7 +155,9 @@ export default function SettingsPage() {
               </h3>
               <div className="mt-2 text-sm text-blue-700">
                 <ul className="list-disc list-inside space-y-1">
-                  <li>아바타 이미지를 변경하면 기존 가상 피팅 결과가 초기화됩니다.</li>
+                  <li>
+                    아바타 이미지를 변경하면 기존 가상 피팅 결과가 초기화됩니다.
+                  </li>
                   <li>새로운 아바타로 다시 가상 피팅을 진행해야 합니다.</li>
                   <li>권장 이미지 크기: 512x512 픽셀</li>
                 </ul>

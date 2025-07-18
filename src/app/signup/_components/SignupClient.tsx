@@ -12,6 +12,7 @@ import { signup } from "@/api/auth";
 import PasswordForm from "@/app/signup/_components/PasswordForm";
 import SignupForm from "@/app/signup/_components/SignupForm";
 import { useRouter } from "next/navigation";
+import Spinner from "@/components/common/Spinner";
 
 const SignupClient = () => {
   const [step, setStep] = useState(1);
@@ -29,6 +30,7 @@ const SignupClient = () => {
     avatarBaseImageUrl: "temp",
     userBaseImageUrl: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
 
@@ -40,6 +42,7 @@ const SignupClient = () => {
       return;
     }
     try {
+      setIsLoading(true);
       // fileUrl이 전달되면 data 상태 업데이트
       const finalData = fileUrl
         ? {
@@ -55,6 +58,7 @@ const SignupClient = () => {
       const response = await signup(finalData);
 
       if (response) {
+        setIsLoading(false);
         setStep((prev) => prev + 1);
       }
     } catch (error) {
@@ -65,30 +69,33 @@ const SignupClient = () => {
   };
 
   return (
-    <div className="w-full min-h-screen flex justify-center px-4 sm:px-6 md:px-8 lg:px-0 mb-10">
-      <div className="w-full max-w-[640px] p-4 sm:p-6 md:p-8">
-        <h2 className="text-2xl font-bold my-6 md:my-8">회원가입</h2>
+    <>
+      {isLoading && <Spinner />}
+      <div className="w-full min-h-screen flex justify-center px-4 sm:px-6 md:px-8 lg:px-0 mb-10">
+        <div className="w-full max-w-[640px] p-4 sm:p-6 md:p-8">
+          <h2 className="text-2xl font-bold my-6 md:my-8">회원가입</h2>
 
-        {step === 1 && (
-          <SendVerification setStep={setStep} data={data} setData={setData} />
-        )}
-        {step === 2 && <VerifyCode setStep={setStep} email={data.email} />}
-        {step === 3 && (
-          <PasswordForm setStep={setStep} data={data} setData={setData} />
-        )}
-        {step === 4 && (
-          <SignupForm setStep={setStep} data={data} setData={setData} />
-        )}
-        {step === 5 && (
-          <TryonImgUploader
-            onSubmit={handleSubmit}
-            data={data}
-            setData={setData}
-          />
-        )}
-        {step === 6 && <Success />}
+          {step === 1 && (
+            <SendVerification setStep={setStep} data={data} setData={setData} />
+          )}
+          {step === 2 && <VerifyCode setStep={setStep} email={data.email} />}
+          {step === 3 && (
+            <PasswordForm setStep={setStep} data={data} setData={setData} />
+          )}
+          {step === 4 && (
+            <SignupForm setStep={setStep} data={data} setData={setData} />
+          )}
+          {step === 5 && (
+            <TryonImgUploader
+              onSubmit={handleSubmit}
+              data={data}
+              setData={setData}
+            />
+          )}
+          {step === 6 && <Success />}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

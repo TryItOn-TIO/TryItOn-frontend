@@ -33,6 +33,11 @@ export const getNextStories = async (
   return response.data;
 };
 
+export const getMyStories = async (): Promise<StoryResponse[]> => {
+  const response = await axiosWithAuth().get("/api/stories/my");
+  return response.data;
+};
+
 export const updateStory = async (
   storyId: number,
   data: StoryUpdate

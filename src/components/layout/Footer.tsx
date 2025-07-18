@@ -43,23 +43,11 @@ export default function Footer() {
             <h4 className="text-white font-semibold mb-4">고객센터</h4>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="hover:text-white transition-colors">
-                  공지사항
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white transition-colors">
-                  자주 묻는 질문
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a
+                  href="mailto:tryiton486@gmail.com"
+                  className="hover:text-white transition-colors"
+                >
                   1:1 문의
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white transition-colors">
-                  배송조회
                 </a>
               </li>
             </ul>

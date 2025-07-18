@@ -10,6 +10,7 @@ import { GoogleSignupRequest } from "@/types/auth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import TryonImgUploader from "@/app/signup/_components/TryonImgUploader";
+import Spinner from "@/components/common/Spinner";
 
 const Oauth = () => {
   const { idToken } = useIdToken();
@@ -29,6 +30,7 @@ const Oauth = () => {
     userBaseImageUrl: "",
     idToken: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (fileUrl?: string) => {
     if (!idToken) {
@@ -38,6 +40,8 @@ const Oauth = () => {
     }
 
     try {
+      setIsLoading(true);
+
       // fileUrl이 전달되면 data 상태 업데이트
       const finalData = fileUrl
         ? {
@@ -53,6 +57,7 @@ const Oauth = () => {
       console.log("구글 회원가입 데이터:", finalData);
       const response = await signupWithGoogle(finalData);
 
+      setIsLoading(false);
       if (response.accessToken) {
         setAccessToken(response.accessToken);
         console.log("회원가입 및 로그인 완료:", response);
@@ -65,21 +70,24 @@ const Oauth = () => {
   };
 
   return (
-    <div className="w-screen min-h-screen">
-      <div className="w-[40rem] mx-auto p-6">
-        <h2 className="text-2xl font-bold mb-6">회원가입 정보 입력</h2>
-        {step == 1 && (
-          <SignupForm setStep={setStep} data={data} setData={setData} />
-        )}
-        {step == 2 && (
-          <TryonImgUploader
-            onSubmit={handleSubmit}
-            data={data}
-            setData={setData}
-          />
-        )}
+    <>
+      {isLoading && <Spinner />}
+      <div className="w-screen min-h-screen">
+        <div className="w-[40rem] mx-auto p-6">
+          <h2 className="text-2xl font-bold mb-6">회원가입 정보 입력</h2>
+          {step == 1 && (
+            <SignupForm setStep={setStep} data={data} setData={setData} />
+          )}
+          {step == 2 && (
+            <TryonImgUploader
+              onSubmit={handleSubmit}
+              data={data}
+              setData={setData}
+            />
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

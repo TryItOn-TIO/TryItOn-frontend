@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/common/checkbox";
 import { Separator } from "@/components/common/separator";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { useCartItems } from "@/hooks/useCartItems";
+import Spinner from "@/components/common/Spinner";
 
 type CartItem = {
   id: string;
@@ -179,9 +180,10 @@ const Cart = () => {
     <div className="w-full px-4 py-8 overflow-x-hidden">
       {/* 로딩 상태 */}
       {isLoading && (
-        <div className="flex justify-center items-center py-8">
-          <div className="text-lg text-gray-600">장바구니를 불러오는 중...</div>
-        </div>
+        // <div className="flex justify-center items-center py-8">
+        //   <div className="text-lg text-gray-600">장바구니를 불러오는 중...</div>
+        // </div>
+        <Spinner />
       )}
 
       {/* 에러 상태 */}

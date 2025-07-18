@@ -11,6 +11,7 @@ import {
   getRecommendProducts,
   getTrendingProducts,
 } from "@/api/recommend";
+import Spinner from "@/components/common/Spinner";
 
 export default function HomeClientWrapper() {
   const [data, setData] = useState<MainProductResponse | null>(null);
@@ -68,17 +69,6 @@ export default function HomeClientWrapper() {
     loadData();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen w-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">상품 정보를 불러오는 중...</p>
-        </div>
-      </div>
-    );
-  }
-
   if (error && !data) {
     return (
       <div className="flex items-center justify-center min-h-screen w-screen">
@@ -96,13 +86,16 @@ export default function HomeClientWrapper() {
   }
 
   return (
-    <div className="w-full">
-      <HomeClient
-        initialData={data!}
-        recommend={recommend}
-        trending={trending}
-        ageGroup={ageGroup}
-      />
-    </div>
+    <>
+      {loading && <Spinner />}
+      <div className="w-full">
+        <HomeClient
+          initialData={data!}
+          recommend={recommend}
+          trending={trending}
+          ageGroup={ageGroup}
+        />
+      </div>
+    </>
   );
 }
