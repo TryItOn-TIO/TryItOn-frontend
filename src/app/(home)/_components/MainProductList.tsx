@@ -16,7 +16,7 @@ const MainProductList = ({
   ageGroup,
 }: MainProductListProps) => {
   return (
-    <div className="flex flex-col gap-12 pt-3">
+    <div className="w-full pt-3 px-2 sm:px-4 lg:px-5 flex flex-col gap-12">
       {/* 추천 상품 섹션 */}
       <section>
         <h3 className="text-xl font-semibold mb-4 text-black">
