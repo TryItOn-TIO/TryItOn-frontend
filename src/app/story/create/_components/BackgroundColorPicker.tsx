@@ -54,6 +54,9 @@ const BackgroundColorPicker = ({
           />
         </svg>
         배경색 선택
+        <span className="ml-2 text-sm text-gray-500 font-normal">
+          (아래 토글 버튼으로 배경 제거가 가능합니다)
+        </span>
       </h2>
 
       {/* 색상 팔레트 */}
@@ -107,9 +110,7 @@ const BackgroundColorPicker = ({
       {/* 미리보기 */}
       <div className="bg-white border border-gray-200 rounded-lg p-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-medium text-gray-700">
-            미리보기
-          </h3>
+          <h3 className="text-sm font-medium text-gray-700">미리보기</h3>
           {processedImageUrl && (
             <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded-full">
               ✨ 배경 제거됨
@@ -118,7 +119,7 @@ const BackgroundColorPicker = ({
         </div>
         <div className="flex justify-center">
           <div
-            className="w-40 h-60 rounded-xl border-2 border-gray-200 flex items-center justify-center shadow-lg transition-all duration-300 overflow-hidden"
+            className="w-52 h-72 rounded-xl border-2 border-gray-200 flex items-center justify-center shadow-lg transition-all duration-300 overflow-hidden"
             style={{ backgroundColor: selectedColor }}
           >
             <img
@@ -132,7 +133,7 @@ const BackgroundColorPicker = ({
             />
           </div>
         </div>
-        
+
         {/* 배경 제거 상태 안내 */}
         {processedImageUrl && (
           <div className="mt-3 text-center">
@@ -141,7 +142,7 @@ const BackgroundColorPicker = ({
             </p>
           </div>
         )}
-        
+
         {/* 선택된 색상 표시 */}
         <div className="text-center mt-4">
           <div className="text-xs text-gray-500 bg-gray-100 rounded-full px-3 py-1 inline-block">

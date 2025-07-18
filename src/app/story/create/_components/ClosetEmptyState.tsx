@@ -114,7 +114,7 @@ const ClosetEmptyState = () => {
               <p className="text-xs text-blue-700 leading-relaxed">
                 원하는 의류를 선택하고 가상 피팅을 통해 나만의 아바타를
                 만들어보세요. <br />
-                북마크 아이콘을 통해 옷장에 등록할 수 있어요.
+                옷장에 추가 버튼을 통해 옷장에 등록할 수 있어요.
               </p>
             </div>
           </div>
