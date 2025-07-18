@@ -9,12 +9,16 @@ import useStoryData from "../hooks/useStoryData";
 import useCommentInteraction from "../hooks/useCommentInteraction";
 import useStoryNavigation from "../hooks/useStoryNavigation";
 
+import { useIsMobile } from "@/hooks/useMediaQuery";
+import ShowClothesInfoModal from "@/components/ui/ShowClothesInfoModal";
+
 type StoryClientProps = {
   storyId: number;
 };
 
 const StoryClient = ({ storyId }: StoryClientProps) => {
   const { data, currentStory } = useStoryData({ storyId });
+  const isMobile = useIsMobile(); // 모바일 여부 판단
 
   const {
     storyImageRef,
@@ -73,12 +77,18 @@ const StoryClient = ({ storyId }: StoryClientProps) => {
         onPrev={handlePrev}
       />
 
-      {/* 착장 정보 */}
-      {clothesOn && (
-        <div className="bg-white rounded-lg shadow-xl p-6 max-w-md w-full md:w-auto">
-          <ClothesInfo data={currentStory.products} />
-        </div>
-      )}
+      {/* 착장 정보 - 모바일에선 모달로 띄워지게끔*/}
+      {clothesOn &&
+        (isMobile ? (
+          <ShowClothesInfoModal
+            data={currentStory.products}
+            onClose={() => setClothesOn(false)}
+          />
+        ) : (
+          <div className="bg-white rounded-lg shadow-xl p-6 max-w-md w-full md:w-auto">
+            <ClothesInfo data={currentStory.products} />
+          </div>
+        ))}
     </div>
   );
 };
