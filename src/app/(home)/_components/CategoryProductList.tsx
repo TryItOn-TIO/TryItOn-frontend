@@ -8,6 +8,7 @@ import { StoryResponse } from "@/types/story";
 import { getStories } from "@/api/story";
 import { SortType } from "@/constants/SortType";
 import { useRouter } from "next/navigation";
+import Spinner from "@/components/common/Spinner";
 
 type CategoryProductListProps = {
   categories: Array<{
@@ -59,7 +60,8 @@ const CategoryProductList = ({ categories }: CategoryProductListProps) => {
         </button>
       </div>
 
-      {isLoading && <p>스토리를 불러오는 중...</p>}
+      {isLoading && <Spinner />}
+      {/* {isLoading && <p>스토리를 불러오는 중...</p>} */}
       {error && <p className="text-red-600">{error}</p>}
       {!isLoading && !error && (
         <div className="overflow-x-auto">

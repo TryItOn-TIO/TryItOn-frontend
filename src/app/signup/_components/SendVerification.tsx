@@ -1,5 +1,6 @@
 import { sendEmail } from "@/api/auth";
 import BlackButton from "@/components/common/BlackButton";
+import Spinner from "@/components/common/Spinner";
 import InputText from "@/components/forms/InputText";
 import { EmailSignupRequest } from "@/types/auth";
 import { validateEmail } from "@/utils/validator";
@@ -17,6 +18,7 @@ const SendVerification = ({
   data,
   setData,
 }: SendVerificationProps) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
 
   const router = useRouter();
@@ -34,7 +36,9 @@ const SendVerification = ({
     }
 
     try {
+      setIsLoading(true);
       await sendEmail(data.email);
+      setIsLoading(false);
 
       if (confirm("인증번호가 발송되었습니다.")) {
         setStep((prev) => prev + 1);
@@ -55,22 +59,25 @@ const SendVerification = ({
   }, [data.email]);
 
   return (
-    <div className="flex flex-col gap-10">
-      어서오세요!
-      <br />
-      가입하실 이메일을 입력해주세요.
-      <form onSubmit={handleClick} className="my-10 flex flex-col gap-8">
-        <InputText
-          placeholder="이메일"
-          value={data.email}
-          onChange={handelChange}
-          type="email"
-          isInvalid={error}
-          errorMessage="이메일 형식이 올바르지 않습니다."
-        />
-        <BlackButton text="인증번호 발송" />
-      </form>
-    </div>
+    <>
+      {isLoading && <Spinner />}
+      <div className="flex flex-col gap-10">
+        어서오세요!
+        <br />
+        가입하실 이메일을 입력해주세요.
+        <form onSubmit={handleClick} className="my-10 flex flex-col gap-8">
+          <InputText
+            placeholder="이메일"
+            value={data.email}
+            onChange={handelChange}
+            type="email"
+            isInvalid={error}
+            errorMessage="이메일 형식이 올바르지 않습니다."
+          />
+          <BlackButton text="인증번호 발송" />
+        </form>
+      </div>
+    </>
   );
 };
 

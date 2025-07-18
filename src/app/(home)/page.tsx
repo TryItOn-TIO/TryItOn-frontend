@@ -7,6 +7,7 @@ import HeroSection from "@/components/HeroSection"; // 비로그인 사용자용
 // import StoryShowcase from "@/components/StoryShowcase";
 import Footer from "@/components/layout/Footer";
 import ScrollToTop from "@/components/common/ScrollToTop";
+import Spinner from "@/components/common/Spinner";
 
 export default function HomePage() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
@@ -17,11 +18,7 @@ export default function HomePage() {
   }, []);
 
   if (isLoggedIn === null) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <p className="text-gray-500">로딩 중...</p>
-      </div>
-    );
+    return <Spinner />;
   }
 
   if (isLoggedIn) {

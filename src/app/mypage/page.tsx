@@ -9,6 +9,7 @@ import { useAvatarStore } from "@/stores/avatar-store";
 import { useEffect } from "react";
 import { fetchLatestAvatarInfo } from "@/api/avatar";
 import AvatarFace from "@/components/common/AvatarFace";
+import Spinner from "@/components/common/Spinner";
 
 interface MenuSectionProps {
   title: string;
@@ -87,9 +88,10 @@ export default function MyPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center w-screen">
-        <div className="text-lg text-gray-600">프로필을 불러오는 중...</div>
-      </div>
+      // <div className="min-h-screen bg-gray-50 flex items-center justify-center w-screen">
+      //   <div className="text-lg text-gray-600">프로필을 불러오는 중...</div>
+      // </div>
+      <Spinner />
     );
   }
 

@@ -3,6 +3,7 @@
 import React from "react";
 import ProductCard from "@/components/common/ProductCard";
 import { ProductResponse } from "@/types/product";
+import { useRouter } from "next/navigation";
 
 type MainProductListProps = {
   recommended: ProductResponse[];
@@ -15,8 +16,21 @@ const MainProductList = ({
   ranked,
   ageGroup,
 }: MainProductListProps) => {
+  const router = useRouter();
+
   return (
     <div className="flex flex-col gap-12 pt-3">
+      {/* 스토리 영역 */}
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-xl font-semibold text-black">패션 스토리</h3>
+        <button
+          className="text-sm text-neutral-500 hover:text-black transition-colors"
+          onClick={() => router.push("/story")}
+        >
+          더보기 →
+        </button>
+      </div>
+
       {/* 추천 상품 섹션 */}
       <section>
         <h3 className="text-xl font-semibold mb-4 text-black">
