@@ -110,7 +110,11 @@ export default function Header() {
             <div className="flex items-center gap-4">
               {!isLoggedIn ? (
                 <>
-                  <Link href="/story" onClick={() => setMenuOpen(false)}>
+                  <Link
+                    href="/story"
+                    onClick={() => setMenuOpen(false)}
+                    className="text-sm text-gray-700 hover:text-gray-900"
+                  >
                     스토리
                   </Link>
                   <Link
@@ -252,9 +256,9 @@ export default function Header() {
                       </Link>
                     ))}
                 </nav>
-                <div className="flex flex-col px-4 gap-4 mt-2 border-t border-gray-200 pt-4 pb-6">
-                  {isLoggedIn ? (
-                    <>
+                {isLoggedIn ? (
+                  <>
+                    <div className="flex flex-col px-4 gap-4 border-t border-gray-200 pt-4 pb-6">
                       <Link href="/story" onClick={() => setMenuOpen(false)}>
                         스토리
                       </Link>
@@ -267,12 +271,16 @@ export default function Header() {
                       <Link href="/mypage" onClick={() => setMenuOpen(false)}>
                         마이페이지
                       </Link>
-                    </>
-                  ) : (
-                    <>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex flex-col px-4 gap-4 border-t border-gray-200 py-4">
                       <Link href="/story" onClick={() => setMenuOpen(false)}>
                         스토리
                       </Link>
+                    </div>
+                    <div className="flex flex-col px-4 gap-4 border-t border-gray-200 py-4">
                       <Link
                         href="/signin"
                         className="flex items-center gap-2 text-base text-gray-800 hover:text-blue-600"
@@ -281,9 +289,9 @@ export default function Header() {
                         <User className="w-5 h-5" />
                         로그인
                       </Link>
-                    </>
-                  )}
-                </div>
+                    </div>
+                  </>
+                )}
               </div>
             )}
           </div>
