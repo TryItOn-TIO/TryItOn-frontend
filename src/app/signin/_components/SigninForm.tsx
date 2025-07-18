@@ -76,7 +76,7 @@ const SigninForm = ({
         <Link href={"/signup"} className="text-sm text-gray-400 cursor-pointer">
           이메일로 가입하기
         </Link>
-        <p className="text-sm text-gray-400 cursor-pointer">비밀번호 찾기</p>
+        {/* <p className="text-sm text-gray-400 cursor-pointer">비밀번호 찾기</p> */}
       </div>
     </div>
   );
