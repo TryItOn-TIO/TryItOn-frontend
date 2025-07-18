@@ -33,7 +33,7 @@ const StoryContentInput = ({
         value={contents}
         onChange={(e) => onContentsChange(e.target.value)}
         placeholder="스토리에 대한 설명을 입력해주세요...&#10;예: 오늘의 OOTD! 심플하면서도 세련된 스타일로 코디했어요 ✨"
-        className="w-full h-32 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-gray-700 placeholder-gray-400"
+        className="w-full min-h-32 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-y text-gray-700 placeholder-gray-400"
         maxLength={maxLength}
       />
       <div className="flex justify-between items-center mt-2">
