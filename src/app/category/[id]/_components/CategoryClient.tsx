@@ -12,9 +12,10 @@ type Props = {
 };
 
 const CategoryClient = ({ categoryId }: Props) => {
-  // const categories = ["전체", "긴소매 티셔츠", "반소매 티셔츠"];
+  // 선택된 카테고리 상태 관리
   const [selectedCategory, setSelectedCategory] = useState("전체");
 
+  // 선택된 카테고리명 매핑
   const categories = useMemo(() => {
     const filteredChildCategories = child_category.filter(
       (item) => item.category_id === categoryId
@@ -27,7 +28,24 @@ const CategoryClient = ({ categoryId }: Props) => {
     return ["전체", ...categoryNames];
   }, [categoryId]);
 
+  // 카테고리 id 반환
+  const productCategoryId = useMemo(() => {
+    if (selectedCategory === "전체") {
+      return categoryId;
+    } else {
+      const foundCategory = child_category.find(
+        (item) =>
+          item.categoryName === selectedCategory &&
+          item.category_id === categoryId
+      );
+      return foundCategory ? foundCategory.id : categoryId;
+    }
+  }, [selectedCategory, categoryId]);
+
+  // 하위 카테고리 핸들러
   const handleCategoryChange = (category: string) => {
+    console.log(productCategoryId);
+
     setSelectedCategory(category);
   };
 
@@ -38,7 +56,7 @@ const CategoryClient = ({ categoryId }: Props) => {
         selectedCategory={selectedCategory}
         onCategoryChange={handleCategoryChange}
       />
-      <CategoryProductList categoryId={categoryId} />
+      <CategoryProductList categoryId={productCategoryId} />
     </div>
   );
 };
