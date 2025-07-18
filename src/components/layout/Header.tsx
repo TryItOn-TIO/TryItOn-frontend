@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
-import { Bell, User, Menu, X, Sparkles } from "lucide-react";
+import Image from "next/image";
+import { User, Menu, X, Sparkles } from "lucide-react";
 import { getAccessToken } from "@/utils/auth";
 import { CATEGORY, CATEGORY_LABELS } from "@/constants/category";
 import { useAvatarStore } from "@/stores/avatar-store";
@@ -37,7 +38,7 @@ export default function Header() {
 
   // 데스크탑: 상세 페이지에서만 '마이페이지' 아이콘에 알림 표시
   const showDesktopNotification = hasUnreadNotification && isDetailPage;
-  // 모바일: 페이지와 상관없이 항상 'Bell' 아이콘에 알림 표시
+  // 모바일: 페이지와 상관없이 항상 'alarm_filled' 아이콘에 알림 표시
   const showMobileNotification = hasUnreadNotification;
   // ---------------------
 
@@ -188,7 +189,12 @@ export default function Header() {
               className="relative flex-shrink-0"
               aria-label="알림"
             >
-              <Bell className="w-5 h-5" />
+              <Image
+                src="/images/common/alarm_filled.svg"
+                width={23}
+                height={23}
+                alt="가상피팅"
+              />
               {showMobileNotification && (
                 <>
                   <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white animate-pulse" />
@@ -219,7 +225,12 @@ export default function Header() {
                     className="relative flex-shrink-0"
                     aria-label="알림"
                   >
-                    <Bell className="w-5 h-5" />
+                    <Image
+                      src="/images/common/alarm_filled.svg"
+                      width={23}
+                      height={23}
+                      alt="가상피팅"
+                    />
                     {showMobileNotification && (
                       <>
                         <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white animate-pulse" />
