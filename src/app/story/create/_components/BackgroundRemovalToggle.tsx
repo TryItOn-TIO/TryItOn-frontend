@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { ClosetAvatarResponse } from "@/types/closet";
-import { useBackgroundRemoval } from "../_hooks/useBackgroundRemoval";
+import { useBackgroundRemoval } from "@/app/story/create/_hooks/useBackgroundRemoval";
 
 type BackgroundRemovalToggleProps = {
   selectedAvatar: ClosetAvatarResponse;
@@ -99,8 +99,8 @@ const BackgroundRemovalToggle = ({
 
   return (
     <div className="border-t pt-6 mt-6">
-      <div className="flex items-center justify-between mb-4">
-        <div>
+      <div className="mb-4">
+        <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-gray-800 flex items-center">
             <svg
               className="w-5 h-5 mr-2 text-purple-600"
@@ -120,28 +120,28 @@ const BackgroundRemovalToggle = ({
               </span>
             )}
           </h3>
-          <p className="text-sm text-gray-600 mt-1">
-            아바타의 배경을 자동으로 제거하여 더 깔끔한 스토리를 만들어보세요
-            {hasCachedResult && (
-              <span className="text-green-600 font-medium">
-                {" "}
-                (이미 처리된 이미지)
-              </span>
-            )}
-          </p>
-        </div>
 
-        {/* 토글 스위치 */}
-        <label className="relative inline-flex items-center cursor-pointer">
-          <input
-            type="checkbox"
-            checked={isEnabled}
-            onChange={(e) => handleToggleChange(e.target.checked)}
-            disabled={isProcessing}
-            className="sr-only peer"
-          />
-          <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600 disabled:opacity-50"></div>
-        </label>
+          {/* 토글 스위치 */}
+          <label className="relative inline-flex items-center cursor-pointer flex-shrink-0 ml-4">
+            <input
+              type="checkbox"
+              checked={isEnabled}
+              onChange={(e) => handleToggleChange(e.target.checked)}
+              disabled={isProcessing}
+              className="sr-only peer"
+            />
+            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600 disabled:opacity-50"></div>
+          </label>
+        </div>
+        <p className="text-sm text-gray-600 mt-1">
+          아바타의 배경을 자동으로 제거하여 더 깔끔한 스토리를 만들어보세요
+          {hasCachedResult && (
+            <span className="text-green-600 font-medium">
+              {" "}
+              (이미 처리된 이미지)
+            </span>
+          )}
+        </p>
       </div>
 
       {/* 처리 중 상태 */}
@@ -179,7 +179,7 @@ const BackgroundRemovalToggle = ({
 
       {/* 안내 메시지 */}
       {isEnabled && !isProcessing && !error && (
-        <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+        <div className="p-3 bg-green-50 border border-green-200 rounded-lg mt-4">
           <div className="flex items-center space-x-2">
             <svg
               className="w-5 h-5 text-green-500"
