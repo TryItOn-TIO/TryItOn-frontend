@@ -47,7 +47,7 @@ const StoryClient = ({ storyId }: StoryClientProps) => {
   }
 
   return (
-    <div className="w-screen h-[90vh] fixed top-[10vh] left-0 flex justify-center gap-20 items-center z-40 bg-[rgba(205,205,205,0.25)]">
+    <div className="w-screen h-[90vh] fixed top-[10vh] left-0 flex justify-center gap-20 items-center z-5 bg-[rgba(205,205,205,0.25)]">
       <StoryImage
         ref={storyImageRef}
         currentStory={currentStory}

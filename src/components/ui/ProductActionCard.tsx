@@ -2,9 +2,9 @@
 
 import { ProductResponse } from "@/types/product";
 import Image from "next/image";
-import React from "react";
-import WhiteButton from "../common/WhiteButton";
-import BlackButton from "../common/BlackButton";
+import React, { useState, useEffect } from "react";
+import WhiteButton from "@/components/common/WhiteButton";
+import BlackButton from "@/components/common/BlackButton";
 import { useRouter } from "next/navigation";
 import { useWishlist } from "@/hooks/useWishlist";
 
@@ -15,11 +15,17 @@ type ProductActionCardProps = {
 const ProductActionCard = ({ data }: ProductActionCardProps) => {
   const router = useRouter();
   const { toggleWishlist } = useWishlist(data.liked, data.id);
+  const [isLiked, setIsLiked] = useState(data.liked);
+
+  useEffect(() => {
+    setIsLiked(data.liked);
+  }, [data.liked]);
 
   const handletoggleWishlist = () => {
     // TODO: 주문 구현 후 수정
     console.log("상품 정보:", data);
     toggleWishlist();
+    setIsLiked((prev) => !prev);
   };
 
   const handleMoveDetail = () => {
@@ -39,7 +45,7 @@ const ProductActionCard = ({ data }: ProductActionCardProps) => {
   return (
     <div className="flex h-60 items-stretch gap-4 text-sm text-black hover:opacity-90">
       {/* 이미지 영역 */}
-      <div className="h-full w-[320px] bg-neutral-100 relative">
+      <div className="h-full w-[200px] bg-neutral-100 relative">
         <Image
           src={data.img1}
           alt={`${data.productName} 이미지`}
@@ -67,7 +73,7 @@ const ProductActionCard = ({ data }: ProductActionCardProps) => {
         </div>
 
         <div className="space-y-2">
-          {data.liked ? (
+          {isLiked ? (
             <WhiteButton
               text="찜 해제하기"
               handleClick={handletoggleWishlist}
