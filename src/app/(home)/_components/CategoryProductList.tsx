@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import ProductCard from "@/components/common/ProductCard";
 import StoryCard from "@/app/story/_components/StoryCard";
-import { dummyStoryList } from "@/mock/story";
 import { StoryResponse } from "@/types/story";
 import { getStories } from "@/api/story";
 import { SortType } from "@/constants/SortType";
@@ -22,7 +21,7 @@ const CategoryProductList = ({ categories }: CategoryProductListProps) => {
   console.log("카테고리별 상품 표시:", categories.length, "개 카테고리");
 
   const router = useRouter();
-  const [stories, setStories] = useState<StoryResponse[]>(dummyStoryList);
+  const [stories, setStories] = useState<StoryResponse[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true); // TODO: API 테스트 후 true로 변경
   const [error, setError] = useState<string | null>(null);
 
