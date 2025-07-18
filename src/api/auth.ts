@@ -1,4 +1,4 @@
-import { axiosWithoutAuth } from "@/api/index";
+import { axiosWithAuth, axiosWithoutAuth } from "@/api/index";
 import type {
   SigninResponse,
   GoogleSignupRequest,
@@ -7,8 +7,10 @@ import type {
   VerifyCodeRequest,
   EmailSignupResponse,
   EmailSignupRequest,
+  WithdrawRequest,
+  WithdrawResponse,
 } from "@/types/auth";
-import { setAccessToken } from "@/utils/auth";
+import { setAccessToken, deleteAccessToken } from "@/utils/auth";
 
 export const signupWithGoogle = async (
   data: GoogleSignupRequest
@@ -62,5 +64,15 @@ export const signin = async (
   }
   console.log(response.data);
 
+  return response.data;
+};
+
+export const withdraw = async (
+  data: WithdrawRequest
+): Promise<WithdrawResponse> => {
+  const response = await axiosWithAuth().delete("/api/auth/withdraw", { data });
+  if (response.data?.success) {
+    deleteAccessToken();
+  }
   return response.data;
 };

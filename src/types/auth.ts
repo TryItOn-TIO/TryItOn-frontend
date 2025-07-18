@@ -54,3 +54,15 @@ export type GoogleSigninRequest = {
 export type GoogleSignupRequest = SignupRequest & {
   idToken: string;
 };
+
+// 회원 탈퇴 요청
+export type WithdrawRequest = {
+  password?: string; // 이메일 로그인 사용자 인증용 (소셜 로그인은 선택적)
+  reason?: string; // 탈퇴 사유 (선택 사항)
+};
+
+// 회원 탈퇴 응답
+export type WithdrawResponse = {
+  success: boolean;
+  message: string;
+};
