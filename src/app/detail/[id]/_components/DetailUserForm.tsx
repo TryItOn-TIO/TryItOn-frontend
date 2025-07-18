@@ -12,9 +12,10 @@ import BottomActionButtons from "@/app/detail/[id]/_components/BottomActionButto
 
 type ProductDetailInfoProps = {
   data: ProductDetailResponse;
+  onWishlistChange?: () => void;
 };
 
-const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
+const ProductDetailInfo = ({ data, onWishlistChange }: ProductDetailInfoProps) => {
   const router = useRouter();
   console.log(data.liked);
 
@@ -39,8 +40,18 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
     }
   }, [data.variant, orderData.color]);
 
-  const { isWished, toggleWishlist } = useWishlist(data.liked, data.id);
+  const { isWished, isLoading: wishLoading, toggleWishlist } = useWishlist(data.liked, data.id);
   const { addToCart, isLoading } = useCart();
+
+  // 찜 상태 변경 핸들러
+  const handleToggleWishlist = async () => {
+    const success = await toggleWishlist();
+    if (success && onWishlistChange) {
+      // 찜 상태 변경 성공 시 부모 컴포넌트에 알림
+      onWishlistChange();
+    }
+    return success;
+  };
 
   // 태그를 위한 product name 전처리
   const cleanedProductName = data.productName
@@ -283,7 +294,7 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
             )}
             <BottomActionButtons
               isWished={data.liked}
-              toggleWishlist={toggleWishlist}
+              toggleWishlist={handleToggleWishlist}
               wishlistCount={data.wishlistCount}
               isOutOfStock={isCurrentVariantOutOfStock()}
               isLoading={isLoading}
@@ -295,7 +306,7 @@ const ProductDetailInfo = ({ data }: ProductDetailInfoProps) => {
         ) : (
           <BottomActionButtons
             isWished={data.liked}
-            toggleWishlist={toggleWishlist}
+            toggleWishlist={handleToggleWishlist}
             wishlistCount={data.wishlistCount}
             isOutOfStock={isCurrentVariantOutOfStock()}
             isLoading={isLoading}

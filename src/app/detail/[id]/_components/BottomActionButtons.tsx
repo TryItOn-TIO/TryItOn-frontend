@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 
 type Props = {
   isWished: boolean;
-  toggleWishlist: () => void;
+  toggleWishlist: () => Promise<boolean>;
   wishlistCount: number;
   isOutOfStock: boolean;
   isLoading: boolean;
@@ -27,14 +27,45 @@ export default function BottomActionButtons({
   isMobile,
 }: Props) {
   const [liked, setLiked] = useState(isWished);
+  const [count, setCount] = useState(wishlistCount);
+  const [isWishLoading, setIsWishLoading] = useState(false);
 
+  // isWished prop이 변경될 때마다 로컬 상태 업데이트
   useEffect(() => {
+    console.log("BottomActionButtons: isWished 변경됨", isWished);
     setLiked(isWished);
   }, [isWished]);
 
-  const handleWishlistClick = () => {
-    setLiked(!liked);
-    toggleWishlist();
+  // wishlistCount prop이 변경될 때마다 로컬 상태 업데이트
+  useEffect(() => {
+    console.log("BottomActionButtons: wishlistCount 변경됨", wishlistCount);
+    setCount(wishlistCount);
+  }, [wishlistCount]);
+
+  const handleWishlistClick = async () => {
+    if (isWishLoading) return; // 이미 처리 중이면 중복 클릭 방지
+    
+    console.log("찜 버튼 클릭: 현재 상태", liked);
+    setIsWishLoading(true);
+    
+    try {
+      // toggleWishlist가 성공적으로 실행되었을 때만 UI 상태 변경
+      const success = await toggleWishlist();
+      console.log("찜 토글 결과:", success);
+      
+      if (success) {
+        // 현재 상태의 반대로 변경
+        const newLikedState = !liked;
+        console.log("새로운 찜 상태:", newLikedState);
+        
+        setLiked(newLikedState);
+        
+        // 찜 상태에 따라 카운트 업데이트
+        setCount(prev => newLikedState ? prev + 1 : prev - 1);
+      }
+    } finally {
+      setIsWishLoading(false);
+    }
   };
 
   return (
@@ -51,8 +82,9 @@ export default function BottomActionButtons({
           width={24}
           height={24}
           alt="heart"
+          className={isWishLoading ? "opacity-70" : ""}
         />
-        <p className="text-xs">{wishlistCount.toLocaleString()}</p>
+        <p className="text-xs">{count.toLocaleString()}</p>
       </div>
 
       {/* 장바구니 버튼 */}
