@@ -30,7 +30,7 @@ const SavedOutfitCard = ({
         {!isShareMode && (
           <button
             onClick={() => onDelete(outfit.avatarId)}
-            className="absolute top-2 right-2 bg-[rgba(255,255,255,0.25)] text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-500 transition-colors disabled:opacity-50"
+            className="absolute top-2 right-2 bg-[rgba(255,255,255,0.25)] text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-[rgba(255,255,255,0.50)] transition-colors disabled:opacity-50"
             disabled={isDeleting}
           >
             <Image
