@@ -7,8 +7,11 @@ import ProductCard from "./common/ProductCard";
 import { getTrendingProducts } from "@/api/recommend";
 import { MainProductResponse, ProductResponse } from "@/types/product";
 import { fetchMainProductsForGuest } from "@/api/product";
+import { useIsMobile } from "@/hooks/useMediaQuery";
 
 const HeroSection = () => {
+  const isMobile = useIsMobile(); // 모바일 여부 판단
+
   const [trendingProducts, setTrendingProducts] = useState<ProductResponse[]>(
     []
   );
@@ -36,11 +39,26 @@ const HeroSection = () => {
         {/* Interactive Try-On Experience */}
         <div className="bg-white rounded-3xl shadow-2xl p-6 md:p-8 mb-12 hover:shadow-3xl transition-shadow duration-300">
           <div className="text-center mb-8">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
-              <p className="text-lg text-primary mb-1">
-                🤔 어떤 옷이 나에게 어울릴까?
-              </p>
-              아바타로 먼저 입어보고, 내 스타일을 발견해보세요
+            <h2 className="md:text-2xl font-bold mb-2">
+              {isMobile ? (
+                <>
+                  <p className="text-sm text-primary mb-3 text-gray-400">
+                    🤔 어떤 옷이 나에게 어울릴까?
+                  </p>
+                  <p className="text-lg  text-gray-900 leading-snug">
+                    아바타로 먼저 입어보고, <br />내 스타일을 발견해보세요
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="text-lg text-primary mb-1 text-gray-400">
+                    🤔 어떤 옷이 나에게 어울릴까?
+                  </p>
+                  <p className="text-xl text-gray-900">
+                    아바타로 먼저 입어보고, 내 스타일을 발견해보세요
+                  </p>
+                </>
+              )}
             </h2>
             {/* 
             <p className="text-gray-600 mt-6 text-sm md:text-base">
