@@ -10,7 +10,6 @@ import { getWishlist, getWishlistByCategory } from "@/api/wishlist";
 import type { ClosetAvatarResponse } from "@/types/closet";
 import type { ProductResponse } from "@/types/product";
 
-// TODO: 확인! parent category name으로 받아와야 함
 const categories = [
   "전체",
   "상의",
@@ -94,7 +93,8 @@ const ClosetPage = () => {
       setClosetAvatars((prev) =>
         prev.filter((avatar) => avatar.avatarId !== avatarId)
       );
-      alert("착장이 삭제되었습니다!");
+      // alert("착장이 삭제되었습니다!");
+      window.location.reload();
     } catch (error) {
       console.error("착장 삭제 실패:", error);
       alert("착장 삭제에 실패했습니다.");

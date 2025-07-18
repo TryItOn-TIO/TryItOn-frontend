@@ -109,15 +109,21 @@ export default function Header() {
             </div>
             <div className="flex items-center gap-4">
               {!isLoggedIn ? (
-                <Link
-                  href="/signin"
-                  className="flex items-center gap-2 text-sm text-gray-700 hover:text-gray-900"
-                >
-                  <User className="w-4 h-4" />
-                  로그인
-                </Link>
+                <>
+                  <Link href="/story" onClick={() => setMenuOpen(false)}>
+                    스토리
+                  </Link>
+                  <Link
+                    href="/signin"
+                    className="flex items-center gap-2 text-sm text-gray-700 hover:text-gray-900"
+                  >
+                    <User className="w-4 h-4" />
+                    로그인
+                  </Link>
+                </>
               ) : (
                 <div className="flex items-center gap-4 text-sm text-gray-700">
+                  <Link href="/story">스토리</Link>
                   <Link href="/closet">옷장</Link>
                   <Link href="/cart">장바구니</Link>
                   <Link
@@ -249,6 +255,9 @@ export default function Header() {
                 <div className="flex flex-col px-4 gap-4 mt-2 border-t border-gray-200 pt-4 pb-6">
                   {isLoggedIn ? (
                     <>
+                      <Link href="/story" onClick={() => setMenuOpen(false)}>
+                        스토리
+                      </Link>
                       <Link href="/closet" onClick={() => setMenuOpen(false)}>
                         옷장
                       </Link>
@@ -260,14 +269,19 @@ export default function Header() {
                       </Link>
                     </>
                   ) : (
-                    <Link
-                      href="/signin"
-                      className="flex items-center gap-2 text-base text-gray-800 hover:text-blue-600"
-                      onClick={() => setMenuOpen(false)}
-                    >
-                      <User className="w-5 h-5" />
-                      로그인
-                    </Link>
+                    <>
+                      <Link href="/story" onClick={() => setMenuOpen(false)}>
+                        스토리
+                      </Link>
+                      <Link
+                        href="/signin"
+                        className="flex items-center gap-2 text-base text-gray-800 hover:text-blue-600"
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        <User className="w-5 h-5" />
+                        로그인
+                      </Link>
+                    </>
                   )}
                 </div>
               </div>
