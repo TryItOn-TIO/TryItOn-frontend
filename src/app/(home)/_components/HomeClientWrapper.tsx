@@ -19,7 +19,7 @@ export default function HomeClientWrapper() {
   const [trending, setTrending] = useState<ProductResponse[]>([]);
   const [ageGroup, setAgeGroup] = useState<ProductResponse[]>([]);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {

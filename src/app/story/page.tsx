@@ -9,13 +9,12 @@ import StoryLoadingState from "./_components/StoryLoadingState";
 import StoryErrorState from "./_components/StoryErrorState";
 import StoryHeader from "./_components/StoryHeader";
 import StoryGrid from "./_components/StoryGrid";
-import { dummyStoryList } from "@/mock/story";
 import Spinner from "@/components/common/Spinner";
 
 const StoryPage = () => {
   const router = useRouter();
-  const [stories, setStories] = useState<StoryResponse[]>(dummyStoryList);
-  const [isLoading, setIsLoading] = useState<boolean>(true); // TODO: API 테스트 후 true로 변경
+  const [stories, setStories] = useState<StoryResponse[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [sortType, setSortType] = useState<SortType>(SortType.POPULAR);
 
@@ -50,16 +49,13 @@ const StoryPage = () => {
 
   return (
     <>
-      {isLoading ? (
-        <Spinner />
-      ) : (
-        <div className="flex flex-col items-center w-screen min-h-screen">
-          <div className="max-w-6xl mx-auto px-4 py-8">
-            <StoryHeader sortType={sortType} onSortChange={handleSortChange} />
-            <StoryGrid stories={stories} onStoryClick={handleStoryClick} />
-          </div>
+      {isLoading && <Spinner />}
+      <div className="flex flex-col items-center w-screen min-h-screen">
+        <div className="max-w-6xl mx-auto px-4 py-8">
+          <StoryHeader sortType={sortType} onSortChange={handleSortChange} />
+          <StoryGrid stories={stories} onStoryClick={handleStoryClick} />
         </div>
-      )}
+      </div>
     </>
   );
 };
