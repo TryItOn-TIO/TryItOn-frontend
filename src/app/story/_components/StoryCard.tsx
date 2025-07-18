@@ -47,7 +47,9 @@ const StoryCard = ({ story, onClick }: StoryCardProps) => {
       {/* 스토리 정보 */}
       <div className="p-4">
         <p className="text-gray-800 mb-3 line-clamp-3">
-          {story.contents.slice(0, 17)} ...
+          {story.contents.length > 17
+            ? story.contents.slice(0, 17) + "..."
+            : story.contents}
         </p>
 
         {/* 작성자 정보 */}
