@@ -3,7 +3,7 @@
 import { User, ChevronRight, LogOut } from "lucide-react";
 import { useProfile } from "@/hooks/useMypage";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
-import { deleteAccessToken } from "@/utils/auth";
+import { clearSessionStorage, deleteAccessToken } from "@/utils/auth";
 import { useRouter } from "next/navigation";
 import { useAvatarStore } from "@/stores/avatar-store";
 import { useEffect } from "react";
@@ -55,7 +55,7 @@ export default function MyPage() {
 
   const { profile, isLoading, error } = useProfile();
   const router = useRouter();
-  
+
   const avatarInfo = useAvatarStore((state) => state.avatarInfo);
   const setAvatarInfo = useAvatarStore((state) => state.setAvatarInfo);
 
@@ -64,7 +64,7 @@ export default function MyPage() {
       try {
         const data = await fetchLatestAvatarInfo();
         setAvatarInfo(data);
-        console.log('마이페이지 - 아바타 정보 로드:', data);
+        console.log("마이페이지 - 아바타 정보 로드:", data);
       } catch (error) {
         console.error("아바타 정보 로드 실패", error);
       }
@@ -78,6 +78,8 @@ export default function MyPage() {
 
     if (confirmLogout) {
       deleteAccessToken();
+      clearSessionStorage();
+
       router.push("/");
       alert("로그아웃되었습니다.");
     }
@@ -100,14 +102,16 @@ export default function MyPage() {
   }
 
   // 백엔드 API에서 받은 loginType 사용
-  const isGoogleLogin = profile?.loginType === 'GOOGLE';
+  const isGoogleLogin = profile?.loginType === "GOOGLE";
 
   // 내 정보 메뉴 아이템 (구글 로그인 사용자는 비밀번호 변경 제외)
   const myInfoItems = [
     { label: "프로필 관리", href: "/mypage/profile" },
     { label: "아바타 설정", href: "/mypage/settings" },
     // 구글 로그인 사용자가 아닌 경우에만 비밀번호 변경 메뉴 표시
-    ...(isGoogleLogin ? [] : [{ label: "비밀번호 변경", href: "/mypage/password" }]),
+    ...(isGoogleLogin
+      ? []
+      : [{ label: "비밀번호 변경", href: "/mypage/password" }]),
     { label: "배송지 주소 관리", href: "/mypage/address" },
     { label: "결제 정보", href: "/mypage/payment" },
   ];
@@ -150,10 +154,7 @@ export default function MyPage() {
             ]}
           />
 
-          <MenuSection
-            title="내 정보"
-            items={myInfoItems}
-          />
+          <MenuSection title="내 정보" items={myInfoItems} />
 
           <MenuSection
             title="나의 맞춤 정보"
