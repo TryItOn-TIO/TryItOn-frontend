@@ -62,3 +62,18 @@ export const completeAvatarUpload = async (
   const response = await axiosWithAuth().post("/api/avatars/upload-complete", data);
   return response.data;
 };
+
+// 아바타 리셋 응답 타입
+export interface ResetAvatarResponse {
+  success: boolean;
+  message?: string;
+}
+
+/**
+ * 아바타 리셋 - 원본 베이스 이미지로 복원하고 착용 아이템 제거
+ * @returns 리셋 결과
+ */
+export const resetAvatar = async (): Promise<ResetAvatarResponse> => {
+  const response = await axiosWithAuth().put("/api/avatars/reset");
+  return response.data;
+};

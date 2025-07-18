@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
-import { Bell, User, Menu, X, Sparkles } from "lucide-react";
+import Image from "next/image";
+import { User, Menu, X, Sparkles } from "lucide-react";
 import { getAccessToken } from "@/utils/auth";
 import { CATEGORY, CATEGORY_LABELS } from "@/constants/category";
 import { useAvatarStore } from "@/stores/avatar-store";
@@ -38,7 +38,7 @@ export default function Header() {
 
   // 데스크탑: 상세 페이지에서만 '마이페이지' 아이콘에 알림 표시
   const showDesktopNotification = hasUnreadNotification && isDetailPage;
-  // 모바일: 페이지와 상관없이 항상 'Bell' 아이콘에 알림 표시
+  // 모바일: 페이지와 상관없이 항상 'alarm_filled' 아이콘에 알림 표시
   const showMobileNotification = hasUnreadNotification;
   // ---------------------
 
@@ -80,6 +80,13 @@ export default function Header() {
 
   if (isLoggedIn === null) return null;
 
+  const getLinkClassName = (
+    base: string,
+    active: string,
+    inactive: string,
+    isActive: boolean
+  ) => [base, isActive ? active : inactive].join(" ");
+
   return (
     <>
       <header className="h-16 sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-gray-100">
@@ -93,15 +100,26 @@ export default function Header() {
               <nav className="hidden lg:flex items-center gap-5">
                 {Object.values(CATEGORY)
                   .filter((v) => typeof v === "number")
-                  .map((id) => (
-                    <Link
-                      key={id}
-                      href={id === 0 ? "/" : `/category/${id}`}
-                      className="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
-                    >
-                      {CATEGORY_LABELS[id as CATEGORY]}
-                    </Link>
-                  ))}
+                  .map((id) => {
+                    const href = id === 0 ? "/" : `/category/${id}`;
+                    const isActive =
+                      pathname === href ||
+                      (href !== "/" && pathname.startsWith(href));
+                    return (
+                      <Link
+                        key={id}
+                        href={href}
+                        className={getLinkClassName(
+                          "text-sm transition-colors",
+                          "font-bold text-gray-900",
+                          "font-medium text-gray-700 hover:text-gray-900",
+                          isActive
+                        )}
+                      >
+                        {CATEGORY_LABELS[id as CATEGORY]}
+                      </Link>
+                    );
+                  })}
               </nav>
             </div>
             <div className="flex-grow mx-8">
@@ -126,10 +144,29 @@ export default function Header() {
                   </Link>
                 </>
               ) : (
-                <div className="flex items-center gap-4 text-sm text-gray-700">
-                  <Link href="/story">스토리</Link>
-                  <Link href="/closet">옷장</Link>
-                  <Link href="/cart">장바구니</Link>
+                <div className="flex items-center gap-4 text-sm">
+                  <Link
+                    href="/closet"
+                    className={getLinkClassName(
+                      "transition-colors",
+                      "font-bold text-gray-900",
+                      "text-gray-700 hover:text-gray-900",
+                      pathname.startsWith("/closet")
+                    )}
+                  >
+                    옷장
+                  </Link>
+                  <Link
+                    href="/cart"
+                    className={getLinkClassName(
+                      "transition-colors",
+                      "font-bold text-gray-900",
+                      "text-gray-700 hover:text-gray-900",
+                      pathname.startsWith("/cart")
+                    )}
+                  >
+                    장바구니
+                  </Link>
                   <Link
                     href="/mypage"
                     onClick={handleMypageClick}
@@ -148,7 +185,7 @@ export default function Header() {
             </div>
           </div>
 
-          {/* --- 모바일 헤더 --- */}
+          {/* --- Mobile Header --- */}
           <div className="flex md:hidden items-center gap-2 py-3">
             <Link href="/">
               <h1 className="text-xl font-bold text-gray-900">TIO</h1>
@@ -161,7 +198,12 @@ export default function Header() {
               className="relative flex-shrink-0"
               aria-label="알림"
             >
-              <Bell className="w-5 h-5" />
+              <Image
+                src="/images/common/alarm_filled.svg"
+                width={23}
+                height={23}
+                alt="가상피팅"
+              />
               {showMobileNotification && (
                 <>
                   <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white animate-pulse" />
@@ -177,7 +219,7 @@ export default function Header() {
               )}
             </button>
 
-            {/* 모바일 메뉴 */}
+            {/* Mobile Menu */}
             {menuOpen && (
               <div className="fixed top-0 left-0 w-full h-screen bg-white z-[9999] overflow-y-auto">
                 <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-200">
@@ -192,7 +234,12 @@ export default function Header() {
                     className="relative flex-shrink-0"
                     aria-label="알림"
                   >
-                    <Bell className="w-5 h-5" />
+                    <Image
+                      src="/images/common/alarm_filled.svg"
+                      width={23}
+                      height={23}
+                      alt="가상피팅"
+                    />
                     {showMobileNotification && (
                       <>
                         <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white animate-pulse" />
@@ -245,45 +292,89 @@ export default function Header() {
                 <nav className="flex flex-wrap gap-3 px-4 py-4">
                   {Object.values(CATEGORY)
                     .filter((v) => typeof v === "number")
-                    .map((id) => (
-                      <Link
-                        key={id}
-                        href={id === 0 ? "/" : `/category/${id}`}
-                        className="text-base text-gray-800 hover:text-blue-600"
-                        onClick={() => setMenuOpen(false)}
-                      >
-                        {CATEGORY_LABELS[id as CATEGORY]}
-                      </Link>
-                    ))}
+                    .map((id) => {
+                      const href = id === 0 ? "/" : `/category/${id}`;
+                      const isActive =
+                        pathname === href ||
+                        (href !== "/" && pathname.startsWith(href));
+                      return (
+                        <Link
+                          key={id}
+                          href={href}
+                          onClick={() => setMenuOpen(false)}
+                          className={getLinkClassName(
+                            "text-base transition-colors",
+                            "font-bold text-gray-900",
+                            "text-gray-800 hover:text-gray-900",
+                            isActive
+                          )}
+                        >
+                          {CATEGORY_LABELS[id as CATEGORY]}
+                        </Link>
+                      );
+                    })}
                 </nav>
                 {isLoggedIn ? (
-                  <>
-                    <div className="flex flex-col px-4 gap-4 border-t border-gray-200 pt-4 pb-6">
-                      <Link href="/story" onClick={() => setMenuOpen(false)}>
-                        스토리
-                      </Link>
-                      <Link href="/closet" onClick={() => setMenuOpen(false)}>
-                        옷장
-                      </Link>
-                      <Link href="/cart" onClick={() => setMenuOpen(false)}>
-                        장바구니
-                      </Link>
-                      <Link href="/mypage" onClick={() => setMenuOpen(false)}>
-                        마이페이지
-                      </Link>
-                    </div>
-                  </>
+                  <div className="flex flex-col px-4 gap-4 mt-2 border-t border-gray-200 pt-4 pb-6">
+                    <Link
+                      href="/story"
+                      onClick={() => setMenuOpen(false)}
+                      className="text-base text-gray-800 hover:text-gray-900"
+                    >
+                      스토리
+                    </Link>
+                    <Link
+                      href="/closet"
+                      onClick={() => setMenuOpen(false)}
+                      className={getLinkClassName(
+                        "transition-colors",
+                        "font-bold text-gray-900",
+                        "text-gray-800 hover:text-gray-900",
+                        pathname.startsWith("/closet")
+                      )}
+                    >
+                      옷장
+                    </Link>
+                    <Link
+                      href="/cart"
+                      onClick={() => setMenuOpen(false)}
+                      className={getLinkClassName(
+                        "transition-colors",
+                        "font-bold text-gray-900",
+                        "text-gray-800 hover:text-gray-900",
+                        pathname.startsWith("/cart")
+                      )}
+                    >
+                      장바구니
+                    </Link>
+                    <Link
+                      href="/mypage"
+                      onClick={() => setMenuOpen(false)}
+                      className={getLinkClassName(
+                        "transition-colors",
+                        "font-bold text-gray-900",
+                        "text-gray-800 hover:text-gray-900",
+                        pathname.startsWith("/mypage")
+                      )}
+                    >
+                      마이페이지
+                    </Link>
+                  </div>
                 ) : (
                   <>
-                    <div className="flex flex-col px-4 gap-4 border-t border-gray-200 py-4">
-                      <Link href="/story" onClick={() => setMenuOpen(false)}>
+                    <div className="flex flex-col px-4 gap-4 my-2 border-t border-gray-200 pt-4">
+                      <Link
+                        href="/story"
+                        onClick={() => setMenuOpen(false)}
+                        className="text-base text-gray-800 hover:text-gray-900"
+                      >
                         스토리
                       </Link>
                     </div>
-                    <div className="flex flex-col px-4 gap-4 border-t border-gray-200 py-4">
+                    <div className="flex flex-col px-4 gap-4 my-2 border-t border-gray-200 pt-4">
                       <Link
                         href="/signin"
-                        className="flex items-center gap-2 text-base text-gray-800 hover:text-blue-600"
+                        className="flex items-center gap-2 text-base text-gray-800 hover:text-gray-900"
                         onClick={() => setMenuOpen(false)}
                       >
                         <User className="w-5 h-5" />

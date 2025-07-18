@@ -5,7 +5,7 @@ import ProductDetailInfo from "@/app/detail/[id]/_components/DetailUserForm";
 import DetailRecommand from "@/app/detail/[id]/_components/DetailRecommand";
 import DetailInfo from "@/app/detail/[id]/_components/DetailInfo";
 import { getProductDetail } from "@/api/productDetail";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Spinner from "@/components/common/Spinner";
 import { initialProductDetail } from "@/types/productDetail";
 import { useIsMobile } from "@/hooks/useMediaQuery";
@@ -19,8 +19,10 @@ const DetailClient = ({ productId }: DetailClientProps) => {
   const [loading, setLoading] = useState(true);
   const isMobile = useIsMobile();
 
-  const fetchData = async () => {
+  // fetchData를 useCallback으로 감싸서 재사용 가능하게 함
+  const fetchData = useCallback(async () => {
     try {
+      setLoading(true);
       const data = await getProductDetail(productId);
       setData(data);
       setLoading(false);
@@ -30,12 +32,19 @@ const DetailClient = ({ productId }: DetailClientProps) => {
       console.error("에러 상태:", error.response?.status);
       console.error("요청 URL:", error.config?.url);
       console.error("요청 productId:", productId);
+      setLoading(false);
     }
-  };
+  }, [productId]);
+
+  // 찜 상태 변경 후 데이터 갱신 함수
+  const refreshData = useCallback(() => {
+    console.log("찜 상태 변경 후 데이터 갱신");
+    fetchData();
+  }, [fetchData]);
 
   useEffect(() => {
     fetchData();
-  }, [productId]);
+  }, [fetchData]);
 
   return (
     <>
@@ -44,7 +53,7 @@ const DetailClient = ({ productId }: DetailClientProps) => {
       {isMobile ? (
         <>
           <DetailMainImg images={data.images} productId={productId} />
-          <ProductDetailInfo data={data} />
+          <ProductDetailInfo data={data} onWishlistChange={refreshData} />
           <DetailRecommand productId={productId} />
           {data.images
             .slice(4)
@@ -71,7 +80,7 @@ const DetailClient = ({ productId }: DetailClientProps) => {
 
           {/* 우측 상품 장바구니/구매하기 창 */}
           <div className="w-full md:w-[35%] md:min-h-screen md:h-screen md:fixed md:right-0 md:top-[15vh] md:bottom-0 md:overflow-y-auto md:shadow-md md:bg-white">
-            <ProductDetailInfo data={data} />
+            <ProductDetailInfo data={data} onWishlistChange={refreshData} />
           </div>
         </div>
       )}

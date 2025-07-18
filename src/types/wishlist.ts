@@ -5,3 +5,9 @@ export type PostWishlist = {
 export type DeleteWishlist = {
   productId: number;
 };
+
+export type WishlistResponse = {
+  success: boolean;
+  message?: string;
+  data?: any;
+};
