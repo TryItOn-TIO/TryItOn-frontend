@@ -131,7 +131,12 @@ export default function Header() {
                   <Link
                     href="/story"
                     onClick={() => setMenuOpen(false)}
-                    className="text-sm text-gray-700 hover:text-gray-900"
+                    className={getLinkClassName(
+                      "transition-colors",
+                      "font-bold text-gray-900",
+                      "text-gray-700 hover:text-gray-900",
+                      pathname.startsWith("/story")
+                    )}
                   >
                     스토리
                   </Link>
@@ -145,6 +150,18 @@ export default function Header() {
                 </>
               ) : (
                 <div className="flex items-center gap-4 text-sm">
+                  <Link
+                    href="/story"
+                    onClick={() => setMenuOpen(false)}
+                    className={getLinkClassName(
+                      "transition-colors",
+                      "font-bold text-gray-900",
+                      "text-gray-700 hover:text-gray-900",
+                      pathname.startsWith("/story")
+                    )}
+                  >
+                    스토리
+                  </Link>
                   <Link
                     href="/closet"
                     className={getLinkClassName(
