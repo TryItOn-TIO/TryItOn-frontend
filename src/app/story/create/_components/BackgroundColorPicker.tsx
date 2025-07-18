@@ -54,6 +54,9 @@ const BackgroundColorPicker = ({
           />
         </svg>
         배경색 선택
+        <span className="ml-2 text-sm text-gray-500 font-normal">
+          (아래 토글 버튼으로 배경 제거가 가능합니다)
+        </span>
       </h2>
 
       {/* 색상 팔레트 */}
