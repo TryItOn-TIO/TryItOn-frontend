@@ -3,8 +3,6 @@
 import { ProductResponse } from "@/types/product";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
-import WhiteButton from "@/components/common/WhiteButton";
-import BlackButton from "@/components/common/BlackButton";
 import { useRouter } from "next/navigation";
 import { useWishlist } from "@/hooks/useWishlist";
 
@@ -58,7 +56,7 @@ const ProductActionCard = ({ data }: ProductActionCardProps) => {
       <div className="h-full flex flex-col justify-between w-full py-2">
         <div>
           <div className="text-sm text-gray-500">{data.brand}</div>
-          <div className="font-medium text-xl">{data.productName}</div>
+          <div className="font-medium text-base">{data.productName}</div>
 
           <div className="my-2">
             {isDiscounted && (
@@ -74,14 +72,29 @@ const ProductActionCard = ({ data }: ProductActionCardProps) => {
 
         <div className="space-y-2">
           {isLiked ? (
-            <WhiteButton
-              text="찜 해제하기"
-              handleClick={handletoggleWishlist}
-            />
+            <button
+              type="submit"
+              onClick={handletoggleWishlist}
+              className={`w-full cursor-pointer rounded-md bg-white py-2 px-4 border border-transparent text-center text-base text-neutral-800 transition-all shadow-md hover:shadow-lg focus:bg-gray-100 focus:shadow-none active:bg-gray-100 hover:bg-gray-100 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none`}
+            >
+              찜 해제하기
+            </button>
           ) : (
-            <WhiteButton text="찜하기" handleClick={handletoggleWishlist} />
+            <button
+              type="submit"
+              onClick={handletoggleWishlist}
+              className={`w-full cursor-pointer rounded-md bg-white py-2 px-4 border border-transparent text-center text-base text-neutral-800 transition-all shadow-md hover:shadow-lg focus:bg-gray-100 focus:shadow-none active:bg-gray-100 hover:bg-gray-100 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none`}
+            >
+              찜하기
+            </button>
           )}
-          <BlackButton text="더보기" handleClick={handleMoveDetail} />
+          <button
+            type="submit"
+            onClick={handleMoveDetail}
+            className={`w-full cursor-pointer rounded-md bg-black py-2 px-4 border border-transparent text-center text-base text-white transition-all shadow-md hover:shadow-lg focus:bg-neutral-700 focus:shadow-none active:bg-neutral-700 hover:bg-neutral-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none`}
+          >
+            더보기
+          </button>
         </div>
       </div>
     </div>

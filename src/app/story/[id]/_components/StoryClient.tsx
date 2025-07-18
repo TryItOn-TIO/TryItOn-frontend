@@ -75,7 +75,7 @@ const StoryClient = ({ storyId }: StoryClientProps) => {
 
       {/* 착장 정보 */}
       {clothesOn && (
-        <div className="bg-white rounded-lg shadow-xl p-6 max-w-md">
+        <div className="bg-white rounded-lg shadow-xl p-6 max-w-md w-full md:w-auto">
           <ClothesInfo data={currentStory.products} />
         </div>
       )}

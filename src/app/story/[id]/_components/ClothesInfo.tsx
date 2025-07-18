@@ -1,6 +1,5 @@
 import ProductActionCard from "@/components/ui/ProductActionCard";
-import React from "react";
-import { ProductResponse } from "@/types/product";
+import type { ProductResponse } from "@/types/product";
 
 type ClothesInfoProps = {
   data: ProductResponse[];
@@ -8,7 +7,7 @@ type ClothesInfoProps = {
 
 const ClothesInfo = ({ data }: ClothesInfoProps) => {
   return (
-    <div className="w-full max-w-[400px] space-y-6 animate-fadeIn py-4">
+    <div className="w-full max-w-sm md:max-w-md space-y-6 animate-fadeIn py-4">
       <div className="text-center mb-6">
         <h2 className="text-xl font-bold text-gray-800 mb-2">착장 정보</h2>
         <p className="text-sm text-gray-600">
@@ -16,7 +15,7 @@ const ClothesInfo = ({ data }: ClothesInfoProps) => {
         </p>
       </div>
 
-      <div className="space-y-4 max-h-[70vh] pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+      <div className="space-y-4 pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
         {data.map((product, index) => (
           <div
             key={product.id}
