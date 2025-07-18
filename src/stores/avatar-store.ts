@@ -14,6 +14,7 @@ type AvatarState = {
   setSelectedProductIds: (ids: number[]) => void;
   addSelectedProductId: (id: number) => void;
   removeSelectedProductId: (id: number) => void;
+  clearSelectedProducts: () => void; // 선택된 상품 목록 초기화
   setLoading: (loading: boolean) => void;
   setHasAvatarUpdate: (hasUpdate: boolean) => void;
 };
@@ -74,6 +75,7 @@ export const useAvatarStore = create<AvatarState>()(
         set((state) => ({
           selectedProductIds: state.selectedProductIds.filter((i) => i !== id),
         })),
+      clearSelectedProducts: () => set({ selectedProductIds: [] }),
       setLoading: (loading) => set({ isLoading: loading }),
     }),
     {
