@@ -9,6 +9,7 @@ import { getClosetAvatars, deleteClosetAvatar } from "@/api/closet";
 import { getWishlist, getWishlistByCategory } from "@/api/wishlist";
 import type { ClosetAvatarResponse } from "@/types/closet";
 import type { ProductResponse } from "@/types/product";
+import { useRouter } from "next/navigation";
 
 const categories = [
   "전체",
@@ -32,6 +33,7 @@ const CATEGORY_ID_MAP: Record<string, number> = {
 
 const ClosetPage = () => {
   useAuthGuard();
+  const router = useRouter();
 
   const [selectedCategory, setSelectedCategory] = useState("전체");
   const [closetAvatars, setClosetAvatars] = useState<ClosetAvatarResponse[]>(
@@ -97,7 +99,13 @@ const ClosetPage = () => {
       window.location.reload();
     } catch (error) {
       console.error("착장 삭제 실패:", error);
-      alert("착장 삭제에 실패했습니다.");
+      if (
+        confirm(
+          "이 착장으로 업로드된 스토리가 존재합니다. 스토리를 삭제하시나요?"
+        )
+      ) {
+        router.push("/mypage/story");
+      }
     } finally {
       setIsDeleting(false);
     }
