@@ -72,8 +72,8 @@ const Oauth = () => {
   return (
     <>
       {isLoading && <Spinner />}
-      <div className="w-screen min-h-screen">
-        <div className="w-[40rem] mx-auto p-6">
+      <div className="w-screen min-h-screen flex justify-center px-4 sm:px-6 md:px-8 lg:px-0 mb-10">
+        <div className="w-full max-w-[640px] p-4 sm:p-6 md:p-8">
           <h2 className="text-2xl font-bold mb-6">회원가입 정보 입력</h2>
           {step == 1 && (
             <SignupForm setStep={setStep} data={data} setData={setData} />

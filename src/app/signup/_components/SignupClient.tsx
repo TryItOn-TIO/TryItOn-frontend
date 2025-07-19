@@ -56,6 +56,7 @@ const SignupClient = () => {
       console.log(data);
       console.log("이메일 회원가입 데이터:", finalData);
       const response = await signup(finalData);
+      console.log("signup response", response);
 
       if (response) {
         setIsLoading(false);
