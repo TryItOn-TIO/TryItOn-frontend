@@ -14,7 +14,7 @@ type TryonImgUploaderProps<T extends SignupRequest> = {
 
 // 기본 이미지 경로
 const BASE_AVATAR_URL =
-  "https://tio-frontend-assets-jungle8th.s3.ap-northeast-2.amazonaws.com/images/signup/base_avatar.png";
+  "https://tio-image-storage-jungle8th.s3.ap-northeast-2.amazonaws.com/base/default_avatar.png";
 
 const TryonImgUploader = <T extends SignupRequest>({
   onSubmit,
@@ -56,6 +56,7 @@ const TryonImgUploader = <T extends SignupRequest>({
 
   const handleSubmitWithoutImg = () => {
     // 기본 이미지를 사용하므로 업로드 과정 없이 바로 onSubmit 호출
+    console.log("다음에 추가하기 클릭: 기본 이미지 사용", BASE_AVATAR_URL);
     setData((prev) => ({
       ...prev,
       userBaseImageUrl: BASE_AVATAR_URL,
