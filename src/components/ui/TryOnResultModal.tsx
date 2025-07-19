@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { useAvatarStore } from "@/stores/avatar-store";
 import { saveClosetAvatar } from "@/api/closet";
@@ -30,6 +30,9 @@ const TryOnResultModal = ({ onClose }: TryOnResultModalProps) => {
   const [isClosetLoading, setIsClosetLoading] = useState(false);
   const [isResetLoading, setIsResetLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+
+  // 타이머 ID를 보관하기 위한 ref
+  const messageTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // 로그인 상태 확인
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -70,8 +73,20 @@ const TryOnResultModal = ({ onClose }: TryOnResultModalProps) => {
   // 메시지 3초 후 자동 삭제 함수
   const showMessage = (msg: string) => {
     setMessage(msg);
-    setTimeout(() => setMessage(null), 3000);
+    if (messageTimerRef.current) {
+      clearTimeout(messageTimerRef.current);
+    }
+    messageTimerRef.current = setTimeout(() => setMessage(null), 3000);
   };
+
+  // 컴포넌트 언마운트 시 타이머 클리어
+  useEffect(() => {
+    return () => {
+      if (messageTimerRef.current) {
+        clearTimeout(messageTimerRef.current);
+      }
+    };
+  }, []);
 
   const handleAddToCloset = async () => {
     try {
@@ -155,7 +170,8 @@ const TryOnResultModal = ({ onClose }: TryOnResultModalProps) => {
     return (
       <>
         <div className="flex justify-between items-start mb-4">
-          <h2 className="text-2xl font-bold text-gray-800" />
+          {/* 제목 필요하면 여기에 넣으세요 */}
+          {/* <h2 className="text-2xl font-bold text-gray-800">가상 피팅 결과</h2> */}
           <div className="flex gap-2">
             <button
               onClick={handleResetAvatar}
