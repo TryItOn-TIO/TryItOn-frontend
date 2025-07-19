@@ -12,6 +12,10 @@ type TryonImgUploaderProps<T extends SignupRequest> = {
   onSubmit: (fileUrl?: string) => void; // fileUrl 파라미터 추가
 };
 
+// 기본 이미지 경로
+const BASE_AVATAR_URL =
+  "https://tio-frontend-assets-jungle8th.s3.ap-northeast-2.amazonaws.com/images/signup/base_avatar.png";
+
 const TryonImgUploader = <T extends SignupRequest>({
   onSubmit,
   setData,
@@ -50,12 +54,23 @@ const TryonImgUploader = <T extends SignupRequest>({
     reader.readAsDataURL(file);
   };
 
+  const handleSubmitWithoutImg = () => {
+    // 기본 이미지를 사용하므로 업로드 과정 없이 바로 onSubmit 호출
+    setData((prev) => ({
+      ...prev,
+      userBaseImageUrl: BASE_AVATAR_URL,
+    }));
+    onSubmit(BASE_AVATAR_URL);
+  };
+
   const handleSubmit = async () => {
+    if (isUploading) return; // 중복 클릭 방지
+
+    // 파일을 선택하지 않았으면
     if (!selectedFile) {
-      alert("전신 사진을 선택해주세요.");
+      handleSubmitWithoutImg(); // 기본 이미지로 진행
       return;
     }
-
     setIsUploading(true);
 
     try {
@@ -121,7 +136,6 @@ const TryonImgUploader = <T extends SignupRequest>({
           • 지원 형식: JPG, PNG, WEBP • 최대 크기: 10MB
         </div>
       </div>
-
       {/* 미리보기 사진 및 사진 선택 버튼 */}
       <div className="w-full flex flex-col items-center gap-4">
         {preview ? (
@@ -162,13 +176,20 @@ const TryonImgUploader = <T extends SignupRequest>({
           </div>
         )}
       </div>
-
       {/* submit 버튼 */}
-      <BlackButton
-        text={isUploading ? "진행 중..." : "회원가입"}
-        handleClick={handleSubmit}
-        disabled={isUploading || !selectedFile}
-      />
+      <div className="w-full flex flex-col items-center gap-3">
+        <BlackButton
+          text={isUploading ? "진행 중..." : "회원가입"}
+          handleClick={handleSubmit}
+          disabled={isUploading || !selectedFile}
+        />
+        <p
+          className="underline text-gray-400 text-sm cursor-pointer"
+          onClick={handleSubmitWithoutImg}
+        >
+          다음에 추가하기
+        </p>
+      </div>
     </div>
   );
 };
