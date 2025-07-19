@@ -148,143 +148,134 @@ const TryOnResultModal = ({ onClose }: TryOnResultModalProps) => {
     }
   };
 
-  // 모달 내부 콘텐츠 함수
-  const getModalContent = () => {
-    if (isAvatarLoading) {
-      return (
-        <div className="flex flex-col items-center justify-center py-12">
-          <Image
-            src="/images/common/spinner.gif"
-            width={60}
-            height={60}
-            alt="로딩 중"
-          />
-          <p className="mt-4 text-lg font-semibold text-gray-800">
-            옷을 입어보는 중입니다...
-          </p>
-          <p className="text-sm text-gray-500">잠시만 기다려주세요.</p>
-        </div>
-      );
-    }
-
-    return (
-      <>
-        <div className="flex justify-between items-start mb-4">
-          {/* 제목 필요하면 여기에 넣으세요 */}
-          {/* <h2 className="text-2xl font-bold text-gray-800">가상 피팅 결과</h2> */}
-          <div className="flex gap-2">
-            <button
-              onClick={handleResetAvatar}
-              disabled={isAvatarLoading || isResetLoading}
-              className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center ${
-                isResetLoading || isAvatarLoading
-                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-              }`}
-              aria-label="아바타 초기화"
-              type="button"
-            >
-              <RefreshCw className="w-4 h-4 mr-1" />
-              {isResetLoading ? "초기화 중..." : "초기화"}
-            </button>
-
-            <button
-              onClick={handleAddToCloset}
-              disabled={isAvatarLoading || isClosetLoading}
-              className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                isClosetLoading || isAvatarLoading
-                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  : "bg-black text-white hover:bg-neutral-600"
-              }`}
-              aria-label="옷장에 추가"
-              type="button"
-            >
-              {isClosetLoading ? "추가 중..." : "옷장에 추가"}
-            </button>
-          </div>
-        </div>
-
-        {message && (
-          <div
-            className={`absolute top-20 right-4 z-10 px-3 py-2 rounded-lg text-sm ${
-              message.includes("성공") || message.includes("초기화되었습니다")
-                ? "bg-green-100 text-green-800 border border-green-200"
-                : "bg-yellow-100 text-yellow-800 border border-yellow-200"
-            }`}
-          >
-            {message}
-          </div>
-        )}
-
-        <div className="w-full flex justify-center my-6 relative">
-          {avatarInfo.avatarImgUrl ? (
-            <div className="relative">
-              <Image
-                src={avatarInfo.avatarImgUrl}
-                alt="착장한 아바타"
-                width={350}
-                height={350}
-                className={`object-contain transition-opacity duration-300 ${
-                  isAvatarLoading ? "opacity-50" : "opacity-100"
-                }`}
-              />
-              {isAvatarLoading && (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="w-[180px] h-[180px] bg-gray-200 rounded-md flex items-center justify-center">
-              {isAvatarLoading ? (
-                <div className="flex flex-col items-center gap-2">
-                  <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                  <span className="text-sm text-gray-600">착용 중...</span>
-                </div>
-              ) : (
-                <span className="text-sm text-gray-500">
-                  아바타 이미지 없음
-                </span>
-              )}
-            </div>
-          )}
-        </div>
-
-        <div className="mt-3 max-h-[20vh] overflow-y-auto px-2">
-          {avatarInfo?.products && avatarInfo.products.length > 0 ? (
-            <ul className="space-y-2">
-              {avatarInfo.products.map((product, idx) => (
-                <li key={product.productId ?? idx}>
-                  <Link
-                    href={`/detail/${product.productId}`}
-                    className="block group transition-all"
-                  >
-                    <span className="text-xs text-gray-400 group-hover:text-gray-500">
-                      {product.categoryName}
-                    </span>
-                    <div className="text-base text-black font-semibold group-hover:underline leading-tight">
-                      {product.productName}
-                    </div>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-sm text-center text-gray-500 mt-2">
-              {isAvatarLoading
-                ? "옷을 입는 중입니다."
-                : "입은 상품이 없습니다."}
-            </p>
-          )}
-        </div>
-      </>
-    );
-  };
-
+  // getModalContent 함수를 제거하고, JSX를 직접 렌더링하도록 변경
   return (
     <Modal onClose={onClose} title="가상 피팅">
       <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md relative">
-        {getModalContent()}
+        {isAvatarLoading ? (
+          <div className="flex flex-col items-center justify-center py-12">
+            <Image
+              src="/images/common/spinner.gif"
+              width={60}
+              height={60}
+              alt="로딩 중"
+            />
+            <p className="mt-4 text-lg font-semibold text-gray-800">
+              옷을 입어보는 중입니다...
+            </p>
+            <p className="text-sm text-gray-500">잠시만 기다려주세요.</p>
+          </div>
+        ) : (
+          <>
+            <div className="flex justify-between items-start mb-4">
+              <div className="flex gap-2">
+                <button
+                  onClick={handleResetAvatar}
+                  disabled={isAvatarLoading || isResetLoading}
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center ${
+                    isResetLoading || isAvatarLoading
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                  }`}
+                  aria-label="아바타 초기화"
+                  type="button"
+                >
+                  <RefreshCw className="w-4 h-4 mr-1" />
+                  {isResetLoading ? "초기화 중..." : "초기화"}
+                </button>
+
+                <button
+                  onClick={handleAddToCloset}
+                  disabled={isAvatarLoading || isClosetLoading}
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    isClosetLoading || isAvatarLoading
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      : "bg-black text-white hover:bg-neutral-600"
+                  }`}
+                  aria-label="옷장에 추가"
+                  type="button"
+                >
+                  {isClosetLoading ? "추가 중..." : "옷장에 추가"}
+                </button>
+              </div>
+            </div>
+
+            {message && (
+              <div
+                className={`absolute top-20 right-4 z-10 px-3 py-2 rounded-lg text-sm ${
+                  message.includes("성공") ||
+                  message.includes("초기화되었습니다")
+                    ? "bg-green-100 text-green-800 border border-green-200"
+                    : "bg-yellow-100 text-yellow-800 border border-yellow-200"
+                }`}
+              >
+                {message}
+              </div>
+            )}
+
+            <div className="w-full flex justify-center my-6 relative">
+              {avatarInfo.avatarImgUrl ? (
+                <div className="relative">
+                  <Image
+                    src={avatarInfo.avatarImgUrl}
+                    alt="착장한 아바타"
+                    width={350}
+                    height={350}
+                    className={`object-contain transition-opacity duration-300 ${
+                      isAvatarLoading ? "opacity-50" : "opacity-100"
+                    }`}
+                  />
+                  {isAvatarLoading && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="w-[180px] h-[180px] bg-gray-200 rounded-md flex items-center justify-center">
+                  {isAvatarLoading ? (
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                      <span className="text-sm text-gray-600">착용 중...</span>
+                    </div>
+                  ) : (
+                    <span className="text-sm text-gray-500">
+                      아바타 이미지 없음
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+
+            <div className="mt-3 max-h-[20vh] overflow-y-auto px-2">
+              {avatarInfo?.products && avatarInfo.products.length > 0 ? (
+                <ul className="space-y-2">
+                  {avatarInfo.products.map((product, idx) => (
+                    <li key={product.productId ?? idx}>
+                      <Link
+                        href={`/detail/${product.productId}`}
+                        className="block group transition-all"
+                      >
+                        <span className="text-xs text-gray-400 group-hover:text-gray-500">
+                          {product.categoryName}
+                        </span>
+                        <div className="text-base text-black font-semibold group-hover:underline leading-tight">
+                          {product.productName}
+                        </div>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-sm text-center text-gray-500 mt-2">
+                  {isAvatarLoading
+                    ? "옷을 입는 중입니다."
+                    : "입은 상품이 없습니다."}
+                </p>
+              )}
+            </div>
+          </>
+        )}
       </div>
     </Modal>
   );
