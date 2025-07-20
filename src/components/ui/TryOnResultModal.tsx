@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import { useTryOnStore } from "@/stores/try-on-store";
 import { useAvatarStore } from "@/stores/avatar-store";
@@ -15,39 +15,41 @@ interface TryOnResultModalProps {
 }
 
 const TryOnResultModal = ({ onClose }: TryOnResultModalProps) => {
-  const { status, resultImageUrl, viewNotification } = useTryOnStore();
+  const {
+    status,
+    resultImageUrl,
+    viewNotification,
+    reset: resetTryOn,
+  } = useTryOnStore();
 
-  const avatarInfo = useAvatarStore((state) => state.avatarInfo);
-  const setAvatarInfo = useAvatarStore((state) => state.setAvatarInfo);
-  const selectedProductIds = useAvatarStore(
-    (state) => state.selectedProductIds
-  );
-  const isAvatarLoading = useAvatarStore((state) => state.isLoading);
-  const setAvatarLoading = useAvatarStore((state) => state.setLoading);
-  const clearSelectedProducts = useAvatarStore(
-    (state) => state.clearSelectedProducts
-  );
+  const {
+    avatarInfo,
+    setAvatarInfo,
+    selectedProductIds,
+    isLoading: isAvatarLoading,
+    setLoading: setAvatarLoading,
+    clearSelectedProducts,
+  } = useAvatarStore();
 
   const [isClosetLoading, setIsClosetLoading] = useState(false);
   const [isResetLoading, setIsResetLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    if (status === "success") {
-      const loadAvatarInfo = async () => {
-        try {
-          setAvatarLoading(true);
-          const data = await fetchLatestAvatarInfo();
-          setAvatarInfo(data);
-        } catch (error) {
-          console.error("아바타 정보 로드 실패", error);
-        } finally {
-          setAvatarLoading(false);
-        }
-      };
-      loadAvatarInfo();
-    }
-  }, [status, setAvatarInfo, setAvatarLoading]);
+    const loadAvatarInfo = async () => {
+      try {
+        setAvatarLoading(true);
+        const data = await fetchLatestAvatarInfo();
+        setAvatarInfo(data);
+      } catch (error) {
+        console.error("아바타 정보 로드 실패", error);
+      } finally {
+        setAvatarLoading(false);
+      }
+    };
+
+    loadAvatarInfo();
+  }, [setAvatarInfo, setAvatarLoading]);
 
   const handleClose = () => {
     viewNotification();
@@ -91,6 +93,7 @@ const TryOnResultModal = ({ onClose }: TryOnResultModalProps) => {
     }
   };
 
+  // 아바타 리셋 처리
   const handleResetAvatar = async () => {
     try {
       setIsResetLoading(true);
@@ -103,6 +106,7 @@ const TryOnResultModal = ({ onClose }: TryOnResultModalProps) => {
         const updatedAvatarInfo = await fetchLatestAvatarInfo(); // 초기화 후 최신 아바타 정보 다시 불러오기
         setAvatarInfo(updatedAvatarInfo); // AvatarStore의 아바타 정보 업데이트
         clearSelectedProducts(); // 선택된 상품 목록 초기화
+        resetTryOn(); // try-on-store 상태 초기화
         setMessage("아바타가 초기화되었습니다.");
       } else {
         setMessage(response.message || "아바타 초기화에 실패했습니다.");
@@ -120,29 +124,45 @@ const TryOnResultModal = ({ onClose }: TryOnResultModalProps) => {
     }
   };
 
+  const displayImageUrl = useMemo(() => {
+    return resultImageUrl || avatarInfo.avatarImgUrl;
+  }, [resultImageUrl, avatarInfo.avatarImgUrl]);
+
   const getModalContent = () => {
-    const displayImageUrl = avatarInfo.avatarImgUrl || resultImageUrl;
+    const renderAvatar = () => (
+      <div className="relative w-full aspect-[4/5] sm:aspect-square rounded-lg overflow-hidden bg-gray-100 mb-4">
+        {displayImageUrl && (
+          <Image
+            src={displayImageUrl}
+            alt="아바타"
+            fill
+            className="object-contain"
+          />
+        )}
+      </div>
+    );
 
     switch (status) {
       case "loading":
         return (
-          <div className="flex flex-col items-center justify-center p-8">
-            <Image
-              src="/images/common/spinner.gif"
-              width={60}
-              height={60}
-              alt="로딩 중"
-            />
-            <p className="mt-4 text-lg font-semibold text-gray-800">
-              옷을 입어보는 중입니다...
-            </p>
-            <p className="text-sm text-gray-500">잠시만 기다려주세요.</p>
-            {isAvatarLoading && (
-              <div className="mt-4 px-3 py-2 rounded-lg text-sm bg-blue-100 text-blue-800 border border-blue-200 flex items-center gap-2">
-                <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                옷을 입고 있어요 👕 (최대 1분 소요됩니다)
+          <div className="p-4">
+            <div className="relative w-full aspect-[4/5] sm:aspect-square rounded-lg overflow-hidden bg-gray-100 mb-4">
+              {avatarInfo.avatarImgUrl && (
+                <Image
+                  src={avatarInfo.avatarImgUrl}
+                  alt="현재 아바타"
+                  fill
+                  className="object-contain opacity-50"
+                />
+              )}
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-white">
+                <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+                <p className="mt-4 text-lg font-semibold text-gray-800">
+                  옷을 입어보는 중입니다...
+                </p>
+                <p className="text-sm text-gray-500">잠시만 기다려주세요.</p>
               </div>
-            )}
+            </div>
           </div>
         );
       case "success":
@@ -220,7 +240,6 @@ const TryOnResultModal = ({ onClose }: TryOnResultModalProps) => {
                 </p>
               )}
             </div>
-
             <div className="flex flex-col gap-3">
               <button
                 onClick={handleAddToCloset}
@@ -250,23 +269,14 @@ const TryOnResultModal = ({ onClose }: TryOnResultModalProps) => {
         );
       case "error":
         return (
-          <div className="flex flex-col items-center justify-center p-8">
-            <p className="text-lg font-semibold text-red-500">
+          <div className="p-4">
+            {renderAvatar()}
+            <p className="text-lg font-semibold text-red-500 text-center">
               오류가 발생했습니다.
             </p>
-            <p className="mt-2 text-sm text-gray-600">다시 시도해주세요.</p>
-            <button
-              onClick={handleResetAvatar}
-              disabled={isAvatarLoading || isResetLoading}
-              className={`mt-4 py-2 px-4 rounded-md transition-colors ${
-                isResetLoading || isAvatarLoading
-                  ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  : "bg-gray-200 text-gray-800 hover:bg-gray-300"
-              }`}
-            >
-              <RefreshCw className="w-4 h-4 mr-2" />
-              {isResetLoading ? "초기화 중..." : "다시 시도 / 초기화"}
-            </button>
+            <p className="mt-2 text-sm text-gray-600 text-center">
+              다시 시도해주세요.
+            </p>
             {message && (
               <div className="mt-4 px-3 py-2 rounded-lg text-sm bg-yellow-100 text-yellow-800 border border-yellow-200 text-center">
                 {message}
@@ -275,7 +285,24 @@ const TryOnResultModal = ({ onClose }: TryOnResultModalProps) => {
           </div>
         );
       default:
-        return null;
+        return (
+          <div className="p-4">
+            {renderAvatar()}
+            <div className="mt-3 mb-6">
+              <p className="text-sm text-gray-500 mt-2 text-center">
+                피팅할 옷을 선택해주세요.
+              </p>
+            </div>
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={handleClose}
+                className="w-full py-3 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+              >
+                닫기
+              </button>
+            </div>
+          </div>
+        );
     }
   };
 
