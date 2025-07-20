@@ -210,24 +210,28 @@ export default function Header() {
             <div className="flex-grow min-w-0">
               <SearchInput />
             </div>
-            <button
-              onClick={openResultModal}
-              className="relative flex-shrink-0"
-              aria-label="알림"
-            >
-              <Image
-                src="/images/common/alarm_filled.svg"
-                width={23}
-                height={23}
-                alt="가상피팅"
-              />
-              {showMobileNotification && (
-                <>
-                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white animate-pulse" />
-                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-ping opacity-75" />
-                </>
-              )}
-            </button>
+
+            {/* Try On 버튼 */}
+            {isLoggedIn && (
+              <button
+                onClick={openResultModal}
+                className="relative flex-shrink-0"
+                aria-label="알림"
+              >
+                <Image
+                  src="/images/common/alarm_filled.svg"
+                  width={23}
+                  height={23}
+                  alt="가상피팅"
+                />
+                {showMobileNotification && (
+                  <>
+                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white animate-pulse" />
+                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-ping opacity-75" />
+                  </>
+                )}
+              </button>
+            )}
             <button onClick={toggleMenu} className="relative">
               {menuOpen ? (
                 <X className="w-5 h-5" />
@@ -239,6 +243,7 @@ export default function Header() {
             {/* Mobile Menu */}
             {menuOpen && (
               <div className="fixed top-0 left-0 w-full h-screen bg-white z-[9999] overflow-y-auto">
+                {/* 상단 헤더 */}
                 <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-200">
                   <Link href="/">
                     <h1 className="text-xl font-bold text-gray-900">TIO</h1>
@@ -246,28 +251,35 @@ export default function Header() {
                   <div className="flex-grow min-w-0">
                     <SearchInput onSearch={() => setMenuOpen(false)} />
                   </div>
-                  <button
-                    onClick={openResultModal}
-                    className="relative flex-shrink-0"
-                    aria-label="알림"
-                  >
-                    <Image
-                      src="/images/common/alarm_filled.svg"
-                      width={23}
-                      height={23}
-                      alt="가상피팅"
-                    />
-                    {showMobileNotification && (
-                      <>
-                        <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white animate-pulse" />
-                        <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-ping opacity-75" />
-                      </>
-                    )}
-                  </button>
+
+                  {/* Try On 버튼 */}
+                  {isLoggedIn && (
+                    <button
+                      onClick={openResultModal}
+                      className="relative flex-shrink-0"
+                      aria-label="알림"
+                    >
+                      <Image
+                        src="/images/common/alarm_filled.svg"
+                        width={23}
+                        height={23}
+                        alt="가상피팅"
+                      />
+                      {showMobileNotification && (
+                        <>
+                          <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white animate-pulse" />
+                          <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-ping opacity-75" />
+                        </>
+                      )}
+                    </button>
+                  )}
+
                   <button onClick={toggleMenu}>
                     <X className="w-5 h-5" />
                   </button>
                 </div>
+
+                {/* 모바일 아바타 섹션 & 카테고리 섹션 */}
                 <div className="px-4 py-4 border-b border-gray-200">
                   <div className="flex items-center gap-2 mb-2">
                     <Sparkles className="w-5 h-5 text-blue-500" />
@@ -331,6 +343,8 @@ export default function Header() {
                       );
                     })}
                 </nav>
+
+                {/* 모바일 로그인 유저 하단 CTA 메뉴 */}
                 {isLoggedIn ? (
                   <div className="flex flex-col px-4 gap-4 mt-2 border-t border-gray-200 pt-4 pb-6">
                     <Link
@@ -379,6 +393,7 @@ export default function Header() {
                   </div>
                 ) : (
                   <>
+                    {/* 모바일 비로그인 유저 하단 CTA 메뉴 */}
                     <div className="flex flex-col px-4 gap-4 my-2 border-t border-gray-200 pt-4">
                       <Link
                         href="/story"
