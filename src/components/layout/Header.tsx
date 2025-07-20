@@ -134,7 +134,7 @@ export default function Header() {
                     className={getLinkClassName(
                       "transition-colors",
                       "font-bold text-gray-900",
-                      "text-gray-700 hover:text-gray-900",
+                      "text-sm text-gray-700 hover:text-gray-900",
                       pathname.startsWith("/story")
                     )}
                   >
