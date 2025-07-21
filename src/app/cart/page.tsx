@@ -129,10 +129,6 @@ const Cart = () => {
   };
 
   const handlePurchase = () => {
-    if (selectedItems.length === 0) {
-      alert("구매할 상품을 선택해주세요.");
-      return;
-    }
     // 선택된 상품 정보를 주문 페이지로 전달하기 위해 localStorage에 저장
     const selectedCartItems = cartItems.filter((item) =>
       selectedItems.includes(item.id)

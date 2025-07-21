@@ -9,7 +9,7 @@ const AvatarProducts = ({ avatarSlot, productSlot }: AvatarProductsProps) => {
   return (
     <div className="relative flex justify-between w-full px-6">
       {/* 좌측 아바타 영역 (PC: 20%, 모바일: 숨김) */}
-      <aside className="hidden md:block w-[20%] pr-4 fixed left-0 top-[15vh] bottom-0 min-h-screen">
+      <aside className="hidden md:block w-[20%] pr-4 fixed left-0 top-16 bottom-0 min-h-screen">
         {avatarSlot}
       </aside>
 

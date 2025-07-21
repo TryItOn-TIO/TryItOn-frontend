@@ -7,10 +7,13 @@ import StoryContentInput from "@/app/story/create/_components/StoryContentInput"
 import SubmitButtons from "@/app/story/create/_components/SubmitButtons";
 import { useAvatarData } from "@/app/story/create/_hooks/useAvatarData";
 import { useStoryCreation } from "@/app/story/create/_hooks/useStoryCreation";
+import CustomAlert from "@/components/ui/CustomAlert";
+import { useCustomAlert } from "@/hooks/useCustomAlert";
 
 const CreateStoryPage = () => {
   const searchParams = useSearchParams();
   const closetAvatarId = searchParams.get('closet_avatar_id');
+  const { isOpen, options, openAlert, closeAlert } = useCustomAlert();
   
   // 특정 아바타 데이터 로드
   const {
@@ -30,12 +33,11 @@ const CreateStoryPage = () => {
     isSubmitting,
     handleSubmit,
     handleCancel,
-    // 배경 제거 관련
     isBackgroundRemovalEnabled,
     setIsBackgroundRemovalEnabled,
     processedImageUrl,
     setProcessedImageUrl,
-  } = useStoryCreation();
+  } = useStoryCreation({ openAlert }); // openAlert를 props로 전달
 
   // 제출 버튼 비활성화 조건
   const isSubmitDisabled = isSubmitting || !selectedAvatar || !contents.trim();
@@ -72,68 +74,82 @@ const CreateStoryPage = () => {
   }
 
   return (
-    <div className="w-screen min-h-screen py-4 sm:py-8">
-      <div className="max-w-4xl mx-auto px-4">
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          {/* 헤더 */}
-          <div className="bg-black px-6 py-4">
-            <h1 className="text-2xl font-bold text-white">스토리 작성</h1>
-            <p className="text-blue-100 mt-1">
-              선택한 아바타로 나만의 스타일 스토리를 공유해보세요
-            </p>
-          </div>
+    <>
+      <div className="w-screen min-h-screen py-4 sm:py-8">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            {/* 헤더 */}
+            <div className="bg-black px-6 py-4">
+              <h1 className="text-2xl font-bold text-white">스토리 작성</h1>
+              <p className="text-blue-100 mt-1">
+                선택한 아바타로 나만의 스타일 스토리를 공유해보세요
+              </p>
+            </div>
 
-          <div className="p-6">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleSubmit(selectedAvatar);
-              }}
-              className="space-y-8"
-            >
-              {/* 배경색 선택 및 배경 제거 섹션 */}
-              <BackgroundColorPicker
-                selectedAvatar={selectedAvatar}
-                selectedColor={selectedColor}
-                onColorChange={setSelectedColor}
-                processedImageUrl={processedImageUrl}
-              />
-              
-              {/* 배경 제거 토글 섹션 */}
-              <BackgroundRemovalToggle
-                selectedAvatar={selectedAvatar}
-                onProcessedImageChange={setProcessedImageUrl}
-                isEnabled={isBackgroundRemovalEnabled}
-                onToggle={setIsBackgroundRemovalEnabled}
-              />
+            <div className="p-6">
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSubmit(selectedAvatar);
+                }}
+                className="space-y-8"
+              >
+                {/* 배경색 선택 및 배경 제거 섹션 */}
+                <BackgroundColorPicker
+                  selectedAvatar={selectedAvatar}
+                  selectedColor={selectedColor}
+                  onColorChange={setSelectedColor}
+                  processedImageUrl={processedImageUrl}
+                />
+                
+                {/* 배경 제거 토글 섹션 */}
+                <BackgroundRemovalToggle
+                  selectedAvatar={selectedAvatar}
+                  onProcessedImageChange={setProcessedImageUrl}
+                  isEnabled={isBackgroundRemovalEnabled}
+                  onToggle={setIsBackgroundRemovalEnabled}
+                />
 
-              {/* 내용 입력 섹션 */}
-              <StoryContentInput
-                contents={contents}
-                onContentsChange={setContents}
-                maxLength={500}
-              />
+                {/* 내용 입력 섹션 */}
+                <StoryContentInput
+                  contents={contents}
+                  onContentsChange={setContents}
+                  maxLength={500}
+                />
 
-              {/* 제출 버튼 */}
-              <SubmitButtons
-                onCancel={handleCancel}
-                onSubmit={() => handleSubmit(selectedAvatar)}
-                isSubmitting={isSubmitting}
-                isDisabled={isSubmitDisabled}
-              />
-            </form>
+                {/* 제출 버튼 */}
+                <SubmitButtons
+                  onCancel={handleCancel}
+                  onSubmit={() => handleSubmit(selectedAvatar)}
+                  isSubmitting={isSubmitting}
+                  isDisabled={isSubmitDisabled}
+                />
+              </form>
 
-            {/* 숨겨진 캔버스 (이미지 생성용) */}
-            <canvas
-              ref={canvasRef}
-              className="hidden"
-              width={400}
-              height={600}
-            />
+              {/* 숨겨진 캔버스 (이미지 생성용) */}
+              <canvas
+                ref={canvasRef}
+                className="hidden"
+                width={400}
+                height={600}
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
+      {/* CustomAlert 컴포넌트 */}
+      <CustomAlert
+        isOpen={isOpen}
+        title={options.title}
+        message={options.message}
+        type={options.type}
+        confirmText={options.confirmText}
+        cancelText={options.cancelText}
+        onConfirm={options.onConfirm || closeAlert}
+        onCancel={options.onCancel}
+      />
+    </>
   );
 };
 

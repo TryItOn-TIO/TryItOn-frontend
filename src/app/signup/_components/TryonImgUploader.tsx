@@ -5,6 +5,8 @@ import { SignupRequest } from "@/types/auth";
 import BlackButton from "@/components/common/BlackButton";
 import Image from "next/image";
 import { generatePresignedUrl, uploadFileToS3 } from "@/api/files";
+import { useCustomAlert } from "@/hooks/useCustomAlert";
+import CustomAlert from "@/components/ui/CustomAlert";
 
 type TryonImgUploaderProps<T extends SignupRequest> = {
   data: T;
@@ -21,6 +23,8 @@ const TryonImgUploader = <T extends SignupRequest>({
   setData,
   data,
 }: TryonImgUploaderProps<T>) => {
+  const { isOpen, options, openAlert, closeAlert } = useCustomAlert();
+
   const [preview, setPreview] = useState<string | null>();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -33,14 +37,26 @@ const TryonImgUploader = <T extends SignupRequest>({
     // 파일 크기 검증 (10MB 제한)
     const maxSize = 10 * 1024 * 1024; // 10MB
     if (file.size > maxSize) {
-      alert("파일 크기는 10MB 이하여야 합니다.");
+      openAlert({
+        title: "파일 제한 안내",
+        message: "파일 크기는 10MB 이하여야 합니다.",
+        confirmText: "확인",
+        cancelText: "취소",
+        type: "error",
+      });
       return;
     }
 
     // 파일 타입 검증
     const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
     if (!allowedTypes.includes(file.type)) {
-      alert("JPG, PNG, WEBP 형식의 이미지만 업로드 가능합니다.");
+      openAlert({
+        title: "파일 제한 안내",
+        message: "JPG, PNG, WEBP 형식의 이미지만 업로드 가능합니다.",
+        confirmText: "확인",
+        cancelText: "취소",
+        type: "error",
+      });
       return;
     }
 
@@ -91,18 +107,13 @@ const TryonImgUploader = <T extends SignupRequest>({
       await uploadFileToS3(presignedUrl, selectedFile);
       const fileUrl = presignedUrl.split("?")[0];
 
-      console.log("업로드 성공:", fileUrl);
-
       // 먼저 데이터 업데이트
       setData((prev) => ({
         ...prev,
         userBaseImageUrl: fileUrl,
       }));
 
-      console.log("TryonImgUploader -> ", data);
-
       // fileUrl을 직접 onSubmit에 전달
-      console.log("onSubmit 호출 시작 - fileUrl:", fileUrl);
       onSubmit(fileUrl);
     } catch (error: any) {
       console.error("업로드 실패:", error);
@@ -130,68 +141,79 @@ const TryonImgUploader = <T extends SignupRequest>({
   };
 
   return (
-    <div className="flex flex-col items-center gap-18">
-      <div className="w-full text-start">
-        전신이 잘 보이도록 정면에서 찍은 사진을 업로드해주세요.
-        <div className="text-sm text-gray-500 mt-2">
-          • 지원 형식: JPG, PNG, WEBP • 최대 크기: 10MB
+    <>
+      <CustomAlert
+        isOpen={isOpen}
+        title={options.title}
+        message={options.message}
+        type={options.type}
+        onConfirm={options.onConfirm || closeAlert}
+        onCancel={options.onCancel}
+      />
+
+      <div className="flex flex-col items-center gap-18">
+        <div className="w-full text-start">
+          전신이 잘 보이도록 정면에서 찍은 사진을 업로드해주세요.
+          <div className="text-sm text-gray-500 mt-2">
+            • 지원 형식: JPG, PNG, WEBP • 최대 크기: 10MB
+          </div>
+        </div>
+        {/* 미리보기 사진 및 사진 선택 버튼 */}
+        <div className="w-full flex flex-col items-center gap-4">
+          {preview ? (
+            <Image
+              src={preview}
+              width={300}
+              height={400}
+              alt="전신 사진 미리보기"
+              className="w-48 h-auto rounded-md shadow-md"
+            />
+          ) : (
+            <div className="w-48 h-64 border border-gray-300 flex items-center justify-center rounded-md text-sm text-gray-400">
+              미리보기 없음
+            </div>
+          )}
+          <input
+            type="file"
+            accept="image/jpeg,image/jpg,image/png,image/webp"
+            onChange={handleFileChange}
+            className="hidden"
+            ref={fileInputRef}
+            disabled={isUploading}
+          />
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isUploading}
+            className="text-sm bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow disabled:opacity-50"
+          >
+            {isUploading ? "업로드 중..." : "사진 선택"}
+          </button>
+
+          {selectedFile && (
+            <div className="text-sm text-gray-600">
+              선택된 파일: {selectedFile.name}
+              <div className="text-xs text-gray-400">
+                크기: {(selectedFile.size / 1024 / 1024).toFixed(2)}MB
+              </div>
+            </div>
+          )}
+        </div>
+        {/* submit 버튼 */}
+        <div className="w-full flex flex-col items-center gap-3">
+          <BlackButton
+            text={isUploading ? "진행 중..." : "회원가입"}
+            handleClick={handleSubmit}
+            disabled={isUploading || !selectedFile}
+          />
+          <p
+            className="underline text-gray-400 text-sm cursor-pointer"
+            onClick={handleSubmitWithoutImg}
+          >
+            다음에 추가하기
+          </p>
         </div>
       </div>
-      {/* 미리보기 사진 및 사진 선택 버튼 */}
-      <div className="w-full flex flex-col items-center gap-4">
-        {preview ? (
-          <Image
-            src={preview}
-            width={300}
-            height={400}
-            alt="전신 사진 미리보기"
-            className="w-48 h-auto rounded-md shadow-md"
-          />
-        ) : (
-          <div className="w-48 h-64 border border-gray-300 flex items-center justify-center rounded-md text-sm text-gray-400">
-            미리보기 없음
-          </div>
-        )}
-        <input
-          type="file"
-          accept="image/jpeg,image/jpg,image/png,image/webp"
-          onChange={handleFileChange}
-          className="hidden"
-          ref={fileInputRef}
-          disabled={isUploading}
-        />
-        <button
-          onClick={() => fileInputRef.current?.click()}
-          disabled={isUploading}
-          className="text-sm bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow disabled:opacity-50"
-        >
-          {isUploading ? "업로드 중..." : "사진 선택"}
-        </button>
-
-        {selectedFile && (
-          <div className="text-sm text-gray-600">
-            선택된 파일: {selectedFile.name}
-            <div className="text-xs text-gray-400">
-              크기: {(selectedFile.size / 1024 / 1024).toFixed(2)}MB
-            </div>
-          </div>
-        )}
-      </div>
-      {/* submit 버튼 */}
-      <div className="w-full flex flex-col items-center gap-3">
-        <BlackButton
-          text={isUploading ? "진행 중..." : "회원가입"}
-          handleClick={handleSubmit}
-          disabled={isUploading || !selectedFile}
-        />
-        <p
-          className="underline text-gray-400 text-sm cursor-pointer"
-          onClick={handleSubmitWithoutImg}
-        >
-          다음에 추가하기
-        </p>
-      </div>
-    </div>
+    </>
   );
 };
 

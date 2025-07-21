@@ -11,7 +11,7 @@ const StorySortButtons = ({ sortOrder, onSort }: StorySortButtonsProps) => {
       <button
         className={`px-4 py-2 rounded transition-colors ${
           sortOrder === "newest"
-            ? "bg-blue-500 text-white"
+            ? "bg-black text-white"
             : "bg-gray-200 text-gray-700 hover:bg-gray-300"
         }`}
         onClick={() => onSort("newest")}
@@ -21,7 +21,7 @@ const StorySortButtons = ({ sortOrder, onSort }: StorySortButtonsProps) => {
       <button
         className={`px-4 py-2 rounded transition-colors ${
           sortOrder === "oldest"
-            ? "bg-blue-500 text-white"
+            ? "bg-black text-white"
             : "bg-gray-200 text-gray-700 hover:bg-gray-300"
         }`}
         onClick={() => onSort("oldest")}

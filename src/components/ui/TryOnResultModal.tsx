@@ -9,12 +9,15 @@ import { saveClosetAvatar } from "@/api/closet";
 import { fetchLatestAvatarInfo, resetAvatar } from "@/api/avatar";
 import Link from "next/link";
 import { RefreshCw } from "lucide-react";
+import { useIsMobile } from "@/hooks/useMediaQuery";
 
 interface TryOnResultModalProps {
   onClose: () => void;
 }
 
 const TryOnResultModal = ({ onClose }: TryOnResultModalProps) => {
+  const isMobile = useIsMobile(); // 모바일 여부 판단
+
   const {
     status,
     resultImageUrl,
@@ -145,7 +148,7 @@ const TryOnResultModal = ({ onClose }: TryOnResultModalProps) => {
     switch (status) {
       case "loading":
         return (
-          <div className="p-4">
+          <div className="w-full h-full p-4 flex flex-col justify-center">
             <div className="relative w-full aspect-[4/5] sm:aspect-square rounded-lg overflow-hidden bg-gray-100 mb-4">
               {avatarInfo.avatarImgUrl && (
                 <Image
@@ -167,7 +170,7 @@ const TryOnResultModal = ({ onClose }: TryOnResultModalProps) => {
         );
       case "success":
         return (
-          <div className="p-4">
+          <div className="w-full h-full p-4 flex flex-col justify-center">
             {message && (
               <div
                 className={`mb-4 px-3 py-2 rounded-lg text-sm text-center ${
@@ -181,7 +184,7 @@ const TryOnResultModal = ({ onClose }: TryOnResultModalProps) => {
               </div>
             )}
 
-            <div className="relative w-full aspect-[4/5] sm:aspect-square rounded-lg overflow-hidden bg-gray-100 mb-4">
+            <div className="relative w-full aspect-[4/5] rounded-lg overflow-hidden bg-gray-100 mb-4">
               {displayImageUrl ? (
                 <Image
                   src={displayImageUrl}
@@ -240,7 +243,7 @@ const TryOnResultModal = ({ onClose }: TryOnResultModalProps) => {
                 </p>
               )}
             </div>
-            <div className="flex flex-col gap-3">
+            <div className="w-full flex gap-4">
               <button
                 onClick={handleAddToCloset}
                 disabled={isAvatarLoading || isClosetLoading}
@@ -269,7 +272,7 @@ const TryOnResultModal = ({ onClose }: TryOnResultModalProps) => {
         );
       case "error":
         return (
-          <div className="p-4">
+          <div className="w-full h-full p-4 flex flex-col justify-center">
             {renderAvatar()}
             <p className="text-lg font-semibold text-red-500 text-center">
               오류가 발생했습니다.
@@ -286,14 +289,14 @@ const TryOnResultModal = ({ onClose }: TryOnResultModalProps) => {
         );
       default:
         return (
-          <div className="p-4">
+          <div className="w-full h-full p-4 flex flex-col justify-center">
             {renderAvatar()}
             <div className="mt-3 mb-6">
               <p className="text-sm text-gray-500 mt-2 text-center">
                 피팅할 옷을 선택해주세요.
               </p>
             </div>
-            <div className="flex flex-col gap-3">
+            <div className="w-full flex flex-col gap-3">
               <button
                 onClick={handleClose}
                 className="w-full py-3 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
@@ -308,7 +311,13 @@ const TryOnResultModal = ({ onClose }: TryOnResultModalProps) => {
 
   return (
     <Modal onClose={handleClose} title="가상 피팅">
-      <div className="w-full max-w-[340px] mx-auto">{getModalContent()}</div>
+      {isMobile ? (
+        <div className="w-full max-w-[340px] mx-auto">{getModalContent()}</div>
+      ) : (
+        <div className="w-full h-full flex justify-center items-center">
+          <div className="w-full h-[85vh] mx-auto">{getModalContent()}</div>
+        </div>
+      )}
     </Modal>
   );
 };

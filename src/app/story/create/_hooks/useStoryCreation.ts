@@ -4,18 +4,26 @@ import { postStories } from "@/api/story";
 import { generatePresignedUrl, uploadFileToS3 } from "@/api/files";
 import { StoryRequest } from "@/types/story";
 import { ClosetAvatarResponse } from "@/types/closet";
+import { UseCustomAlertReturn } from "@/hooks/useCustomAlert";
 
-export const useStoryCreation = () => {
+type UseStoryCreationProps = {
+  openAlert: UseCustomAlertReturn["openAlert"];
+};
+
+export const useStoryCreation = ({ openAlert }: UseStoryCreationProps) => {
   const router = useRouter();
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const [selectedColor, setSelectedColor] = useState<string>("#ffffff");
   const [contents, setContents] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  
+
   // 배경 제거 관련 상태
-  const [isBackgroundRemovalEnabled, setIsBackgroundRemovalEnabled] = useState<boolean>(false);
-  const [processedImageUrl, setProcessedImageUrl] = useState<string | null>(null);
+  const [isBackgroundRemovalEnabled, setIsBackgroundRemovalEnabled] =
+    useState<boolean>(false);
+  const [processedImageUrl, setProcessedImageUrl] = useState<string | null>(
+    null
+  );
 
   const generateStoryImage = async (
     selectedAvatar: ClosetAvatarResponse
@@ -39,11 +47,16 @@ export const useStoryCreation = () => {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // 사용할 이미지 URL 결정 (배경 제거된 이미지 또는 원본)
-    const imageUrl = isBackgroundRemovalEnabled && processedImageUrl 
-      ? processedImageUrl 
-      : selectedAvatar.avatarImage;
+    const imageUrl =
+      isBackgroundRemovalEnabled && processedImageUrl
+        ? processedImageUrl
+        : selectedAvatar.avatarImage;
 
-    console.log('사용할 이미지:', isBackgroundRemovalEnabled ? '배경 제거됨' : '원본', imageUrl);
+    console.log(
+      "사용할 이미지:",
+      isBackgroundRemovalEnabled ? "배경 제거됨" : "원본",
+      imageUrl
+    );
 
     // 아바타 이미지 로드 및 그리기
     return new Promise((resolve, reject) => {
@@ -177,7 +190,11 @@ export const useStoryCreation = () => {
 
   const handleSubmit = async (selectedAvatar: ClosetAvatarResponse | null) => {
     if (!selectedAvatar || !contents.trim()) {
-      alert("아바타를 선택하고 내용을 입력해주세요.");
+      openAlert({
+        title: "입력 오류",
+        message: "아바타를 선택하고 내용을 입력해주세요.",
+        type: "warning",
+      });
       return;
     }
 
@@ -205,12 +222,18 @@ export const useStoryCreation = () => {
       await postStories(storyData);
 
       console.log("스토리 작성 완료!");
-      alert("스토리가 성공적으로 작성되었습니다!");
-      router.push("/story");
+      openAlert({
+        title: "작성 완료",
+        message: "스토리가 성공적으로 작성되었습니다!",
+        type: "success",
+        onConfirm: () => {
+          router.push("/story");
+        },
+      });
     } catch (error) {
       console.error("스토리 작성 실패:", error);
 
-      // 에러 타입에 따른 메시지 분기
+      let errorTitle = "오류";
       let errorMessage = "스토리 작성에 실패했습니다. 다시 시도해주세요.";
 
       if (error instanceof Error) {
@@ -225,14 +248,29 @@ export const useStoryCreation = () => {
         }
       }
 
-      alert(errorMessage);
+      openAlert({
+        title: errorTitle,
+        message: errorMessage,
+        type: "error",
+      });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleCancel = () => {
-    router.back();
+  const handleCancel = async () => {
+    const shouldCancel = await openAlert({
+      title: "작성 취소",
+      message:
+        "스토리 작성을 취소하시겠습니까? 작성 중인 내용은 저장되지 않습니다.",
+      type: "warning",
+      confirmText: "취소하기",
+      cancelText: "계속 작성",
+    });
+
+    if (shouldCancel) {
+      router.back();
+    }
   };
 
   return {
@@ -244,7 +282,6 @@ export const useStoryCreation = () => {
     isSubmitting,
     handleSubmit,
     handleCancel,
-    // 배경 제거 관련
     isBackgroundRemovalEnabled,
     setIsBackgroundRemovalEnabled,
     processedImageUrl,

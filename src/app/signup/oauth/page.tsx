@@ -11,10 +11,13 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import TryonImgUploader from "@/app/signup/_components/TryonImgUploader";
 import Spinner from "@/components/common/Spinner";
+import CustomAlert from "@/components/ui/CustomAlert";
+import { useCustomAlert } from "@/hooks/useCustomAlert";
 
 const Oauth = () => {
   const { idToken } = useIdToken();
   const router = useRouter();
+  const { isOpen, options, openAlert, closeAlert } = useCustomAlert();
 
   const [step, setStep] = useState(1);
   const [data, setData] = useState<GoogleSignupRequest>({
@@ -34,15 +37,20 @@ const Oauth = () => {
 
   const handleSubmit = async (fileUrl?: string) => {
     if (!idToken) {
-      alert("인증 정보가 없습니다. 다시 로그인해주세요.");
-      router.push("/signin");
+      openAlert({
+        title: "인증 오류",
+        message: "인증 정보가 없습니다. 다시 로그인해주세요.",
+        type: "error",
+        onConfirm: () => {
+          router.push("/signin");
+        },
+      });
       return;
     }
 
     try {
       setIsLoading(true);
 
-      // fileUrl이 전달되면 data 상태 업데이트
       const finalData = fileUrl
         ? {
             ...data,
@@ -54,18 +62,20 @@ const Oauth = () => {
             idToken,
           };
 
-      console.log("구글 회원가입 데이터:", finalData);
       const response = await signupWithGoogle(finalData);
 
       setIsLoading(false);
       if (response.accessToken) {
         setAccessToken(response.accessToken);
-        console.log("회원가입 및 로그인 완료:", response);
-        router.push("/"); // 홈으로 리다이렉트
+        router.push("/");
       }
     } catch (error) {
       console.error("회원가입 오류:", error);
-      alert("회원가입 중 오류가 발생했습니다. 다시 시도해주세요.");
+      openAlert({
+        title: "회원가입 오류",
+        message: "회원가입 중 오류가 발생했습니다. 다시 시도해주세요.",
+        type: "error",
+      });
     }
   };
 
@@ -87,6 +97,14 @@ const Oauth = () => {
           )}
         </div>
       </div>
+      <CustomAlert
+        isOpen={isOpen}
+        title={options.title}
+        message={options.message}
+        type={options.type}
+        onConfirm={options.onConfirm || closeAlert}
+        onCancel={options.onCancel}
+      />
     </>
   );
 };

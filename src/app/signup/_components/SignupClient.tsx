@@ -13,8 +13,12 @@ import PasswordForm from "@/app/signup/_components/PasswordForm";
 import SignupForm from "@/app/signup/_components/SignupForm";
 import { useRouter } from "next/navigation";
 import Spinner from "@/components/common/Spinner";
+import { useCustomAlert } from "@/hooks/useCustomAlert";
+import CustomAlert from "@/components/ui/CustomAlert";
 
 const SignupClient = () => {
+  const { isOpen, options, openAlert, closeAlert } = useCustomAlert();
+
   const [step, setStep] = useState(1);
   const [data, setData] = useState<EmailSignupRequest>({
     email: "",
@@ -38,7 +42,11 @@ const SignupClient = () => {
     // 필수 필드 검증
 
     if (!data.username || !data.birthDate || !data.phoneNum) {
-      alert("필수 정보를 모두 입력해주세요.");
+      openAlert({
+        title: "필수 정보 안내",
+        message: "필수 정보를 모두 입력해주세요.",
+        type: "error",
+      });
       return;
     }
     try {
@@ -53,24 +61,32 @@ const SignupClient = () => {
             ...data,
           };
 
-      console.log(data);
-      console.log("이메일 회원가입 데이터:", finalData);
       const response = await signup(finalData);
-      console.log("signup response", response);
 
       if (response) {
         setIsLoading(false);
         setStep((prev) => prev + 1);
       }
     } catch (error) {
-      alert("에러가 발생했습니다. 다시 시도해 주세요.");
-      console.log("회원가입 에러", error);
+      openAlert({
+        title: "알림",
+        message: "에러가 발생했습니다. 다시 시도해 주세요.",
+        type: "error",
+      });
       router.push("/signin");
     }
   };
 
   return (
     <>
+      <CustomAlert
+        isOpen={isOpen}
+        title={options.title}
+        message={options.message}
+        type={options.type}
+        onConfirm={options.onConfirm || closeAlert}
+        onCancel={options.onCancel}
+      />
       {isLoading && <Spinner />}
       <div className="w-full min-h-screen flex justify-center px-4 sm:px-6 md:px-8 lg:px-0 mb-10">
         <div className="w-full max-w-[640px] p-4 sm:p-6 md:p-8">

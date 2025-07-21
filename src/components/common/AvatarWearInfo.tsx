@@ -16,7 +16,9 @@ const AvatarWearInfo = () => {
   );
   const isAvatarLoading = useAvatarStore((state) => state.isLoading);
   const setAvatarLoading = useAvatarStore((state) => state.setLoading);
-  const clearSelectedProducts = useAvatarStore((state) => state.clearSelectedProducts);
+  const clearSelectedProducts = useAvatarStore(
+    (state) => state.clearSelectedProducts
+  );
 
   const [isClosetLoading, setIsClosetLoading] = useState(false);
   const [isResetLoading, setIsResetLoading] = useState(false);
@@ -97,15 +99,15 @@ const AvatarWearInfo = () => {
       setAvatarLoading(true);
 
       const response = await resetAvatar();
-      
+
       if (response.success) {
         // 리셋 성공 후 최신 아바타 정보 다시 불러오기
         const updatedAvatarInfo = await fetchLatestAvatarInfo();
         setAvatarInfo(updatedAvatarInfo);
-        
+
         // 선택된 상품 목록 초기화
         clearSelectedProducts();
-        
+
         setMessage("아바타가 초기화되었습니다.");
       } else {
         setMessage(response.message || "아바타 초기화에 실패했습니다.");
@@ -115,8 +117,10 @@ const AvatarWearInfo = () => {
       setTimeout(() => setMessage(null), 3000);
     } catch (error: any) {
       console.error("아바타 리셋 실패:", error);
-      setMessage(`아바타 초기화에 실패했습니다: ${error.message || "알 수 없는 오류"}`);
-      
+      setMessage(
+        `아바타 초기화에 실패했습니다: ${error.message || "알 수 없는 오류"}`
+      );
+
       // 3초 후 메시지 제거
       setTimeout(() => setMessage(null), 3000);
     } finally {
@@ -126,7 +130,7 @@ const AvatarWearInfo = () => {
   };
 
   return (
-    <div className="w-full h-[85vh] p-4 bg-gray-50 rounded-xl shadow-sm flex flex-col justify-center relative">
+    <div className="w-full h-full p-4 bg-gray-50 rounded-xl shadow-sm flex flex-col justify-center relative">
       {/* 옷장에 추가 버튼 (우측 상단 고정) */}
       <div className="absolute top-4 right-4 z-10 flex gap-2">
         {/* 아바타 리셋 버튼 */}
@@ -143,7 +147,7 @@ const AvatarWearInfo = () => {
           <RefreshCw className="w-4 h-4 mr-1" />
           {isResetLoading ? "초기화 중..." : "초기화"}
         </button>
-        
+
         {/* 옷장에 추가 버튼 */}
         <button
           onClick={handleAddToCloset}
