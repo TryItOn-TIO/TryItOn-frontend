@@ -7,12 +7,15 @@ import React, { useEffect, useState } from "react";
 import StorySortButtons from "./_components/StorySortButtons";
 import MyStoryGrid from "./_components/MyStoryGrid";
 import Spinner from "@/components/common/Spinner";
+import CustomAlert from "@/components/ui/CustomAlert";
+import { useCustomAlert } from "@/hooks/useCustomAlert";
 
 const MyStoryPage = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [stories, setStories] = useState<StoryResponse[]>([]);
   const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest");
+  const { isOpen, options, openAlert, closeAlert } = useCustomAlert();
 
   useEffect(() => {
     fetchStories();
@@ -35,13 +38,29 @@ const MyStoryPage = () => {
   };
 
   const handleStoryDelete = async (id: number) => {
-    if (window.confirm("정말로 이 스토리를 삭제하시겠습니까?")) {
+    const confirmDelete = await openAlert({
+      title: "스토리 삭제",
+      message: "정말로 이 스토리를 삭제하시겠습니까?",
+      type: "warning",
+      confirmText: "삭제",
+      cancelText: "취소"
+    });
+
+    if (confirmDelete) {
       const response = await deleteStory(id);
       if (response) {
-        alert("스토리가 성공적으로 삭제되었습니다.");
+        openAlert({
+          title: "성공",
+          message: "스토리가 성공적으로 삭제되었습니다.",
+          type: "success"
+        });
         setStories(stories.filter((story) => story.storyId !== id));
       } else {
-        alert("스토리 삭제에 실패했습니다.");
+        openAlert({
+          title: "오류",
+          message: "스토리 삭제에 실패했습니다.",
+          type: "error"
+        });
       }
     }
   };
@@ -75,6 +94,14 @@ const MyStoryPage = () => {
           </div>
         </div>
       )}
+      <CustomAlert
+        isOpen={isOpen}
+        title={options.title}
+        message={options.message}
+        type={options.type}
+        onConfirm={options.onConfirm || closeAlert}
+        onCancel={options.onCancel}
+      />
     </>
   );
 };

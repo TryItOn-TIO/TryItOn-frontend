@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { getStories } from "@/api/story";
 import { StoryResponse } from "@/types/story";
 import { SortType } from "@/constants/SortType";
-import StoryLoadingState from "./_components/StoryLoadingState";
 import StoryErrorState from "./_components/StoryErrorState";
 import StoryHeader from "./_components/StoryHeader";
 import StoryGrid from "./_components/StoryGrid";
