@@ -237,25 +237,27 @@ export default function MyPage() {
 
             <MenuSection title="내 정보" items={myInfoItems} />
 
-            <div className="bg-white rounded-lg shadow-sm">
-              <button
-                onClick={handleLogout}
-                className="w-full flex items-center justify-center px-6 py-4 text-red-600 hover:bg-red-50 transition-colors rounded-lg"
-              >
-                <LogOut className="w-5 h-5 mr-2" />
-                로그아웃
-              </button>
-            </div>
+            <div className="space-y-4">
+              <div className="bg-white rounded-lg shadow-sm">
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center justify-center px-6 py-4 text-gray-700 hover:bg-red-50 transition-colors rounded-lg"
+                >
+                  <LogOut className="w-5 h-5 mr-2" />
+                  로그아웃
+                </button>
+              </div>
 
-            {/* 회원 탈퇴 버튼 */}
-            <div className="bg-white rounded-lg shadow-sm">
-              <button
-                onClick={openWithdrawModal}
-                className="w-full flex items-center justify-center px-6 py-4 text-red-600 hover:bg-red-50 transition-colors rounded-lg"
-              >
-                <UserX className="w-5 h-5 mr-2" />
-                회원 탈퇴
-              </button>
+              {/* 회원 탈퇴 버튼 */}
+              <div className="bg-white rounded-lg shadow-sm">
+                <button
+                  onClick={openWithdrawModal}
+                  className="w-full flex items-center justify-center px-6 py-4 text-red-600 hover:bg-red-50 transition-colors rounded-lg"
+                >
+                  <UserX className="w-5 h-5 mr-2" />
+                  회원 탈퇴
+                </button>
+              </div>
             </div>
           </div>
         </div>
