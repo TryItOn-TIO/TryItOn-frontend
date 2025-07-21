@@ -47,10 +47,15 @@ const SendVerification = ({
       setIsLoading(true);
       await sendEmail(data.email);
       setIsLoading(false);
+      openAlert({
+        title: "인증번호 발송",
+        message: "인증번호가 발송되었습니다.",
+        type: "info",
 
-      if (confirm("인증번호가 발송되었습니다.")) {
-        setStep((prev) => prev + 1);
-      }
+        onConfirm: () => {
+          setStep((prev) => prev + 1);
+        },
+      });
     } catch (error) {
       openAlert({
         title: "안내",

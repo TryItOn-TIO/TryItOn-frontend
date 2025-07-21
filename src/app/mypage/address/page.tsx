@@ -6,8 +6,12 @@ import { useRouter } from "next/navigation";
 import { useAddresses } from "@/hooks/useMypage";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { Address, AddressRequest } from "@/types/mypage";
+import { useCustomAlert } from "@/hooks/useCustomAlert";
+import CustomAlert from "@/components/ui/CustomAlert";
 
 export default function AddressPage() {
+  const { isOpen, options, openAlert, closeAlert } = useCustomAlert();
+
   useAuthGuard();
   const router = useRouter();
   const {
@@ -81,13 +85,21 @@ export default function AddressPage() {
   };
 
   const handleDelete = async (addressId: number) => {
-    if (confirm("정말로 이 배송지를 삭제하시겠습니까?")) {
-      try {
-        await deleteAddress(addressId);
-      } catch (error) {
-        console.error("배송지 삭제 실패:", error);
-      }
-    }
+    openAlert({
+      title: "배송지 삭제",
+      message: "이 배송지를 삭제하시겠습니까?",
+      confirmText: "삭제",
+      cancelText: "취소",
+      type: "info",
+
+      onConfirm: async () => {
+        try {
+          await deleteAddress(addressId);
+        } catch (error) {
+          console.error("배송지 삭제 실패:", error);
+        }
+      },
+    });
   };
 
   if (isLoading) {
