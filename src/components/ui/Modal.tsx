@@ -57,7 +57,7 @@ const Modal = ({ onClose, children, title }: ModalProps) => {
             <X className="w-6 h-6" />
           </button>
         </header>
-        <main className="p-5">{children}</main>
+        <main className="p-5 flex-grow">{children}</main>
       </div>
     </div>
   );
