@@ -18,6 +18,7 @@ export default function Header() {
   const pathname = usePathname();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const [isResultModalOpen, setIsResultModalOpen] = useState(false);
+
   const { viewNotification } = useTryOnStore();
 
   useEffect(() => {
