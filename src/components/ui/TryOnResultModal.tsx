@@ -9,12 +9,15 @@ import { saveClosetAvatar } from "@/api/closet";
 import { fetchLatestAvatarInfo, resetAvatar } from "@/api/avatar";
 import Link from "next/link";
 import { RefreshCw } from "lucide-react";
+import { useIsMobile } from "@/hooks/useMediaQuery";
 
 interface TryOnResultModalProps {
   onClose: () => void;
 }
 
 const TryOnResultModal = ({ onClose }: TryOnResultModalProps) => {
+  const isMobile = useIsMobile(); // 모바일 여부 판단
+
   const { status, resultImageUrl, viewNotification } = useTryOnStore();
 
   const avatarInfo = useAvatarStore((state) => state.avatarInfo);
@@ -161,7 +164,7 @@ const TryOnResultModal = ({ onClose }: TryOnResultModalProps) => {
               </div>
             )}
 
-            <div className="relative w-full aspect-[4/5] sm:aspect-square rounded-lg overflow-hidden bg-gray-100 mb-4">
+            <div className="relative w-full aspect-[4/5] rounded-lg overflow-hidden bg-gray-100 mb-4">
               {displayImageUrl ? (
                 <Image
                   src={displayImageUrl}
@@ -221,7 +224,7 @@ const TryOnResultModal = ({ onClose }: TryOnResultModalProps) => {
               )}
             </div>
 
-            <div className="flex flex-col gap-3">
+            <div className="flex gap-4">
               <button
                 onClick={handleAddToCloset}
                 disabled={isAvatarLoading || isClosetLoading}
@@ -281,7 +284,13 @@ const TryOnResultModal = ({ onClose }: TryOnResultModalProps) => {
 
   return (
     <Modal onClose={handleClose} title="가상 피팅">
-      <div className="w-full max-w-[340px] mx-auto">{getModalContent()}</div>
+      {isMobile ? (
+        <div className="w-full max-w-[340px] mx-auto">{getModalContent()}</div>
+      ) : (
+        <div className="w-full h-full flex justify-center items-center">
+          <div className="w-full h-[85vh] mx-auto">{getModalContent()}</div>
+        </div>
+      )}
     </Modal>
   );
 };
