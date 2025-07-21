@@ -185,6 +185,7 @@ export default function MyPage() {
   const myInfoItems = [
     { label: "프로필 관리", href: "/mypage/profile" },
     { label: "아바타 설정", href: "/mypage/settings" },
+    { label: "스토리 관리", href: "/mypage/story" },
     // 구글 로그인 사용자가 아닌 경우에만 비밀번호 변경 메뉴 표시
     ...(isGoogleLogin
       ? []
