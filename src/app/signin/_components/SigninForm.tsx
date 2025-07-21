@@ -5,6 +5,8 @@ import InputText from "@/components/forms/InputText";
 import { validateEmail, validatePassword } from "@/utils/validator";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { useCustomAlert } from "@/hooks/useCustomAlert";
+import CustomAlert from "@/components/ui/CustomAlert";
 
 type SigninFormProps = {
   email: string;
@@ -21,13 +23,19 @@ const SigninForm = ({
   onPasswordChange,
   onSubmit,
 }: SigninFormProps) => {
+  const { isOpen, options, openAlert, closeAlert } = useCustomAlert();
+
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
 
   // submit시, 유효성 검사
   const handleSubmit = () => {
     if (emailError || passwordError) {
-      alert("형식에 맞게 다시 입력해 주세요.");
+      openAlert({
+        title: "로그인 안내",
+        message: "형식에 맞게 다시 입력해 주세요.",
+        type: "error",
+      });
       return;
     }
     onSubmit();
@@ -50,7 +58,16 @@ const SigninForm = ({
   }, [email, password]);
 
   return (
-    <div>
+    <>
+      <CustomAlert
+        isOpen={isOpen}
+        title={options.title}
+        message={options.message}
+        type={options.type}
+        onConfirm={options.onConfirm || closeAlert}
+        onCancel={options.onCancel}
+      />
+
       <div className="flex flex-col items-center gap-4">
         <InputText
           value={email}
@@ -78,7 +95,7 @@ const SigninForm = ({
         </Link>
         {/* <p className="text-sm text-gray-400 cursor-pointer">비밀번호 찾기</p> */}
       </div>
-    </div>
+    </>
   );
 };
 
