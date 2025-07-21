@@ -7,6 +7,8 @@ import { useAvatarTryon } from "@/hooks/useAvatarTryon";
 import { getAccessToken } from "@/utils/auth";
 import TryOnResultModal from "@/components/ui/TryOnResultModal";
 import { useIsMobile } from "@/hooks/useMediaQuery";
+import { useCustomAlert } from "@/hooks/useCustomAlert";
+import CustomAlert from "@/components/ui/CustomAlert";
 
 type ProductCardProps = {
   product: ProductResponse;
@@ -14,6 +16,8 @@ type ProductCardProps = {
 };
 
 const ProductCard = ({ product, isShareMode = false }: ProductCardProps) => {
+  const { isOpen, options, openAlert, closeAlert } = useCustomAlert();
+
   const { id, productName, img1, brand, price, sale, liked } = product;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const isMobile = useIsMobile();
@@ -58,7 +62,12 @@ const ProductCard = ({ product, isShareMode = false }: ProductCardProps) => {
 
     const token = getAccessToken();
     if (!token) {
-      alert("로그인이 필요한 기능입니다.");
+      openAlert({
+        title: "안내",
+        message: "로그인이 필요한 기능입니다.",
+        type: "info",
+      });
+
       return;
     }
 
@@ -76,6 +85,14 @@ const ProductCard = ({ product, isShareMode = false }: ProductCardProps) => {
 
   return (
     <>
+      <CustomAlert
+        isOpen={isOpen}
+        title={options.title}
+        message={options.message}
+        type={options.type}
+        onConfirm={options.onConfirm || closeAlert}
+        onCancel={options.onCancel}
+      />
       <div className="w-full bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden relative">
         <div className="w-full h-[240px] bg-gray-100 relative">
           <Link href={`/detail/${id}`}>
@@ -159,7 +176,6 @@ const ProductCard = ({ product, isShareMode = false }: ProductCardProps) => {
           </div>
         </Link>
       </div>
-
       {/* 모달 렌더링 */}
       {isModalOpen && (
         <TryOnResultModal onClose={() => setIsModalOpen(false)} />
