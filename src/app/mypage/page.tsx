@@ -87,20 +87,20 @@ export default function MyPage() {
   }, [setAvatarInfo]);
 
   const handleLogout = async () => {
-    const confirmLogout = await openAlert({
-      title: "알림",
+    openAlert({
+      title: "로그아웃 확인",
       message: "정말 로그아웃 하시겠습니까?",
       confirmText: "확인",
       cancelText: "취소",
       type: "info",
+
+      onConfirm: () => {
+        deleteAccessToken();
+        clearSessionStorage();
+
+        router.push("/");
+      },
     });
-
-    if (confirmLogout) {
-      deleteAccessToken();
-      clearSessionStorage();
-
-      router.push("/");
-    }
   };
 
   // 회원 탈퇴 모달 열기
@@ -134,7 +134,7 @@ export default function MyPage() {
         openAlert({
           title: "회원 탈퇴 완료",
           message: "회원 탈퇴가 완료되었습니다.",
-          type: "success",
+          type: "info",
           onConfirm: () => {
             deleteAccessToken();
             router.push("/");
@@ -194,7 +194,6 @@ export default function MyPage() {
 
   return (
     <>
-      {/* 기존 JSX */}
       <CustomAlert
         isOpen={isOpen}
         title={options.title}
