@@ -9,17 +9,21 @@ import { useRouter } from "next/navigation";
 import { useIsMobile } from "@/hooks/useMediaQuery";
 import OrderOptions from "@/app/detail/[id]/_components/DetailOrderOptions";
 import BottomActionButtons from "@/app/detail/[id]/_components/BottomActionButtons";
+import CustomAlert from "@/components/ui/CustomAlert";
+import { useCustomAlert } from "@/hooks/useCustomAlert";
 
 type ProductDetailInfoProps = {
   data: ProductDetailResponse;
   onWishlistChange?: () => void;
 };
 
-const ProductDetailInfo = ({ data, onWishlistChange }: ProductDetailInfoProps) => {
+const ProductDetailInfo = ({
+  data,
+  onWishlistChange,
+}: ProductDetailInfoProps) => {
   const router = useRouter();
-  console.log(data.liked);
+  const { isOpen, options, openAlert, closeAlert } = useCustomAlert();
 
-  // TODO: 주문 구현 후 DTO 수정
   const [orderData, setOrderData] = useState({
     id: data.id,
     color: data.variant[0]?.color || "", // 첫 번째 색상으로 설정
@@ -40,7 +44,11 @@ const ProductDetailInfo = ({ data, onWishlistChange }: ProductDetailInfoProps) =
     }
   }, [data.variant, orderData.color]);
 
-  const { isWished, isLoading: wishLoading, toggleWishlist } = useWishlist(data.liked, data.id);
+  const {
+    isWished,
+    isLoading: wishLoading,
+    toggleWishlist,
+  } = useWishlist(data.liked, data.id);
   const { addToCart, isLoading } = useCart();
 
   // 찜 상태 변경 핸들러
@@ -116,30 +124,60 @@ const ProductDetailInfo = ({ data, onWishlistChange }: ProductDetailInfoProps) =
 
     // 필수 옵션 선택 확인
     if (!orderData.color || !orderData.size) {
-      alert("색상과 사이즈를 선택해주세요.");
+      openAlert({
+        title: "알림",
+        message: "색상과 사이즈를 선택해주세요.",
+        confirmText: "확인",
+        cancelText: "취소",
+        type: "info",
+      });
       return;
     }
 
     const variantId = getCurrentVariantId();
     if (!variantId) {
-      alert("선택한 옵션에 해당하는 상품을 찾을 수 없습니다.");
+      openAlert({
+        title: "알림",
+        message: "선택한 옵션에 해당하는 상품을 찾을 수 없습니다.",
+        confirmText: "확인",
+        cancelText: "취소",
+        type: "info",
+      });
       return;
     }
 
     // 재고 확인
     const currentVariant = data.variant.find((v) => v.variantId === variantId);
     if (!currentVariant) {
-      alert("상품 정보를 찾을 수 없습니다.");
+      openAlert({
+        title: "알림",
+        message: "상품 정보를 찾을 수 없습니다.",
+        confirmText: "확인",
+        cancelText: "취소",
+        type: "info",
+      });
       return;
     }
 
     if (currentVariant.quantity === 0) {
-      alert("품절된 상품입니다.");
+      openAlert({
+        title: "알림",
+        message: "품절된 상품입니다.",
+        confirmText: "확인",
+        cancelText: "취소",
+        type: "info",
+      });
       return;
     }
 
     if (currentVariant.quantity < orderData.quantity) {
-      alert(`재고가 부족합니다. (현재 재고: ${currentVariant.quantity}개)`);
+      openAlert({
+        title: "알림",
+        message: `재고가 부족합니다. (현재 재고: ${currentVariant.quantity}개)`,
+        confirmText: "확인",
+        cancelText: "취소",
+        type: "info",
+      });
       return;
     }
 
@@ -171,24 +209,48 @@ const ProductDetailInfo = ({ data, onWishlistChange }: ProductDetailInfoProps) =
     const variantId = getCurrentVariantId();
 
     if (!variantId) {
-      alert("선택한 옵션에 해당하는 상품을 찾을 수 없습니다.");
+      openAlert({
+        title: "알림",
+        message: "선택한 옵션에 해당하는 상품을 찾을 수 없습니다.",
+        confirmText: "확인",
+        cancelText: "취소",
+        type: "info",
+      });
       return;
     }
 
     // 재고 확인
     const currentVariant = data.variant.find((v) => v.variantId === variantId);
     if (!currentVariant) {
-      alert("상품 정보를 찾을 수 없습니다.");
+      openAlert({
+        title: "알림",
+        message: "상품 정보를 찾을 수 없습니다.",
+        confirmText: "확인",
+        cancelText: "취소",
+        type: "info",
+      });
       return;
     }
 
     if (currentVariant.quantity === 0) {
-      alert("품절된 상품입니다.");
+      openAlert({
+        title: "알림",
+        message: "품절된 상품입니다.",
+        confirmText: "확인",
+        cancelText: "취소",
+        type: "info",
+      });
       return;
     }
 
     if (currentVariant.quantity < orderData.quantity) {
-      alert(`재고가 부족합니다. (현재 재고: ${currentVariant.quantity}개)`);
+      openAlert({
+        title: "알림",
+        message: `재고가 부족합니다. (현재 재고: ${currentVariant.quantity}개)`,
+        confirmText: "확인",
+        cancelText: "취소",
+        type: "info",
+      });
       return;
     }
 
@@ -205,6 +267,14 @@ const ProductDetailInfo = ({ data, onWishlistChange }: ProductDetailInfoProps) =
 
   return (
     <>
+      <CustomAlert
+        isOpen={isOpen}
+        title={options.title}
+        message={options.message}
+        type={options.type}
+        onConfirm={options.onConfirm || closeAlert}
+        onCancel={options.onCancel}
+      />
       {/* 데스크톱 및 모바일 상단에 표시될 정보 */}
       <div className="text-black p-4 space-y-3 md:p-6 md:space-y-4">
         {/* 브랜드 및 제품명 */}

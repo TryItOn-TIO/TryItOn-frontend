@@ -9,6 +9,8 @@ import React, { useState } from "react";
 import { useAvatarTryon } from "@/hooks/useAvatarTryon";
 import { getAccessToken } from "@/utils/auth";
 import TryOnResultModal from "@/components/ui/TryOnResultModal";
+import { useCustomAlert } from "@/hooks/useCustomAlert";
+import CustomAlert from "@/components/ui/CustomAlert";
 
 type DetailMainImgProps = {
   images: string[];
@@ -16,6 +18,8 @@ type DetailMainImgProps = {
 };
 
 const DetailMainImg = ({ images, productId }: DetailMainImgProps) => {
+  const { isOpen, options, openAlert, closeAlert } = useCustomAlert();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { tryOnProduct } = useAvatarTryon();
 
@@ -25,7 +29,11 @@ const DetailMainImg = ({ images, productId }: DetailMainImgProps) => {
 
     const token = getAccessToken();
     if (!token) {
-      alert("로그인이 필요한 기능입니다.");
+      openAlert({
+        title: "알림",
+        message: "로그인이 필요한 기능입니다.",
+        type: "info",
+      });
       return;
     }
 
@@ -53,8 +61,15 @@ const DetailMainImg = ({ images, productId }: DetailMainImgProps) => {
 
   return (
     <>
+      <CustomAlert
+        isOpen={isOpen}
+        title={options.title}
+        message={options.message}
+        type={options.type}
+        onConfirm={options.onConfirm || closeAlert}
+        onCancel={options.onCancel}
+      />
       <div className="w-full relative">
-        {" "}
         {/* 부모 컨테이너 추가 및 relative 설정 */}
         <Swiper
           modules={[Navigation]}
@@ -95,7 +110,6 @@ const DetailMainImg = ({ images, productId }: DetailMainImgProps) => {
           />
         </div>
       </div>
-
       {/* 모달 렌더링 */}
       {isModalOpen && (
         <TryOnResultModal onClose={() => setIsModalOpen(false)} />
