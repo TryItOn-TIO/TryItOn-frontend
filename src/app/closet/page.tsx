@@ -10,6 +10,8 @@ import { getWishlist, getWishlistByCategory } from "@/api/wishlist";
 import type { ClosetAvatarResponse } from "@/types/closet";
 import type { ProductResponse } from "@/types/product";
 import { useRouter } from "next/navigation";
+import { useCustomAlert } from "@/hooks/useCustomAlert";
+import CustomAlert from "@/components/ui/CustomAlert";
 
 const categories = [
   "전체",
@@ -34,6 +36,8 @@ const CATEGORY_ID_MAP: Record<string, number> = {
 const ClosetPage = () => {
   useAuthGuard();
   const router = useRouter();
+
+  const { isOpen, options, openAlert, closeAlert } = useCustomAlert();
 
   const [selectedCategory, setSelectedCategory] = useState("전체");
   const [closetAvatars, setClosetAvatars] = useState<ClosetAvatarResponse[]>(
@@ -82,33 +86,41 @@ const ClosetPage = () => {
   }, []);
 
   // 착장 삭제 핸들러
-  const handleDeleteOutfit = async (avatarId: number) => {
-    if (!confirm("이 착장을 삭제하시겠습니까?")) {
-      return;
-    }
+  const handleDeleteOutfit = (avatarId: number) => {
+    openAlert({
+      title: "삭제 확인",
+      message: "이 착장을 삭제하시겠습니까?",
+      confirmText: "삭제",
+      cancelText: "취소",
+      type: "info",
+      async onConfirm() {
+        try {
+          setIsDeleting(true);
+          await deleteClosetAvatar(avatarId);
 
-    try {
-      setIsDeleting(true);
-      await deleteClosetAvatar(avatarId);
+          // 로컬 상태에서 삭제된 아이템 제거
+          setClosetAvatars((prev) =>
+            prev.filter((avatar) => avatar.avatarId !== avatarId)
+          );
+          window.location.reload();
+        } catch (error) {
+          console.error("착장 삭제 실패:", error);
+          openAlert({
+            title: "스토리 삭제하러 가기",
+            message: "이 착장으로 업로드된 스토리가 존재합니다.",
+            confirmText: "확인",
+            cancelText: "취소",
+            type: "info",
 
-      // 로컬 상태에서 삭제된 아이템 제거
-      setClosetAvatars((prev) =>
-        prev.filter((avatar) => avatar.avatarId !== avatarId)
-      );
-      // alert("착장이 삭제되었습니다!");
-      window.location.reload();
-    } catch (error) {
-      console.error("착장 삭제 실패:", error);
-      if (
-        confirm(
-          "이 착장으로 업로드된 스토리가 존재합니다. 스토리를 삭제하시나요?"
-        )
-      ) {
-        router.push("/mypage/story");
-      }
-    } finally {
-      setIsDeleting(false);
-    }
+            onConfirm: () => {
+              router.push("/mypage/story");
+            },
+          });
+        } finally {
+          setIsDeleting(false);
+        }
+      },
+    });
   };
 
   // 카테고리 변경 핸들러
@@ -123,22 +135,32 @@ const ClosetPage = () => {
   }, []);
 
   return (
-    <AvatarLayout
-      avatarSlot={<AvatarWearInfo />}
-      productSlot={
-        <ClosetProductSection
-          closetAvatars={closetAvatars}
-          wishlistData={wishlistData}
-          isLoadingCloset={isLoadingCloset}
-          isLoadingWishlist={isLoadingWishlist}
-          selectedCategory={selectedCategory}
-          categories={categories}
-          onCategoryChange={handleCategoryChange}
-          onDeleteOutfit={handleDeleteOutfit}
-          isDeleting={isDeleting}
-        />
-      }
-    />
+    <>
+      <CustomAlert
+        isOpen={isOpen}
+        title={options.title}
+        message={options.message}
+        type={options.type}
+        onConfirm={options.onConfirm || closeAlert}
+        onCancel={options.onCancel}
+      />
+      <AvatarLayout
+        avatarSlot={<AvatarWearInfo />}
+        productSlot={
+          <ClosetProductSection
+            closetAvatars={closetAvatars}
+            wishlistData={wishlistData}
+            isLoadingCloset={isLoadingCloset}
+            isLoadingWishlist={isLoadingWishlist}
+            selectedCategory={selectedCategory}
+            categories={categories}
+            onCategoryChange={handleCategoryChange}
+            onDeleteOutfit={handleDeleteOutfit}
+            isDeleting={isDeleting}
+          />
+        }
+      />
+    </>
   );
 };
 
