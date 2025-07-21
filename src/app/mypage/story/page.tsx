@@ -43,7 +43,7 @@ const MyStoryPage = () => {
       message: "정말로 이 스토리를 삭제하시겠습니까?",
       type: "warning",
       confirmText: "삭제",
-      cancelText: "취소"
+      cancelText: "취소",
     });
 
     if (confirmDelete) {
@@ -52,14 +52,14 @@ const MyStoryPage = () => {
         openAlert({
           title: "성공",
           message: "스토리가 성공적으로 삭제되었습니다.",
-          type: "success"
+          type: "info",
         });
         setStories(stories.filter((story) => story.storyId !== id));
       } else {
         openAlert({
           title: "오류",
           message: "스토리 삭제에 실패했습니다.",
-          type: "error"
+          type: "error",
         });
       }
     }

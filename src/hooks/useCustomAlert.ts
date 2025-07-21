@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-interface AlertOptions {
+export type AlertOptions = {
   title?: string;
   message: string;
   confirmText?: string;
@@ -10,9 +10,16 @@ interface AlertOptions {
   type?: "info" | "success" | "warning" | "error";
   onConfirm?: () => void;
   onCancel?: () => void;
-}
+};
 
-export function useCustomAlert() {
+export type UseCustomAlertReturn = {
+  isOpen: boolean;
+  options: AlertOptions;
+  openAlert: (alertOptions: AlertOptions) => Promise<boolean>;
+  closeAlert: () => void;
+};
+
+export function useCustomAlert(): UseCustomAlertReturn {
   const [isOpen, setIsOpen] = useState(false);
   const [options, setOptions] = useState<AlertOptions>({
     message: "",
