@@ -48,7 +48,12 @@ const ProductDetailInfo = ({
     isWished,
     isLoading: wishLoading,
     toggleWishlist,
-  } = useWishlist(data.liked, data.id);
+  } = useWishlist({
+    initial: data.liked,
+    productId: data.id,
+    openAlert,
+  });
+
   const { addToCart, isLoading } = useCart();
 
   // 찜 상태 변경 핸들러
@@ -272,6 +277,8 @@ const ProductDetailInfo = ({
         title={options.title}
         message={options.message}
         type={options.type}
+        confirmText={options.confirmText}
+        cancelText={options.cancelText}
         onConfirm={options.onConfirm || closeAlert}
         onCancel={options.onCancel}
       />

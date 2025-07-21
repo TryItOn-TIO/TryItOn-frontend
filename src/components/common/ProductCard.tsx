@@ -53,7 +53,11 @@ const ProductCard = ({ product, isShareMode = false }: ProductCardProps) => {
     discountedPrice
   );
 
-  const { isWished, toggleWishlist } = useWishlist(actualLiked, id);
+  const { isWished, toggleWishlist } = useWishlist({
+    initial: actualLiked,
+    productId: id,
+    openAlert,
+  });
   const { tryOnProduct } = useAvatarTryon();
 
   const handleAvatarClick = async (e: React.MouseEvent) => {
