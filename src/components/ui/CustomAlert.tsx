@@ -118,7 +118,7 @@ export default function CustomAlert({
 
   return (
     <div
-      className={`fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 transition-opacity duration-300 ${
+      className={`fixed z-50 w-screen h-screen top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black/50 transition-opacity duration-300 ${
         isVisible ? "opacity-100" : "opacity-0"
       }`}
       aria-modal="true"

@@ -85,9 +85,9 @@ const OrderOptions = ({
           onChange={handleSizeChange}
           className="w-full border border-gray-300 px-2 py-1.5 rounded-md text-sm md:px-3 md:py-2"
         >
-          <option value="" disabled>
+          {/* <option value="" disabled>
             사이즈를 선택해주세요
-          </option>
+          </option> */}
           {sizesForSelectedColor.map((variant, index) => (
             <option key={index} value={variant.size}>
               {variant.size}{" "}

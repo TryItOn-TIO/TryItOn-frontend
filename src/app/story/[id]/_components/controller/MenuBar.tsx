@@ -1,7 +1,5 @@
 import Image from "next/image";
 import { Dispatch, SetStateAction } from "react";
-import { useCustomAlert } from "@/hooks/useCustomAlert";
-import CustomAlert from "@/components/ui/CustomAlert";
 
 type MenuBarProps = {
   liked: boolean;
@@ -15,6 +13,8 @@ type MenuBarProps = {
 
   postComment: boolean;
   setPostComment: Dispatch<SetStateAction<boolean>>;
+
+  onShare: () => void;
 };
 
 const MenuBar = ({
@@ -26,38 +26,10 @@ const MenuBar = ({
   setClothesOn,
   postComment,
   setPostComment,
+  onShare,
 }: MenuBarProps) => {
-  const { isOpen, options, openAlert, closeAlert } = useCustomAlert();
-
-  const handleLinkShare = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      openAlert({
-        title: "링크 복사 완료",
-        message: "링크가 복사되었습니다!",
-        type: "success",
-      });
-    } catch (err) {
-      console.error("링크 복사 실패", err);
-      openAlert({
-        title: "링크 복사 실패",
-        message: "링크 복사에 실패했습니다",
-        type: "error",
-      });
-    }
-  };
-
   return (
     <>
-      <CustomAlert
-        isOpen={isOpen}
-        title={options.title}
-        message={options.message}
-        type={options.type}
-        onConfirm={options.onConfirm || closeAlert}
-        onCancel={options.onCancel}
-      />
-
       <div className="flex flex-col items-center justify-center gap-4 px-3 py-4">
         <div className="flex flex-col items-center text-xs text-neutral-400 gap-1 hover:text-neutral-700 transition-colors">
           <Image
@@ -98,7 +70,7 @@ const MenuBar = ({
             width={25}
             height={25}
             className="cursor-pointer hover:scale-110 transition-transform"
-            onClick={handleLinkShare}
+            onClick={onShare}
           />
           <p className="font-medium">공유하기</p>
         </div>
