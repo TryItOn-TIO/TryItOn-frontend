@@ -42,7 +42,7 @@ export default function DesktopHeader({
         <Link href="/">
           <h1 className="text-2xl font-bold text-gray-900">TIO</h1>
         </Link>
-        <nav className="hidden lg:flex items-center gap-5">
+        <nav className="flex items-center gap-5">
           {Object.values(CATEGORY)
             .filter((v) => typeof v === "number")
             .map((id) => {
