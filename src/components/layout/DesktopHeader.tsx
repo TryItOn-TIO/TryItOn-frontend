@@ -29,13 +29,6 @@ export default function DesktopHeader({
   const showDesktopNotification = hasUnreadNotification;
   // ---------------------
 
-  const handleMypageClick = (e: React.MouseEvent) => {
-    if (showDesktopNotification) {
-      e.preventDefault();
-      openResultModal();
-    }
-  };
-
   const getLinkClassName = (
     base: string,
     active: string,
@@ -152,11 +145,7 @@ export default function DesktopHeader({
             >
               장바구니
             </Link>
-            <Link
-              href="/mypage"
-              onClick={handleMypageClick}
-              className="relative"
-            >
+            <Link href="/mypage" className="relative">
               <User className="w-4 h-4" />
             </Link>
           </div>
