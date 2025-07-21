@@ -29,7 +29,9 @@ const SigninForm = ({
   const [passwordError, setPasswordError] = useState(false);
 
   // submit시, 유효성 검사
-  const handleSubmit = () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
     if (emailError || passwordError) {
       openAlert({
         title: "로그인 안내",
@@ -68,27 +70,32 @@ const SigninForm = ({
         onCancel={options.onCancel}
       />
 
-      <div className="flex flex-col items-center gap-4">
-        <InputText
-          value={email}
-          onChange={onEmailChange}
-          placeholder="이메일"
-          type="text"
-          isInvalid={emailError}
-          errorMessage="이메일 형식에 맞게 입력해 주세요."
-        />
-        <InputText
-          value={password}
-          onChange={onPasswordChange}
-          placeholder="비밀번호"
-          type="password"
-          isInvalid={passwordError}
-          errorMessage="비밀번호는 8자 이상으로 영문, 숫자, 특수문자를 포함해 주세요."
-        />
-        <div className="w-full mt-6">
-          <BlackButton text="로그인" handleClick={handleSubmit} />
+      {/* 로그인 포맷 */}
+      <form onSubmit={handleSubmit}>
+        <div className="flex flex-col items-center gap-4">
+          <InputText
+            value={email}
+            onChange={onEmailChange}
+            placeholder="이메일"
+            type="text"
+            isInvalid={emailError}
+            errorMessage="이메일 형식에 맞게 입력해 주세요."
+          />
+          <InputText
+            value={password}
+            onChange={onPasswordChange}
+            placeholder="비밀번호"
+            type="password"
+            isInvalid={passwordError}
+            errorMessage="비밀번호는 8자 이상으로 영문, 숫자, 특수문자를 포함해 주세요."
+          />
+          <div className="w-full mt-6">
+            <BlackButton text="로그인" />
+          </div>
         </div>
-      </div>
+      </form>
+
+      {/* 이메일로 가입 버튼 */}
       <div className="w-full flex gap-4 justify-end my-3">
         <Link href={"/signup"} className="text-sm text-gray-400 cursor-pointer">
           이메일로 가입하기
