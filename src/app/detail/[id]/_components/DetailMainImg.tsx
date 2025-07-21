@@ -53,9 +53,7 @@ const DetailMainImg = ({ images, productId }: DetailMainImgProps) => {
 
   if (validImages.length === 0) {
     return (
-      <div className="w-full h-[85vh] bg-gray-200 flex items-center justify-center">
-        <p>이미지를 불러올 수 없습니다.</p>
-      </div>
+      <div className="w-full h-[85vh] bg-gray-200 flex items-center justify-center" />
     );
   }
 
