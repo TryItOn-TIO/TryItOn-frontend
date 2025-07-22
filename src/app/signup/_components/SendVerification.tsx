@@ -39,31 +39,46 @@ const SendVerification = ({
         title: "이메일 형식 안내",
         message: "이메일 형식이 올바르지 않습니다.",
         type: "error",
+        confirmText: "확인",
+        cancelText: "취소",
+
+        onConfirm: () => {
+          return;
+        },
       });
-      return;
     }
 
     try {
       setIsLoading(true);
       await sendEmail(data.email);
       setIsLoading(false);
+
       openAlert({
         title: "인증번호 발송",
         message: "인증번호가 발송되었습니다.",
         type: "info",
+        confirmText: "확인",
+        cancelText: "취소",
 
         onConfirm: () => {
           setStep((prev) => prev + 1);
         },
       });
     } catch (error) {
+      setIsLoading(false);
+
       openAlert({
         title: "안내",
         message: "이미 가입된 이메일입니다.",
         type: "error",
+        confirmText: "확인",
+        cancelText: "취소",
+
+        onConfirm: () => {
+          console.log("인증번호 발송 에러", error);
+          router.push("/signin");
+        },
       });
-      console.log("인증번호 발송 에러", error);
-      router.push("/signin");
     }
   };
 

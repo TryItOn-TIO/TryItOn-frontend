@@ -43,8 +43,10 @@ const TryonImgUploader = <T extends SignupRequest>({
         confirmText: "확인",
         cancelText: "취소",
         type: "error",
+        onConfirm() {
+          return;
+        },
       });
-      return;
     }
 
     // 파일 타입 검증
@@ -56,8 +58,10 @@ const TryonImgUploader = <T extends SignupRequest>({
         confirmText: "확인",
         cancelText: "취소",
         type: "error",
+        onConfirm() {
+          return;
+        },
       });
-      return;
     }
 
     setSelectedFile(file);

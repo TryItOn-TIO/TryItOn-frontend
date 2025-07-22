@@ -46,8 +46,12 @@ const SignupClient = () => {
         title: "필수 정보 안내",
         message: "필수 정보를 모두 입력해주세요.",
         type: "error",
+        confirmText: "확인",
+        cancelText: "취소",
+        onConfirm() {
+          return;
+        },
       });
-      return;
     }
     try {
       setIsLoading(true);
@@ -72,8 +76,12 @@ const SignupClient = () => {
         title: "알림",
         message: "에러가 발생했습니다. 다시 시도해 주세요.",
         type: "error",
+        confirmText: "확인",
+        cancelText: "취소",
+        onConfirm() {
+          router.push("/signin");
+        },
       });
-      router.push("/signin");
     }
   };
 
