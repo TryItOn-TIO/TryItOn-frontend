@@ -59,14 +59,25 @@ const DetailMainImg = ({ images, productId }: DetailMainImgProps) => {
 
   return (
     <>
-      <CustomAlert
-        isOpen={isOpen}
-        title={options.title}
-        message={options.message}
-        type={options.type}
-        onConfirm={options.onConfirm || closeAlert}
-        onCancel={options.onCancel}
-      />
+      {/* alert 모달 */}
+      <div className="z-40">
+        <CustomAlert
+          isOpen={isOpen}
+          title={options.title}
+          message={options.message}
+          type={options.type}
+          onConfirm={options.onConfirm || closeAlert}
+          onCancel={options.onCancel}
+        />
+      </div>
+
+      {/* 모달 렌더링 */}
+      <div className="z-40">
+        {isModalOpen && (
+          <TryOnResultModal onClose={() => setIsModalOpen(false)} />
+        )}
+      </div>
+
       <div className="w-full relative">
         {/* 부모 컨테이너 추가 및 relative 설정 */}
         <Swiper
@@ -108,10 +119,6 @@ const DetailMainImg = ({ images, productId }: DetailMainImgProps) => {
           />
         </div>
       </div>
-      {/* 모달 렌더링 */}
-      {isModalOpen && (
-        <TryOnResultModal onClose={() => setIsModalOpen(false)} />
-      )}
     </>
   );
 };

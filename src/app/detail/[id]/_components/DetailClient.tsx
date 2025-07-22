@@ -79,7 +79,7 @@ const DetailClient = ({ productId }: DetailClientProps) => {
           </div>
 
           {/* 우측 상품 장바구니/구매하기 창 */}
-          <div className="z-50 w-full md:w-[35%] md:min-h-screen md:h-screen md:fixed md:right-0 md:top-[15vh] md:bottom-0 md:overflow-y-auto md:shadow-md md:bg-white">
+          <div className="z-10 w-full md:w-[35%] md:min-h-screen md:h-screen md:fixed md:right-0 md:top-[15vh] md:bottom-0 md:overflow-y-auto md:shadow-md md:bg-white">
             <ProductDetailInfo data={data} onWishlistChange={refreshData} />
           </div>
         </div>

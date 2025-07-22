@@ -2,7 +2,7 @@
 
 const Spinner = () => {
   return (
-    <div className="fixed top-0 mt-16 left-0 w-screen h-screen flex items-center justify-center bg-[rgba(0,0,0,0.1)] z-2">
+    <div className="fixed top-0 mt-16 left-0 w-screen h-screen flex items-center justify-center bg-[rgba(0,0,0,0.1)] z-50">
       {/* <Image
         src={"/images/common/spinner.gif"}
         width={100}
