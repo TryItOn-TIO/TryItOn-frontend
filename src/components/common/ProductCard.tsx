@@ -80,10 +80,35 @@ const ProductCard = ({ product, isShareMode = false }: ProductCardProps) => {
     }
 
     try {
-      await tryOnProduct(id);
+      const result = await tryOnProduct(id);
       console.log(`상품 ${id} 착용 요청됨`);
+      
+      // 결과가 null이면 에러가 발생한 것이므로 모달을 닫음
+      if (result === null && isMobile) {
+        setIsModalOpen(false);
+      }
     } catch (error) {
       console.error("아바타 착용 중 오류 발생:", error);
+      if (isMobile) {
+        setIsModalOpen(false);
+      }
+      
+      // 에러 타입에 따라 알럿 표시
+      if (error instanceof Error && error.name === "TryOnError") {
+        openAlert({
+          title: "착용 불가",
+          message: "이 상품은 입을 수 없습니다.",
+          type: "error",
+          confirmText: "확인"
+        });
+      } else {
+        openAlert({
+          title: "오류 발생",
+          message: "상품 착용 중 오류가 발생했습니다.",
+          type: "error",
+          confirmText: "확인"
+        });
+      }
     }
   };
 
