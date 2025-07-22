@@ -1,6 +1,7 @@
 import { useAvatarStore } from "@/stores/avatar-store";
 import { useTryOnStore } from "@/stores/try-on-store";
 import { createAvatar } from "@/api/avatar";
+import { useCustomAlert } from "@/hooks/useCustomAlert";
 
 export const useAvatarTryon = () => {
   const setLoading = useAvatarStore((state) => state.setLoading);
@@ -14,6 +15,9 @@ export const useAvatarTryon = () => {
 
   // try-on-store의 상태 업데이트 함수들을 가져옴
   const { start, setSuccess, setError } = useTryOnStore.getState();
+  
+  // 커스텀 알럿 훅 사용
+  const { openAlert } = useCustomAlert();
 
   const tryOnProduct = async (productId: number) => {
     start(); // 프로세스 시작을 알림
@@ -38,6 +42,8 @@ export const useAvatarTryon = () => {
     } catch (error) {
       console.error("착용 중 오류 발생:", error);
       setError(); // 실패 상태를 스토어에 저장
+      
+      // 에러를 다시 throw
       throw error;
     } finally {
       setLoading(false);

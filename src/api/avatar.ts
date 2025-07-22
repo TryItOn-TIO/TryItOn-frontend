@@ -4,8 +4,15 @@ import { axiosWithAuth } from "@/api";
 export const createAvatar = async (
   data: AvatarRequest
 ): Promise<AvatarResponse> => {
-  const response = await axiosWithAuth().post("/api/avatars/try-on", data);
-  return response.data;
+  try {
+    const response = await axiosWithAuth().post("/api/avatars/try-on", data);
+    return response.data;
+  } catch (error) {
+    // 커스텀 에러 객체 생성
+    const customError = new Error("이 상품은 입을 수 없습니다.");
+    customError.name = "TryOnError";
+    throw customError;
+  }
 };
 
 export const fetchLatestAvatarInfo = async (): Promise<AvatarResponse> => {
