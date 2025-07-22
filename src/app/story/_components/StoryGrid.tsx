@@ -5,10 +5,11 @@ import StoryEmptyState from "./StoryEmptyState";
 type StoryGridProps = {
   stories: StoryResponse[];
   onStoryClick: (storyId: number) => void;
+  isLoading?: boolean;
 };
 
-const StoryGrid = ({ stories, onStoryClick }: StoryGridProps) => {
-  if (stories.length === 0) {
+const StoryGrid = ({ stories, onStoryClick, isLoading }: StoryGridProps) => {
+  if (stories.length === 0 && !isLoading) {
     return (
       <div className="w-full">
         <StoryEmptyState />

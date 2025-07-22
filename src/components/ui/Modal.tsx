@@ -42,10 +42,10 @@ const Modal = ({ onClose, children, title }: ModalProps) => {
   }, [onClose]);
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 z-[1000] flex justify-center items-center p-4">
+    <div className="fixed inset-0 bg-[rgba(0,0,0,0.25)] z-[1000] flex justify-center items-center p-4">
       <div
         ref={modalRef}
-        className="bg-white rounded-2xl shadow-xl w-full max-w-md mx-auto animate-scale-in"
+        className="bg-white rounded-2xl shadow-xl w-full max-w-md mx-auto animate-scale-in z-[1500]"
       >
         <header className="flex items-center justify-between p-4 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-800">{title}</h2>

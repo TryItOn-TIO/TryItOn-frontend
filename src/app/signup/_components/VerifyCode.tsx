@@ -55,16 +55,32 @@ const VerifyCode = ({ setStep, email }: VerifyCodeProps) => {
           title: "안내",
           message: "인증번호가 올바르지 않습니다.",
           type: "error",
+          confirmText: "확인",
+          cancelText: "취소",
         });
       }
-    } catch (error) {
-      openAlert({
-        title: "안내",
-        message: "다시 시도해 주세요.",
-        type: "error",
-      });
-      console.log("인증번호 확인 에러", error);
-      router.push("/signin");
+    } catch (error: any) {
+      if (error.response?.status === 400) {
+        openAlert({
+          title: "안내",
+          message: "인증번호가 올바르지 않습니다.",
+          type: "error",
+          confirmText: "확인",
+          cancelText: "취소",
+        });
+      } else {
+        openAlert({
+          title: "안내",
+          message: "5분이 경과하였습니다. 다시 시도해 주세요.",
+          type: "error",
+          confirmText: "확인",
+          cancelText: "취소",
+          onConfirm: () => {
+            console.log("인증번호 확인 에러", error);
+            router.push("/signin");
+          },
+        });
+      }
     }
   };
 

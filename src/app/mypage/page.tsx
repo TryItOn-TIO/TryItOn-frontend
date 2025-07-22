@@ -242,7 +242,7 @@ export default function MyPage() {
               <div className="bg-white rounded-lg shadow-sm">
                 <button
                   onClick={handleLogout}
-                  className="w-full flex items-center justify-center px-6 py-4 text-gray-700 hover:bg-red-50 transition-colors rounded-lg"
+                  className="w-full flex items-center justify-center px-6 py-4 text-gray-700 hover:bg-gray-100 transition-colors rounded-lg"
                 >
                   <LogOut className="w-5 h-5 mr-2" />
                   로그아웃

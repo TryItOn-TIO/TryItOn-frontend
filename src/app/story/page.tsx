@@ -13,7 +13,7 @@ import Spinner from "@/components/common/Spinner";
 const StoryPage = () => {
   const router = useRouter();
   const [stories, setStories] = useState<StoryResponse[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [sortType, setSortType] = useState<SortType>(SortType.POPULAR);
 
@@ -50,9 +50,13 @@ const StoryPage = () => {
     <>
       {isLoading && <Spinner />}
       <div className="flex flex-col items-center w-screen min-h-screen">
-        <div className="max-w-6xl mx-auto px-4 py-8">
+        <div className="w-full max-w-6xl mx-auto px-4 py-8">
           <StoryHeader sortType={sortType} onSortChange={handleSortChange} />
-          <StoryGrid stories={stories} onStoryClick={handleStoryClick} />
+          <StoryGrid
+            stories={stories}
+            onStoryClick={handleStoryClick}
+            isLoading={isLoading}
+          />
         </div>
       </div>
     </>
