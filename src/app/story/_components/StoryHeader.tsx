@@ -9,7 +9,7 @@ type StoryHeaderProps = {
 const StoryHeader = ({ sortType, onSortChange }: StoryHeaderProps) => {
   return (
     <>
-      <div className="flex justify-between items-start mb-4">
+      <div className="w-full flex justify-between items-start mb-4">
         <h1 className="text-2xl font-bold text-gray-900">스토리</h1>
 
         <div className="flex gap-2">
