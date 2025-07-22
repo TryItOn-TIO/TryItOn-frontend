@@ -312,7 +312,9 @@ const TryOnResultModal = ({ onClose }: TryOnResultModalProps) => {
   return (
     <Modal onClose={handleClose} title="가상 피팅">
       {isMobile ? (
-        <div className="w-full max-w-[340px] mx-auto">{getModalContent()}</div>
+        <div className="w-full max-w-[340px] mx-auto z-50">
+          {getModalContent()}
+        </div>
       ) : (
         <div className="w-full h-full flex justify-center items-center">
           <div className="w-full h-[85vh] mx-auto">{getModalContent()}</div>

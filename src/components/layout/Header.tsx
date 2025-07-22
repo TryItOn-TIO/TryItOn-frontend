@@ -59,7 +59,11 @@ export default function Header() {
         </div>
       </header>
 
-      {isResultModalOpen && <TryOnResultModal onClose={closeResultModal} />}
+      {isResultModalOpen && (
+        <div className="z-50">
+          <TryOnResultModal onClose={closeResultModal} />
+        </div>
+      )}
     </>
   );
 }
