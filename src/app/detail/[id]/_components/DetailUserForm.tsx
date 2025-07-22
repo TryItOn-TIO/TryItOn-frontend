@@ -218,7 +218,6 @@ const ProductDetailInfo = ({
         title: "알림",
         message: "선택한 옵션에 해당하는 상품을 찾을 수 없습니다.",
         confirmText: "확인",
-        cancelText: "취소",
         type: "info",
       });
       return;
@@ -231,7 +230,6 @@ const ProductDetailInfo = ({
         title: "알림",
         message: "상품 정보를 찾을 수 없습니다.",
         confirmText: "확인",
-        cancelText: "취소",
         type: "info",
       });
       return;
@@ -242,7 +240,6 @@ const ProductDetailInfo = ({
         title: "알림",
         message: "품절된 상품입니다.",
         confirmText: "확인",
-        cancelText: "취소",
         type: "info",
       });
       return;
@@ -253,13 +250,26 @@ const ProductDetailInfo = ({
         title: "알림",
         message: `재고가 부족합니다. (현재 재고: ${currentVariant.quantity}개)`,
         confirmText: "확인",
-        cancelText: "취소",
         type: "info",
       });
       return;
     }
 
-    await addToCart(variantId, orderData.quantity);
+    // 장바구니 추가
+    const success = await addToCart(variantId, orderData.quantity);
+
+    if (success) {
+      openAlert({
+        title: "장바구니 추가 완료",
+        message: "장바구니로 이동하시겠습니까?",
+        confirmText: "장바구니로 이동",
+        cancelText: "쇼핑 계속하기",
+        type: "success",
+        onConfirm: () => {
+          window.location.href = "/cart";
+        },
+      });
+    }
   };
 
   // 현재 선택된 상품이 품절인지 확인
@@ -282,6 +292,7 @@ const ProductDetailInfo = ({
         onConfirm={options.onConfirm || closeAlert}
         onCancel={options.onCancel}
       />
+
       {/* 데스크톱 및 모바일 상단에 표시될 정보 */}
       <div className="text-black p-4 space-y-3 md:p-6 md:space-y-4">
         {/* 브랜드 및 제품명 */}
