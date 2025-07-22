@@ -19,7 +19,7 @@ export default function HomeClientWrapper() {
   const [trending, setTrending] = useState<ProductResponse[]>([]);
   const [ageGroup, setAgeGroup] = useState<ProductResponse[]>([]);
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -87,15 +87,18 @@ export default function HomeClientWrapper() {
 
   return (
     <>
-      {loading && <Spinner />}
-      <div className="w-full">
-        <HomeClient
-          initialData={data!}
-          recommend={recommend}
-          trending={trending}
-          ageGroup={ageGroup}
-        />
-      </div>
+      {loading ? (
+        <Spinner />
+      ) : (
+        <div className="w-full">
+          <HomeClient
+            initialData={data!}
+            recommend={recommend}
+            trending={trending}
+            ageGroup={ageGroup}
+          />
+        </div>
+      )}
     </>
   );
 }
